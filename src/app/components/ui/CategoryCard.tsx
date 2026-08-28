@@ -12,21 +12,21 @@ export function CategoryCard({ category }: CategoryCardProps) {
   return (
     <Link
       href={`/shop?category=${category.slug}`}
-      className="group relative h-64 rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 flex flex-col justify-end p-6 hover:border-orange-500/50 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300"
+      className="group relative h-64 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 flex flex-col justify-end p-6 hover:border-orange-500/50 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 shadow-md"
     >
       {/* Background Image */}
       <Image
         src={category.image_url}
         alt={category.name}
         fill
-        className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-40 group-hover:opacity-60"
+        className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-60 dark:opacity-40 group-hover:opacity-75 dark:group-hover:opacity-60"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 space-y-2">
-        <span className="inline-block bg-orange-500/20 text-orange-400 text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-md border border-orange-500/30">
+        <span className="inline-block bg-orange-500/90 text-white text-[10px] font-black tracking-wider uppercase px-2.5 py-1 rounded-md shadow-sm">
           {category.item_count}+ Parça Çeşidi
         </span>
         <h3 className="text-xl font-extrabold text-white group-hover:text-orange-400 transition-colors flex items-center gap-2">

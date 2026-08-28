@@ -5,6 +5,9 @@ export async function getProducts(options?: {
   categorySlug?: string;
   searchQuery?: string;
   featuredOnly?: boolean;
+  brand?: string;
+  model?: string;
+  vin?: string;
 }): Promise<Product[]> {
   let products = [...SAMPLE_PRODUCTS];
 
@@ -23,8 +26,37 @@ export async function getProducts(options?: {
         p.title.toLowerCase().includes(q) ||
         p.brand.toLowerCase().includes(q) ||
         p.part_number.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
+        p.description.toLowerCase().includes(q) ||
+        p.vehicle_compatibility.some(
+          (vc) =>
+            vc.brand.toLowerCase().includes(q) ||
+            vc.model.toLowerCase().includes(q)
+        )
     );
+  }
+
+  // Araç Marka/Model veya Şasi Filtresi
+  if (options?.brand) {
+    const brandQ = options.brand.toLowerCase();
+    const modelQ = options?.model ? options.model.toLowerCase() : '';
+
+    products = products.filter((p) => {
+      // 1. Evrensel Uyumlu parçalar her zaman uyar
+      const hasUniversal = p.vehicle_compatibility.some((vc) =>
+        vc.brand.toLowerCase().includes('evrensel')
+      );
+      if (hasUniversal) return true;
+
+      // 2. Marka ve Model eşleşmesi
+      return p.vehicle_compatibility.some((vc) => {
+        const brandMatch = vc.brand.toLowerCase().includes(brandQ);
+        if (!brandMatch) return false;
+        if (modelQ) {
+          return vc.model.toLowerCase().includes(modelQ);
+        }
+        return true;
+      });
+    });
   }
 
   return products;

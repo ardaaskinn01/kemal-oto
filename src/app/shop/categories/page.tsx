@@ -7,9 +7,9 @@ export default async function CategoriesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-      <div className="border-b border-slate-800 pb-6">
-        <h1 className="text-3xl font-black text-white">Yedek Parça Kategorileri</h1>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-6">
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white">Yedek Parça Kategorileri</h1>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Aracınızın tüm aksam ve donanım kategorilerine göre hızlı erişim sağlayın.
         </p>
       </div>

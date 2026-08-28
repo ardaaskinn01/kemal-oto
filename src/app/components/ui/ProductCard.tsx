@@ -5,103 +5,122 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '../../types/database.types';
 import { formatCurrency } from '../../lib/utils';
-import { Star, ShoppingCart, Car } from 'lucide-react';
+import { ShoppingCart, CheckCircle2, AlertTriangle, ShieldCheck, Wrench } from 'lucide-react';
+import { useGarage } from '../../contexts/GarageContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { activeVehicle, isProductCompatible } = useGarage();
+
   const discountPercent = product.discount_price
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
     : 0;
 
+  const compatibility = isProductCompatible(product);
+
   return (
-    <div className="group relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-orange-500/50 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 flex flex-col justify-between">
+    <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-orange-500/80 transition-all flex flex-col justify-between shadow-sm hover:shadow-md">
       
       {/* Top Badges */}
-      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-        {discountPercent > 0 && (
-          <span className="bg-gradient-to-r from-red-600 to-orange-600 text-white text-[11px] font-black px-2.5 py-1 rounded-md shadow-md uppercase tracking-wider">
-            %{discountPercent} İndirim
+      <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
+        {product.is_original ? (
+          <span className="bg-emerald-700 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
+            <ShieldCheck className="w-3 h-3" /> Orijinal OEM
+          </span>
+        ) : (
+          <span className="bg-slate-700 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
+            <Wrench className="w-3 h-3" /> A Kalite Muadil
           </span>
         )}
-        {product.is_featured && (
-          <span className="bg-amber-500 text-slate-950 text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
-            Çok Satan
+
+        {discountPercent > 0 && (
+          <span className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+            -%{discountPercent}
           </span>
         )}
       </div>
 
-      {/* OEM / Part Code Badge */}
-      <div className="absolute top-3 right-3 z-10">
-        <span className="bg-slate-950/80 backdrop-blur-sm border border-slate-800 text-slate-300 text-[10px] font-mono font-medium px-2 py-1 rounded-md">
+      {/* OEM Number Tag */}
+      <div className="absolute top-2.5 right-2.5 z-10">
+        <span className="bg-white/90 dark:bg-slate-950/90 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono px-1.5 py-0.5 rounded">
           {product.part_number}
         </span>
       </div>
 
-      {/* Image Section */}
-      <Link href={`/shop/products/${product.slug}`} className="block relative w-full h-48 bg-slate-950 overflow-hidden">
+      {/* Product Image */}
+      <Link href={`/shop/products/${product.slug}`} className="block relative w-full h-44 bg-slate-50 dark:bg-slate-950 overflow-hidden border-b border-slate-100 dark:border-slate-800/80">
         <Image
           src={product.image_url}
           alt={product.title}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60" />
       </Link>
 
-      {/* Content Section */}
-      <div className="p-5 flex-1 flex flex-col justify-between">
+      {/* Product Information */}
+      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
         <div>
           {/* Brand & Category */}
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-1.5">
-            <span className="font-semibold text-orange-400 uppercase tracking-wider">{product.brand}</span>
-            <span className="text-slate-400 text-[11px] truncate max-w-[120px]">{product.category}</span>
+          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mb-1">
+            <span className="font-bold text-orange-600 dark:text-orange-400 uppercase">{product.brand}</span>
+            <span className="truncate max-w-[110px]">{product.category}</span>
           </div>
 
           {/* Title */}
-          <Link href={`/shop/products/${product.slug}`} className="block group-hover:text-orange-400 transition-colors">
-            <h3 className="text-white font-semibold text-sm line-clamp-2 leading-snug mb-2">
+          <Link href={`/shop/products/${product.slug}`} className="block group-hover:text-orange-600 transition-colors">
+            <h3 className="text-slate-900 dark:text-white font-semibold text-xs sm:text-sm line-clamp-2 leading-snug">
               {product.title}
             </h3>
           </Link>
 
-          {/* Vehicle Compatibility Preview */}
-          {product.vehicle_compatibility && product.vehicle_compatibility.length > 0 && (
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mb-3 bg-slate-950/50 px-2.5 py-1.5 rounded-lg border border-slate-800/80">
-              <Car className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-              <span className="truncate">
-                {product.vehicle_compatibility[0].brand} {product.vehicle_compatibility[0].model}
+          {/* Garage Vehicle Compatibility Indicator */}
+          {activeVehicle ? (
+            <div
+              className={`flex items-center gap-1 text-[10px] font-medium mt-2 px-2 py-1 rounded border ${
+                compatibility.compatible
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30'
+                  : 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-500/30'
+              }`}
+            >
+              {compatibility.compatible ? (
+                <>
+                  <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                  <span className="truncate font-semibold">{activeVehicle.make} {activeVehicle.model} ile %100 Uyumlu</span>
+                </>
+              ) : (
+                <>
+                  <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
+                  <span className="truncate">Seçili Aracınızla Uyumsuz</span>
+                </>
+              )}
+            </div>
+          ) : (
+            product.vehicle_compatibility && product.vehicle_compatibility.length > 0 && (
+              <span className="inline-block text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-full mt-1.5">
+                Uyum: {product.vehicle_compatibility[0].brand} {product.vehicle_compatibility[0].model}
               </span>
-            </div>
+            )
           )}
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 text-xs text-slate-400 mb-4">
-            <div className="flex items-center text-amber-400">
-              <Star className="w-3.5 h-3.5 fill-amber-400" />
-              <span className="font-bold ml-1 text-white text-xs">{product.rating}</span>
-            </div>
-            <span>({product.reviews_count} değerlendirme)</span>
-          </div>
         </div>
 
         {/* Price & Action */}
-        <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+        <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
           <div>
             {product.discount_price ? (
               <div className="flex flex-col">
-                <span className="text-xs text-slate-400 line-through">
+                <span className="text-[11px] text-slate-400 line-through">
                   {formatCurrency(product.price)}
                 </span>
-                <span className="text-lg font-black text-white">
+                <span className="text-base font-extrabold text-slate-900 dark:text-white">
                   {formatCurrency(product.discount_price)}
                 </span>
               </div>
             ) : (
-              <span className="text-lg font-black text-white">
+              <span className="text-base font-extrabold text-slate-900 dark:text-white">
                 {formatCurrency(product.price)}
               </span>
             )}
@@ -110,9 +129,9 @@ export function ProductCard({ product }: ProductCardProps) {
           <button
             type="button"
             onClick={() => alert(`"${product.title}" sepete eklendi!`)}
-            className="flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition-all shadow-lg shadow-orange-500/20 active:scale-95 cursor-pointer"
+            className="flex items-center gap-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors cursor-pointer"
           >
-            <ShoppingCart className="w-4 h-4" />
+            <ShoppingCart className="w-3.5 h-3.5" />
             <span>Sepete Ekle</span>
           </button>
         </div>
