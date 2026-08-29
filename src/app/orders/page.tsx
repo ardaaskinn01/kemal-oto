@@ -9,16 +9,10 @@ import {
   Truck, 
   Clock, 
   CheckCircle2, 
-  ShieldCheck, 
   ExternalLink, 
-  Search, 
-  ArrowRight,
-  FileText,
-  AlertCircle,
   ShoppingBag
 } from 'lucide-react';
 import Link from 'next/link';
-import { DhlTracker } from '../components/shipping/DhlTracker';
 
 interface OrderItem {
   product_id?: string;
@@ -40,14 +34,14 @@ interface UserOrder {
   created_at: string;
 }
 
-// Sample orders for instant preview/demo
+// Demo orders for immediate viewing
 const DEMO_ORDERS: UserOrder[] = [
   {
     id: 'KML-ORD-9281',
     total_amount: 6890,
     payment_status: 'paid',
     shipping_status: 'shipped',
-    tracking_number: 'DHL-TR-84920194',
+    tracking_number: '930596379034',
     vin: 'VF3M4DV5RC812948',
     vehicle_model: 'Peugeot 3008 1.5 BlueHDi (2020)',
     items: [
@@ -83,8 +77,6 @@ export default function OrdersPage() {
   const { user } = useAuth();
   const [orders, setOrders] = useState<UserOrder[]>(DEMO_ORDERS);
   const [loading, setLoading] = useState(false);
-  const [activeTrackingCode, setActiveTrackingCode] = useState<string | null>(null);
-  const [manualQuery, setManualQuery] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -112,7 +104,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
@@ -122,10 +114,10 @@ export default function OrdersPage() {
             <span>Müşteri Hesap Merkezi</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            Siparişlerim & Kargo Takibi
+            Siparişlerim
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Geçmiş siparişlerinizi, faturalarınızı ve kargo transfer durumlarını bu alandan canlı takip edebilirsiniz.
+            Verdiğiniz siparişlerin güncel durumunu ve kargo takip bağlantılarını buradan doğrudan görüntüleyebilirsiniz.
           </p>
         </div>
 
@@ -138,61 +130,10 @@ export default function OrdersPage() {
         </Link>
       </div>
 
-      {/* Manual Order / Tracking Code Search Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-6 rounded-2xl shadow-sm">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (manualQuery.trim()) {
-              setActiveTrackingCode(manualQuery.trim());
-            }
-          }}
-          className="flex flex-col sm:flex-row items-center gap-3"
-        >
-          <div className="relative flex-1 w-full">
-            <input
-              type="text"
-              value={manualQuery}
-              onChange={(e) => setManualQuery(e.target.value)}
-              placeholder="Sipariş No (Örn: KML-ORD-9281) veya Kargo Kodu ile sorgula..."
-              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-xs sm:text-sm focus:outline-none focus:border-orange-600"
-            />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full sm:w-auto bg-slate-900 hover:bg-black dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0"
-          >
-            <span>Sorgula</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </form>
-      </div>
-
-      {/* Dynamic Live Tracker Popup / View if active */}
-      {activeTrackingCode && (
-        <div className="bg-orange-50/50 dark:bg-slate-900 border-2 border-orange-500/40 rounded-3xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-orange-200 dark:border-slate-800 pb-3">
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-              <Truck className="w-4 h-4 text-orange-600" />
-              <span>Canlı Kargo Durumu: <strong className="font-mono">{activeTrackingCode}</strong></span>
-            </h3>
-            <button
-              onClick={() => setActiveTrackingCode(null)}
-              className="text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white"
-            >
-              Kapat ✕
-            </button>
-          </div>
-          <DhlTracker />
-        </div>
-      )}
-
       {/* Orders List */}
-      <div className="space-y-5">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <span>Son Siparişleriniz</span>
+      <div className="space-y-4">
+        <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>Kayıtlı Siparişleriniz</span>
           <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full font-mono">
             {orders.length}
           </span>
@@ -200,6 +141,9 @@ export default function OrdersPage() {
 
         {orders.map((order) => {
           const isShipped = order.shipping_status === 'shipped';
+          const dhlLink = order.tracking_number
+            ? `https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${encodeURIComponent(order.tracking_number)}&submit=1`
+            : null;
 
           return (
             <div
@@ -258,7 +202,7 @@ export default function OrdersPage() {
                 ))}
               </div>
 
-              {/* Order Bottom Footer: Total Price & Tracking Action */}
+              {/* Order Bottom Footer: Total Price & Direct 1-Click DHL Link */}
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="text-xs">
                   <span className="text-slate-500">Toplam Tutar: </span>
@@ -268,18 +212,20 @@ export default function OrdersPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  {order.tracking_number ? (
-                    <button
-                      type="button"
-                      onClick={() => setActiveTrackingCode(order.tracking_number!)}
-                      className="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  {order.tracking_number && dhlLink ? (
+                    <a
+                      href={dhlLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-md shadow-red-600/20 active:scale-95 cursor-pointer"
                     >
-                      <Truck className="w-3.5 h-3.5" />
-                      <span>Kargoyu Canlı Takip Et ({order.tracking_number})</span>
-                    </button>
+                      <Truck className="w-4 h-4" />
+                      <span>DHL'de Doğrudan Takip Et ({order.tracking_number})</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                   ) : (
                     <span className="text-xs text-slate-500 italic flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" /> Depoda hazırlanıyor, kargo kodu henüz atanmadı.
+                      <Clock className="w-3.5 h-3.5" /> Depoda hazırlanıyor, kargo takip linki birazdan tanımlanacak.
                     </span>
                   )}
                 </div>
