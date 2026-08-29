@@ -16,8 +16,6 @@ import {
   Zap,
   Droplets,
   Layers,
-  RotateCcw,
-  CreditCard,
   PhoneCall,
   Car
 } from 'lucide-react';
@@ -206,53 +204,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* 6. Authentic Trust Strip (OnlineYedekParca Style) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 shadow-sm">
-          
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
-              <Truck className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white">2.500 TL Üzeri Ücretsiz Kargo</h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">DHL Express ile hızlı teslimat</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white">Şasi No ile Birebir Uyum</h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Kargolanmadan önce kontrol edilir</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-              <RotateCcw className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white">14 Gün Kolay İade</h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Açılmamış orijinal kutu güvencesi</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-              <CreditCard className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white">256-Bit SSL Güvenli Ödeme</h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">İyzico ile taksit imkanı</p>
-            </div>
-          </div>
-
-        </div>
-      </section>
     </div>
   );
 }
