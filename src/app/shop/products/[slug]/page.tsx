@@ -135,7 +135,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             </div>
 
             <div className="w-full sm:w-auto">
-              <AddToCartButton productTitle={product.title} />
+              <AddToCartButton product={product} />
             </div>
           </div>
 
