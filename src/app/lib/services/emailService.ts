@@ -84,8 +84,8 @@ export class EmailService {
     }
 
     const fullName = order.shipping_address?.full_name || order.full_name || 'Değerli Müşterimiz';
-    const dhlOfficialUrl = `https://www.dhl.com/tr-tr/home/tracking/tracking-express.html?submit=1&tracking-id=${encodeURIComponent(trackingNumber)}`;
-    const internalTrackingUrl = `${origin}/tracking?code=${encodeURIComponent(trackingNumber)}`;
+    const dhlOfficialUrl = `https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${encodeURIComponent(trackingNumber)}&submit=1`;
+    const internalTrackingUrl = `${origin}/orders`;
 
     try {
       const htmlContent = `
@@ -102,32 +102,34 @@ export class EmailService {
               </span>
             </div>
 
-            <h2 style="color: #0f172a; margin-top: 0; font-size: 18px; text-align: center;">Paketiniz DHL Express ile Sevk Edildi</h2>
+            <h2 style="color: #0f172a; margin-top: 0; font-size: 18px; text-align: center;">Paketiniz DHL Express ile Yola Çıktı</h2>
             <p style="font-size: 14px; line-height: 1.6; color: #334155;">Merhaba <strong>${fullName}</strong>,</p>
             <p style="font-size: 14px; line-height: 1.6; color: #334155;">
-              <strong>#${order.id ? order.id.slice(0, 8) : 'KML-98241'}</strong> numaralı siparişiniz paketlendi ve <strong>${carrier}</strong> kuryesine elden teslim edildi.
+              <strong>#${order.id ? order.id.slice(0, 8) : 'KML-98241'}</strong> numaralı siparişiniz depomuzda kontrol edilip özenle paketlendi ve <strong>${carrier}</strong> kuryesine elden teslim edildi.
             </p>
 
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 18px; border-radius: 8px; margin: 20px 0; text-align: center;">
-              <p style="margin: 0 0 6px 0; font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold;">Kargo Takip Numarası</p>
-              <p style="margin: 0; font-size: 20px; font-family: monospace; font-weight: 800; color: #ea580c; letter-spacing: 1px;">
-                ${trackingNumber}
+            {/* Direct 1-Click DHL Tracking Card */}
+            <div style="background-color: #fff7ed; border: 2px solid #ea580c; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; color: #9a3412; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">
+                DHL Express Canlı Kargo Takip Bağlantısı
               </p>
-              <p style="margin: 6px 0 0 0; font-size: 12px; color: #059669; font-weight: 600;">Taşıyıcı: ${carrier}</p>
+              
+              <div style="margin: 16px 0;">
+                <a href="${dhlOfficialUrl}" style="background-color: #d40511; color: #ffffff !important; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 800; font-size: 15px; display: inline-block; box-shadow: 0 4px 12px rgba(212, 5, 17, 0.25);">
+                  📦 Kargomu DHL'de Canlı Takip Et
+                </a>
+              </div>
+
+              <p style="margin: 10px 0 0 0; font-size: 12px; color: #64748b;">
+                Doğrudan Takip Linki: <br/>
+                <a href="${dhlOfficialUrl}" style="color: #ea580c; word-break: break-all; font-size: 11px; text-decoration: underline;">
+                  ${dhlOfficialUrl}
+                </a>
+              </p>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 10px; margin: 24px 0; text-align: center;">
-              <a href="${dhlOfficialUrl}" style="background: #d40511; color: #ffffff !important; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 13px; display: block;">
-                DHL Resmi Sitesinde Takip Et
-              </a>
-
-              <a href="${internalTrackingUrl}" style="background: #020617; color: #ffffff !important; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 12px; display: block; margin-top: 6px;">
-                Kemal Oto Takip Panelinde Görüntüle
-              </a>
-            </div>
-
-            <div style="background: #f1f5f9; padding: 10px; border-radius: 6px; font-size: 12px; color: #475569; line-height: 1.5;">
-              Kargo durumunuz kurye aktarma merkezine ulaştığında birkaç saat içerisinde DHL sisteminde güncellenecektir.
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 12px; color: #475569; line-height: 1.5; text-align: center;">
+              Kargo takip numaranız: <strong style="font-family: monospace; color: #0f172a;">${trackingNumber}</strong> | Dilerseniz sitemizdeki <a href="${internalTrackingUrl}" style="color: #ea580c; font-weight: bold;">Siparişlerim</a> sayfasından da takip edebilirsiniz.
             </div>
 
             <p style="margin-top: 24px; font-size: 12px; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 16px; text-align: center;">

@@ -43,7 +43,7 @@ export function DhlTracker({ initialTracking }: DhlTrackerProps) {
   };
 
   const dhlOfficialUrl = trackingData?.trackingNumber
-    ? `https://www.dhl.com/tr-tr/home/tracking/tracking-express.html?submit=1&tracking-id=${encodeURIComponent(trackingData.trackingNumber)}`
+    ? `https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${encodeURIComponent(trackingData.trackingNumber)}&submit=1`
     : 'https://www.dhl.com/tr-tr/home/tracking.html';
 
   return (

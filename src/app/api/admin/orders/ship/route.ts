@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
     await emailService.sendShippingNotification(orderData, cleanTracking, origin, carrier);
 
-    const dhlUrl = `https://www.dhl.com/tr-tr/home/tracking/tracking-express.html?submit=1&tracking-id=${encodeURIComponent(cleanTracking)}`;
+    const dhlUrl = `https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${encodeURIComponent(cleanTracking)}&submit=1`;
 
     return NextResponse.json({
       success: true,

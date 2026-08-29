@@ -424,12 +424,12 @@ export default function AdminOrdersPage() {
 
                     <div className="flex items-center gap-3 text-xs">
                       <a
-                        href={`https://www.dhl.com/tr-tr/home/tracking/tracking-express.html?submit=1&tracking-id=${encodeURIComponent(
+                        href={`https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${encodeURIComponent(
                           order.tracking_number
-                        )}`}
+                        )}&submit=1`}
                         target="_blank"
-                        rel="noreferrer"
-                        className="text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 font-bold"
+                        rel="noopener noreferrer"
+                        className="text-xs text-orange-600 hover:underline flex items-center gap-1 font-semibold"
                       >
                         <span>DHL Resmi Takip</span>
                         <ExternalLink className="w-3.5 h-3.5" />
