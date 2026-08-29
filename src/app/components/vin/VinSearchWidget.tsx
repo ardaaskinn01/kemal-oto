@@ -104,12 +104,12 @@ export function VinSearchWidget({ onVehicleDecoded, compact = false }: VinSearch
               onChange={handleInputChange}
               placeholder="Örn: W0L0AHL3582123456"
               maxLength={17}
-              className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-mono text-sm tracking-widest uppercase border border-slate-300 dark:border-slate-700 rounded-lg py-2.5 pl-10 pr-20 focus:outline-none focus:border-orange-600 transition-all placeholder:text-slate-400 placeholder:tracking-normal placeholder:font-sans"
+              className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-mono text-xs sm:text-sm tracking-wider sm:tracking-widest uppercase border border-slate-300 dark:border-slate-700 rounded-lg py-2.5 pl-9 pr-14 sm:pr-20 focus:outline-none focus:border-orange-600 transition-all placeholder:text-slate-400 placeholder:tracking-normal placeholder:font-sans"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <span className="text-xs font-mono font-semibold text-slate-400">
+            <div className="absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <span className="text-[11px] sm:text-xs font-mono font-semibold text-slate-400">
                 {cleanVin.length}/17
               </span>
             </div>

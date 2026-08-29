@@ -25,33 +25,33 @@ export function ProductCard({ product }: ProductCardProps) {
     <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-orange-500/80 transition-all flex flex-col justify-between shadow-sm hover:shadow-md">
       
       {/* Top Badges */}
-      <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
+      <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[65%]">
         {product.is_original ? (
-          <span className="bg-emerald-700 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3" /> Orijinal OEM
+          <span className="bg-emerald-700 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm flex items-center gap-1">
+            <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> OEM
           </span>
         ) : (
-          <span className="bg-slate-700 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
-            <Wrench className="w-3 h-3" /> A Kalite Muadil
+          <span className="bg-slate-700 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm flex items-center gap-1">
+            <Wrench className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> Muadil
           </span>
         )}
 
         {discountPercent > 0 && (
-          <span className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+          <span className="bg-red-600 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
             -%{discountPercent}
           </span>
         )}
       </div>
 
       {/* OEM Number Tag */}
-      <div className="absolute top-2.5 right-2.5 z-10">
-        <span className="bg-white/90 dark:bg-slate-950/90 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono px-1.5 py-0.5 rounded">
+      <div className="absolute top-2 right-2 z-10">
+        <span className="bg-white/95 dark:bg-slate-950/95 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[9px] sm:text-[10px] font-mono px-1.5 py-0.5 rounded truncate max-w-[100px] block">
           {product.part_number}
         </span>
       </div>
 
       {/* Product Image */}
-      <Link href={`/shop/products/${product.slug}`} className="block relative w-full h-44 bg-slate-50 dark:bg-slate-950 overflow-hidden border-b border-slate-100 dark:border-slate-800/80">
+      <Link href={`/shop/products/${product.slug}`} className="block relative w-full h-40 sm:h-44 bg-slate-50 dark:bg-slate-950 overflow-hidden border-b border-slate-100 dark:border-slate-800/80">
         <Image
           src={product.image_url}
           alt={product.title}

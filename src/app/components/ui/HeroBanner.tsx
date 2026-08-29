@@ -62,19 +62,19 @@ export function HeroBanner() {
               Opel, Peugeot, Citroën, Chevrolet ve DS araçlarınız için 17 haneli şasi numarasını girin; periyodik bakım, fren, motor ve mekanik parçaları hatasız eşleştirin.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 pt-1">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 pt-1">
               <span className="flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 Şasi Kontrollü Sevk
               </span>
-              <span>•</span>
+              <span className="hidden sm:inline">•</span>
               <span className="flex items-center gap-1">
-                <Truck className="w-3.5 h-3.5 text-orange-600" />
+                <Truck className="w-3.5 h-3.5 text-orange-600 shrink-0" />
                 DHL Express
               </span>
-              <span>•</span>
+              <span className="hidden sm:inline">•</span>
               <span className="flex items-center gap-1">
-                <Wrench className="w-3.5 h-3.5 text-amber-600" />
+                <Wrench className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 Maslak Sanayi Depo
               </span>
             </div>
@@ -82,33 +82,33 @@ export function HeroBanner() {
 
           {/* Right Column: High-Utility Selector Card */}
           <div className="lg:col-span-7">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-7 rounded-2xl shadow-sm">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-7 rounded-2xl shadow-sm">
               
               {/* Tab Selector */}
-              <div className="flex border-b border-slate-200 dark:border-slate-800 mb-5">
+              <div className="flex border-b border-slate-200 dark:border-slate-800 mb-5 gap-1">
                 <button
                   type="button"
                   onClick={() => setActiveTab('vin')}
-                  className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
+                  className={`pb-3 px-3 sm:px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
                     activeTab === 'vin'
                       ? 'border-orange-600 text-orange-600 dark:text-orange-500'
                       : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Şasi No (VIN) ile Ara</span>
+                  <ShieldCheck className="w-4 h-4 shrink-0" />
+                  <span>Şasi No (VIN)</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab('manual')}
-                  className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
+                  className={`pb-3 px-3 sm:px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
                     activeTab === 'manual'
                       ? 'border-orange-600 text-orange-600 dark:text-orange-500'
                       : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  <Car className="w-4 h-4" />
+                  <Car className="w-4 h-4 shrink-0" />
                   <span>Araç Seçerek Ara</span>
                 </button>
               </div>

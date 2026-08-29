@@ -20,13 +20,20 @@
   --accent: #ea580c;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
 body {
   color: var(--foreground);
   background-color: var(--background);
   font-family: var(--font-jakarta), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  overflow-x: hidden;
   transition: background-color 0.2s ease, color 0.2s ease;
   letter-spacing: -0.01em;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Natural headings */
