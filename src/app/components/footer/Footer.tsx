@@ -97,8 +97,8 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/tracking" className="text-orange-700 dark:text-orange-400 font-bold hover:underline">
-                DHL Kargo Takibi
+              <Link href="/orders" className="text-orange-700 dark:text-orange-400 font-bold hover:underline">
+                Siparişlerim & Kargo Takibi
               </Link>
             </li>
             <li>

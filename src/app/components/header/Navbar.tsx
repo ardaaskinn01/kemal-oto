@@ -17,7 +17,8 @@ import {
   LogOut,
   MapPin,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  Package
 } from 'lucide-react';
 import { useGarage } from '../../contexts/GarageContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -73,9 +74,9 @@ export function Navbar() {
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-              <Link href="/tracking" className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-orange-600 dark:hover:text-orange-400 flex items-center gap-1 whitespace-nowrap">
-                <Truck className="w-3 h-3 text-orange-600 shrink-0" />
-                <span>Kargom Nerede?</span>
+              <Link href="/orders" className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-orange-600 dark:hover:text-orange-400 flex items-center gap-1 whitespace-nowrap">
+                <Package className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                <span>Siparişlerim</span>
               </Link>
             </div>
           </div>
@@ -297,8 +298,9 @@ export function Navbar() {
               <Link href="/shop/categories" onClick={() => setMobileMenuOpen(false)} className="py-2 text-slate-700 dark:text-slate-200">
                 Kategoriler
               </Link>
-              <Link href="/tracking" onClick={() => setMobileMenuOpen(false)} className="py-2 text-orange-600 font-bold">
-                Kargo Takibi (DHL)
+              <Link href="/orders" onClick={() => setMobileMenuOpen(false)} className="py-2 text-orange-600 font-bold flex items-center gap-2">
+                <Package className="w-4 h-4" />
+                <span>Siparişlerim & Kargo</span>
               </Link>
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="py-2 text-slate-700 dark:text-slate-200">
                 İletişim & Depo
