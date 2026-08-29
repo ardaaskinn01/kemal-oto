@@ -55,7 +55,7 @@ export default function ReturnsPolicyPage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">4. İade Ücretinin Geri Ödenmesi</h2>
           <p>
-            İade ettiğiniz ürün Maslak depomuza ulaştıktan ve teknik ekibimizce kontrol edildikten sonra <strong>2 ila 4 iş günü</strong> içerisinde ödemeniz kartınıza iade edilir.
+            İade ettiğiniz ürün Bornova/İzmir depomuza ulaştıktan ve teknik ekibimizce kontrol edildikten sonra <strong>2 ila 4 iş günü</strong> içerisinde ödemeniz kartınıza iade edilir.
           </p>
         </section>
       </div>

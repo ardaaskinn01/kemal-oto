@@ -67,13 +67,13 @@ export function Footer() {
             Kemal Oto; Opel, Peugeot, Citroën, Chevrolet ve DS grubu binek ve ticari araç sahiplerine orijinal ve A kalite muadil yedek parça çözümleri sunar.
           </p>
           <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-orange-600 shrink-0" />
-              <span>Oto Sanayi Sitesi, 2. Blok No:42, Maslak / İstanbul</span>
+            <div className="flex items-start gap-2">
+              <MapPin className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
+              <span>MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova/İzmir</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-orange-600 shrink-0" />
-              <span>0850 300 00 00 / 0212 500 00 00</span>
+              <a href="tel:05422924492" className="hover:text-orange-600">0542 292 44 92</a>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-orange-600 shrink-0" />
@@ -113,7 +113,7 @@ export function Footer() {
             </li>
             <li>
               <Link href="/contact" className="hover:text-orange-600 transition-colors">
-                İletişim & Maslak Depo
+                İletişim & Bornova Depo
               </Link>
             </li>
           </ul>
@@ -187,7 +187,7 @@ export function Footer() {
             </li>
             <li className="pt-2">
               <span className="block text-slate-500 text-[11px]">WhatsApp Destek Hattı:</span>
-              <span className="text-slate-900 dark:text-white font-bold text-xs">+90 530 000 00 00</span>
+              <a href="https://wa.me/905422924492" target="_blank" rel="noopener noreferrer" className="text-slate-900 dark:text-white font-bold text-xs hover:text-orange-600">0542 292 44 92</a>
             </li>
           </ul>
         </div>

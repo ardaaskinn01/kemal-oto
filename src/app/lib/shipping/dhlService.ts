@@ -63,7 +63,7 @@ export async function trackDHLShipment(trackingNumber: string): Promise<DHLTrack
     carrier: 'DHL Express',
     status: 'IN_TRANSIT',
     statusText: 'Kargo Yolda / Transfer Merkezinde',
-    senderAddress: 'Kemal Oto Maslak Ana Depo, Maslak Sanayi Sit. No:42, Sarıyer/İstanbul',
+    senderAddress: 'Kemal Oto Depo, MUTLUBAŞLAR PLAZA, KEMALPAŞA CAD. 5.SANAYİ SİTESİ NO:344B, Bornova/İzmir',
     recipientAddress: 'Atatürk Mah. İstiklal Cad. No:18 D:4, Kadıköy/İstanbul',
     estimatedDeliveryDate: 'Yarın 14:00 - 17:00 Arası',
     packageDetails: {
@@ -76,14 +76,14 @@ export async function trackDHLShipment(trackingNumber: string): Promise<DHLTrack
       {
         id: 'chk-1',
         timestamp: dateStr1,
-        location: 'Kemal Oto Maslak Lojistik Merkezi',
+        location: 'Kemal Oto Bornova Lojistik Merkezi',
         status: 'ORDER_PLACED',
         description: 'Sipariş hazırlandı ve dijital DHL konşimentosu üretildi.',
       },
       {
         id: 'chk-2',
         timestamp: dateStr2,
-        location: 'DHL Maslak Kurumsal Toplama Merkezi',
+        location: 'DHL Bornova / İzmir Toplama Merkezi',
         status: 'PICKED_UP_BY_DHL',
         description: 'Gönderi Kemal Oto deposundan DHL kuryesi tarafından teslim alındı.',
       },

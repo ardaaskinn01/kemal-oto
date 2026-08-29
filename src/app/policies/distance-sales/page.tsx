@@ -30,8 +30,8 @@ export default function DistanceSalesAgreementPage() {
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Satıcı Bilgileri</h2>
           <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1 text-xs">
             <p><strong>Unvan:</strong> Kemal Oto Otomotiv San. ve Tic. A.Ş.</p>
-            <p><strong>Adres:</strong> Atatürk Oto Sanayi Sitesi, 2. Blok No:42, Maslak / Sarıyer / İstanbul</p>
-            <p><strong>Telefon:</strong> 0850 300 00 00 / 0212 500 00 00</p>
+            <p><strong>Adres:</strong> MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova/İzmir</p>
+            <p><strong>Telefon:</strong> 0542 292 44 92</p>
             <p><strong>E-Posta:</strong> destek@kemaloto.com</p>
             <p><strong>Mersis No:</strong> 0549098231400018</p>
           </div>

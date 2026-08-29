@@ -165,7 +165,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-10 text-center space-y-3">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">Aradığınız kriterlere uygun parça bulunamadı.</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                Arama terimini değiştirebilir veya 0850 300 00 00 numaralı hattımızdan şasi no ile parça teyidi alabilirsiniz.
+                Arama terimini değiştirebilir veya 0542 292 44 92 numaralı hattımızdan şasi no ile parça teyidi alabilirsiniz.
               </p>
               <Link
                 href="/shop"

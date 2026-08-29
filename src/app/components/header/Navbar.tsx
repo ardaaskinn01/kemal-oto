@@ -55,7 +55,7 @@ export function Navbar() {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 text-[11px] truncate">
               <MapPin className="w-3.5 h-3.5 text-orange-600 dark:text-orange-500 shrink-0" />
-              <span className="truncate">Maslak Oto Sanayi • Depodan Hızlı Sevk</span>
+              <span className="truncate">5. Sanayi Sitesi Bornova / İzmir • Depodan Hızlı Sevk</span>
             </div>
 
             <div className="hidden md:flex items-center gap-4 text-[11px] font-medium shrink-0">
@@ -64,9 +64,9 @@ export function Navbar() {
                 {shippingSettings.freeThreshold} TL Üzeri Ücretsiz Kargo
               </span>
               <span>•</span>
-              <a href="tel:08503000000" className="flex items-center gap-1 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+              <a href="tel:05422924492" className="flex items-center gap-1 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                 <PhoneCall className="w-3.5 h-3.5 text-orange-600 dark:text-orange-500" />
-                <span>0850 300 00 00 / Destek</span>
+                <span>0542 292 44 92 / Destek</span>
               </a>
             </div>
 
@@ -298,7 +298,7 @@ export function Navbar() {
                 Kargo Takibi (DHL)
               </Link>
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="py-2 text-slate-700 dark:text-slate-200">
-                İletişim & Maslak Depo
+                İletişim & Depo
               </Link>
             </div>
           </div>

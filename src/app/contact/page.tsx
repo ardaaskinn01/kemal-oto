@@ -26,8 +26,12 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-slate-900 dark:text-white font-bold text-sm">Müşteri Destek Hattı</h3>
-              <p className="text-xs text-slate-500 mt-0.5">0850 300 00 00 / 0212 500 00 00</p>
-              <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold mt-1">WhatsApp Destek: +90 530 000 00 00</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                <a href="tel:05422924492" className="hover:text-orange-600 font-semibold text-slate-700 dark:text-slate-200">0542 292 44 92</a>
+              </p>
+              <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold mt-1">
+                <a href="https://wa.me/905422924492" target="_blank" rel="noopener noreferrer" className="hover:underline">WhatsApp Destek: 0542 292 44 92</a>
+              </p>
             </div>
           </div>
 
@@ -48,8 +52,8 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-slate-900 dark:text-white font-bold text-sm">Merkez Mağaza & Depo</h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Oto Sanayi Sitesi, 2. Blok No:42, Maslak / İstanbul
+              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova/İzmir
               </p>
             </div>
           </div>

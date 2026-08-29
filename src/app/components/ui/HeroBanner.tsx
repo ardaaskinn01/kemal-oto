@@ -75,7 +75,7 @@ export function HeroBanner() {
               <span className="hidden sm:inline">•</span>
               <span className="flex items-center gap-1">
                 <Wrench className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                Maslak Sanayi Depo
+                Bornova 5. Sanayi Depo
               </span>
             </div>
           </div>

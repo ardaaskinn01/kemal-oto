@@ -27,7 +27,7 @@ export class EmailService {
         <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background-color: #ffffff;">
           <div style="background: #020617; padding: 24px; text-align: center; color: white; border-bottom: 3px solid #ea580c;">
             <h1 style="margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">KEMAL <span style="color: #ea580c;">OTO</span></h1>
-            <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Otomotiv Yedek Parça & Maslak Depo</p>
+            <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Otomotiv Yedek Parça & Bornova / İzmir Depo</p>
           </div>
 
           <div style="padding: 24px;">
@@ -48,7 +48,7 @@ export class EmailService {
             </div>
 
             <p style="margin-top: 24px; font-size: 12px; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-              Müşteri Hizmetleri: <strong>0850 300 00 00</strong> | <a href="mailto:destek@kemaloto.com" style="color: #ea580c; text-decoration: none;">destek@kemaloto.com</a>
+              Müşteri Hizmetleri: <strong>0542 292 44 92</strong> | <a href="mailto:destek@kemaloto.com" style="color: #ea580c; text-decoration: none;">destek@kemaloto.com</a>
             </p>
           </div>
         </div>
@@ -131,7 +131,7 @@ export class EmailService {
             </div>
 
             <p style="margin-top: 24px; font-size: 12px; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 16px; text-align: center;">
-              Kemal Oto Müşteri Hizmetleri: <strong>0850 300 00 00</strong> | <a href="mailto:destek@kemaloto.com" style="color: #ea580c; text-decoration: none;">destek@kemaloto.com</a>
+              Kemal Oto Müşteri Hizmetleri: <strong>0542 292 44 92</strong> | <a href="mailto:destek@kemaloto.com" style="color: #ea580c; text-decoration: none;">destek@kemaloto.com</a>
             </p>
           </div>
         </div>
