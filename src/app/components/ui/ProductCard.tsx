@@ -7,6 +7,7 @@ import { Product } from '../../types/database.types';
 import { formatCurrency } from '../../lib/utils';
 import { ShoppingCart, CheckCircle2, AlertTriangle, ShieldCheck, Wrench } from 'lucide-react';
 import { useGarage } from '../../contexts/GarageContext';
+import { useCart } from '../../contexts/CartContext';
 
 interface ProductCardProps {
   product: Product;
@@ -14,6 +15,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { activeVehicle, isProductCompatible } = useGarage();
+  const { addToCart } = useCart();
 
   const discountPercent = product.discount_price
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
@@ -128,7 +130,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
           <button
             type="button"
-            onClick={() => alert(`"${product.title}" sepete eklendi!`)}
+            onClick={() => addToCart(product)}
             className="flex items-center gap-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors cursor-pointer"
           >
             <ShoppingCart className="w-3.5 h-3.5" />

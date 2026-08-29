@@ -8,6 +8,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ShippingSettingsProvider } from './contexts/ShippingSettingsContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 
+import { CartProvider } from './contexts/CartContext';
+import { CartDrawer } from './components/cart/CartDrawer';
+
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
@@ -55,9 +58,12 @@ export default function RootLayout({
           <AuthProvider>
             <ShippingSettingsProvider>
               <GarageProvider>
-                <Navbar />
-                <main className="flex-1 w-full max-w-full overflow-x-hidden">{children}</main>
-                <Footer />
+                <CartProvider>
+                  <Navbar />
+                  <main className="flex-1 w-full max-w-full overflow-x-hidden">{children}</main>
+                  <Footer />
+                  <CartDrawer />
+                </CartProvider>
               </GarageProvider>
             </ShippingSettingsProvider>
           </AuthProvider>

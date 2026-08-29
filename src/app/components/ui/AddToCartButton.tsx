@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import { ShoppingCart, CreditCard, Loader2, X, ShieldCheck } from 'lucide-react';
 import { Product } from '../../types/database.types';
+import { useCart } from '../../contexts/CartContext';
 
 interface AddToCartButtonProps {
   product: Product;
 }
 
 export function AddToCartButton({ product }: AddToCartButtonProps) {
+  const { addToCart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formHtml, setFormHtml] = useState<string | null>(null);
@@ -100,7 +102,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
         <button
           type="button"
-          onClick={() => alert(`"${product.title}" sepete eklendi!`)}
+          onClick={() => addToCart(product)}
           className="flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-bold px-4 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 transition-all cursor-pointer"
         >
           <ShoppingCart className="w-4 h-4" />

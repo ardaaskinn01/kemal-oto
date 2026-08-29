@@ -22,6 +22,7 @@ import {
 import { useGarage } from '../../contexts/GarageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useShippingSettings } from '../../contexts/ShippingSettingsContext';
+import { useCart } from '../../contexts/CartContext';
 import { GarageModal } from '../garage/GarageModal';
 import { ThemeToggle } from '../ui/ThemeToggle';
 
@@ -31,6 +32,7 @@ export function Navbar() {
   const { activeVehicle, setIsGarageModalOpen } = useGarage();
   const { user, profile, isAdmin, signOut } = useAuth();
   const { shippingSettings } = useShippingSettings();
+  const { totalItems, setIsCartOpen } = useCart();
 
   const subCategories = [
     { name: 'Periyodik Bakım', href: '/shop?category=ic-donanim-bakim' },
@@ -201,19 +203,20 @@ export function Navbar() {
               )}
 
               {/* Cart */}
-              <Link
-                href="/shop"
-                className="relative p-2 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-500/30 hover:bg-orange-100 text-orange-700 dark:text-orange-400 rounded-lg transition-colors flex items-center gap-1.5 shrink-0"
-                title="Sepet"
+              <button
+                type="button"
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-2 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-500/30 hover:bg-orange-100 text-orange-700 dark:text-orange-400 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+                title="Sepetim"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span className="hidden sm:inline text-xs font-bold text-orange-700 dark:text-orange-300">
-                  Sepet (0)
+                  Sepet ({totalItems})
                 </span>
                 <span className="sm:hidden text-[10px] font-extrabold bg-orange-600 text-white rounded-full w-4 h-4 flex items-center justify-center -ml-0.5">
-                  0
+                  {totalItems}
                 </span>
-              </Link>
+              </button>
 
               {/* Mobile menu trigger */}
               <button
