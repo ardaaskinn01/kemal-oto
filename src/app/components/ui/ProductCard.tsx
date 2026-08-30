@@ -24,7 +24,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const compatibility = isProductCompatible(product);
 
   return (
-    <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-orange-500/80 transition-all flex flex-col justify-between shadow-sm hover:shadow-md">
+    <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-amber-400/80 transition-all flex flex-col justify-between shadow-sm hover:shadow-md">
       
       {/* Top Badges */}
       <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[65%]">
@@ -131,7 +131,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <button
             type="button"
             onClick={() => addToCart(product)}
-            className="flex items-center gap-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-black px-3.5 py-2 rounded-lg transition-all shadow-sm active:scale-95 cursor-pointer"
           >
             <ShoppingCart className="w-3.5 h-3.5" />
             <span>Sepete Ekle</span>

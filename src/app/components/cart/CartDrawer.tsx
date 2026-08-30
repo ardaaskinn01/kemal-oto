@@ -208,7 +208,7 @@ export function CartDrawer() {
                 <Link
                   href="/shop"
                   onClick={() => setIsCartOpen(false)}
-                  className="bg-orange-600 text-white font-bold px-4 py-2 rounded-lg text-xs hover:bg-orange-700"
+                  className="bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-lg text-xs"
                 >
                   Ürünleri İncele
                 </Link>
@@ -230,14 +230,14 @@ export function CartDrawer() {
                 </div>
                 <div className="flex justify-between text-base font-black text-slate-900 dark:text-white pt-2 border-t border-slate-200 dark:border-slate-800">
                   <span>Toplam Tutar:</span>
-                  <span className="text-orange-600 dark:text-orange-400">{formatCurrency(grandTotal)}</span>
+                  <span className="text-amber-500 dark:text-amber-400">{formatCurrency(grandTotal)}</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => setCheckoutModalOpen(true)}
-                className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all cursor-pointer"
+                className="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3.5 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all cursor-pointer"
               >
                 <CreditCard className="w-4 h-4" />
                 <span>Sepeti Onayla & iyzico ile Öde</span>

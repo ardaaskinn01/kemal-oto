@@ -48,14 +48,14 @@ export function HeroBanner() {
           
           {/* Left Column: Heading & Value Proposition */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-600 dark:text-orange-400">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
               <ShieldCheck className="w-4 h-4" />
               <span>Orijinal & Muadil Garantili Yedek Parça</span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight">
               Aracınıza Birebir Uyumlu <br className="hidden sm:inline" />
-              <span className="text-orange-600 dark:text-orange-500">Doğru Parçayı</span> Şasiden Bulun
+              <span className="text-amber-500 dark:text-amber-400">Doğru Parçayı</span> Şasiden Bulun
             </h1>
 
             <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
@@ -91,7 +91,7 @@ export function HeroBanner() {
                   onClick={() => setActiveTab('vin')}
                   className={`pb-3 px-3 sm:px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
                     activeTab === 'vin'
-                      ? 'border-orange-600 text-orange-600 dark:text-orange-500'
+                      ? 'border-amber-400 text-amber-500 dark:text-amber-400 font-extrabold'
                       : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
@@ -104,7 +104,7 @@ export function HeroBanner() {
                   onClick={() => setActiveTab('manual')}
                   className={`pb-3 px-3 sm:px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
                     activeTab === 'manual'
-                      ? 'border-orange-600 text-orange-600 dark:text-orange-500'
+                      ? 'border-amber-400 text-amber-500 dark:text-amber-400 font-extrabold'
                       : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
@@ -118,7 +118,7 @@ export function HeroBanner() {
                   <VinSearchWidget compact={true} />
 
                   <div className="p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                    <FileText className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                    <FileText className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                     <span>Şasi numarası ruhsatınızın <strong>(E)</strong> bendinde yazan 17 haneli koddur.</span>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export function HeroBanner() {
                         setSelectedBrand(e.target.value);
                         setSelectedModel('');
                       }}
-                      className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-orange-600"
+                      className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-amber-400"
                     >
                       <option value="">Marka Seçiniz</option>
                       {brandList.map((b) => (
@@ -155,7 +155,7 @@ export function HeroBanner() {
                       value={selectedModel}
                       onChange={(e) => setSelectedModel(e.target.value)}
                       disabled={!selectedBrand}
-                      className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-orange-600 disabled:opacity-50"
+                      className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-amber-400 disabled:opacity-50"
                     >
                       <option value="">Model Seçiniz</option>
                       {selectedBrand &&
@@ -175,7 +175,7 @@ export function HeroBanner() {
                     <select
                       value={selectedYear}
                       onChange={(e) => setSelectedYear(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-orange-600"
+                      className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-amber-400"
                     >
                       <option value="">Yıl Seçiniz</option>
                       {years.map((y) => (
@@ -190,7 +190,7 @@ export function HeroBanner() {
                   <div className="sm:col-span-3 pt-1">
                     <button
                       type="submit"
-                      className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      className="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-2.5 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <Search className="w-3.5 h-3.5" />
                       <span>Uyumlu Parçaları Listele</span>

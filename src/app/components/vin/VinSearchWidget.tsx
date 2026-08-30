@@ -104,7 +104,7 @@ export function VinSearchWidget({ onVehicleDecoded, compact = false }: VinSearch
               onChange={handleInputChange}
               placeholder="Örn: W0L0AHL3582123456"
               maxLength={17}
-              className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-mono text-xs sm:text-sm tracking-wider sm:tracking-widest uppercase border border-slate-300 dark:border-slate-700 rounded-lg py-2.5 pl-9 pr-14 sm:pr-20 focus:outline-none focus:border-orange-600 transition-all placeholder:text-slate-400 placeholder:tracking-normal placeholder:font-sans"
+              className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-mono text-xs sm:text-sm tracking-wider sm:tracking-widest uppercase border border-slate-300 dark:border-slate-700 rounded-lg py-2.5 pl-9 pr-14 sm:pr-20 focus:outline-none focus:border-amber-400 transition-all placeholder:text-slate-400 placeholder:tracking-normal placeholder:font-sans"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             
@@ -128,7 +128,7 @@ export function VinSearchWidget({ onVehicleDecoded, compact = false }: VinSearch
           <button
             type="submit"
             disabled={loading || cleanVin.length === 0}
-            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 px-5 rounded-lg flex items-center justify-center gap-2 text-xs transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-2.5 px-5 rounded-lg flex items-center justify-center gap-2 text-xs transition-all disabled:opacity-50 cursor-pointer shadow-sm active:scale-95"
           >
             {loading ? (
               <>

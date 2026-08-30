@@ -57,25 +57,25 @@ export function Navbar() {
         <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800/80 text-slate-600 dark:text-slate-400 text-xs py-1.5 px-3 sm:px-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 text-[11px] truncate">
-              <MapPin className="w-3.5 h-3.5 text-orange-600 dark:text-orange-500 shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span className="truncate">5. Sanayi Sitesi Bornova / İzmir • Depodan Hızlı Sevk</span>
             </div>
 
             <div className="hidden md:flex items-center gap-4 text-[11px] font-medium shrink-0">
               <span className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200">
-                <Truck className="w-3.5 h-3.5 text-orange-600 dark:text-orange-500" />
+                <Truck className="w-3.5 h-3.5 text-amber-500" />
                 {shippingSettings.freeThreshold} TL Üzeri Ücretsiz Kargo
               </span>
               <span>•</span>
-              <a href="tel:05422924492" className="flex items-center gap-1 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                <PhoneCall className="w-3.5 h-3.5 text-orange-600 dark:text-orange-500" />
+              <a href="tel:05422924492" className="flex items-center gap-1 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+                <PhoneCall className="w-3.5 h-3.5 text-amber-500" />
                 <span>0542 292 44 92 / Destek</span>
               </a>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-              <Link href="/orders" className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-orange-600 dark:hover:text-orange-400 flex items-center gap-1 whitespace-nowrap">
-                <Package className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+              <Link href="/orders" className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-amber-500 dark:hover:text-amber-400 flex items-center gap-1 whitespace-nowrap">
+                <Package className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                 <span>Siparişlerim</span>
               </Link>
             </div>
@@ -86,20 +86,20 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
           <div className="flex items-center justify-between gap-2 sm:gap-6">
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-orange-600 text-white flex items-center justify-center font-black shadow-sm shrink-0">
-                <Wrench className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
-                  KEMAL<span className="text-orange-600">OTO</span>
-                </span>
-                <span className="text-[9px] sm:text-[10px] tracking-wider text-slate-500 uppercase font-semibold mt-0.5">
-                  Oto Yedek Parça
-                </span>
-              </div>
-            </Link>
+              {/* Brand Logo */}
+              <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-md shadow-amber-400/20 group-hover:scale-105 transition-transform">
+                  <Wrench className="w-5 h-5 stroke-[2.5]" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">
+                    KEMAL <span className="text-amber-500 font-extrabold">OTO</span>
+                  </span>
+                  <span className="text-[9px] font-bold text-slate-600 dark:text-slate-300 tracking-wider uppercase">
+                    Orijinal & Muadil Parça
+                  </span>
+                </div>
+              </Link>
 
             {/* Search Bar (Desktop) */}
             <div className="hidden md:flex flex-1 max-w-xl">
@@ -207,14 +207,14 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-500/30 hover:bg-orange-100 text-orange-700 dark:text-orange-400 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+                className="relative p-2 bg-amber-400/10 dark:bg-amber-400/20 border border-amber-400/40 hover:bg-amber-400/20 text-slate-900 dark:text-amber-300 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
                 title="Sepetim"
               >
-                <ShoppingBag className="w-4 h-4" />
-                <span className="hidden sm:inline text-xs font-bold text-orange-700 dark:text-orange-300">
+                <ShoppingBag className="w-4 h-4 text-amber-500" />
+                <span className="hidden sm:inline text-xs font-black text-slate-900 dark:text-amber-300">
                   Sepet ({totalItems})
                 </span>
-                <span className="sm:hidden text-[10px] font-extrabold bg-orange-600 text-white rounded-full w-4 h-4 flex items-center justify-center -ml-0.5">
+                <span className="sm:hidden text-[10px] font-extrabold bg-amber-400 text-slate-950 rounded-full w-4 h-4 flex items-center justify-center -ml-0.5">
                   {totalItems}
                 </span>
               </button>
@@ -237,7 +237,7 @@ export function Navbar() {
             <div className="flex items-center justify-between text-xs font-semibold overflow-x-auto py-2.5 scrollbar-none gap-6">
               <Link
                 href="/shop/categories"
-                className="flex items-center gap-1.5 text-orange-600 dark:text-orange-400 font-bold shrink-0 hover:underline"
+                className="flex items-center gap-1.5 text-amber-500 dark:text-amber-400 font-extrabold shrink-0 hover:underline"
               >
                 <Menu className="w-3.5 h-3.5" />
                 <span>Tüm Kategoriler</span>

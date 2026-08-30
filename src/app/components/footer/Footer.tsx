@@ -9,7 +9,7 @@ export function Footer() {
       <div className="border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-500 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
               <Truck className="w-6 h-6" />
             </div>
             <div>
@@ -19,7 +19,7 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-500 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
@@ -29,7 +29,7 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-500 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
               <RefreshCw className="w-6 h-6" />
             </div>
             <div>
@@ -39,7 +39,7 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-500 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
               <CreditCard className="w-6 h-6" />
             </div>
             <div>
@@ -56,11 +56,11 @@ export function Footer() {
         {/* Brand info */}
         <div className="lg:col-span-2 space-y-4">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold shadow-sm">
-              <Wrench className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-md">
+              <Wrench className="w-5 h-5 stroke-[2.5]" />
             </div>
-            <span className="text-xl font-bold text-slate-900 dark:text-white">
-              KEMAL<span className="text-orange-600">OTO</span>
+            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+              KEMAL <span className="text-amber-500 font-extrabold">OTO</span>
             </span>
           </Link>
           <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
@@ -68,16 +68,16 @@ export function Footer() {
           </p>
           <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
             <div className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
+              <MapPin className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
               <span>MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova/İzmir</span>
             </div>
             <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-orange-600 shrink-0" />
-              <a href="tel:05422924492" className="hover:text-orange-600">0542 292 44 92</a>
+              <Phone className="w-4 h-4 text-amber-500 shrink-0" />
+              <a href="tel:05422924492" className="hover:text-amber-500">0542 292 44 92</a>
             </div>
             <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-orange-600 shrink-0" />
-              <a href="mailto:info@onlinehizliparca.com" className="hover:text-orange-600">info@onlinehizliparca.com</a>
+              <Mail className="w-4 h-4 text-amber-500 shrink-0" />
+              <a href="mailto:info@onlinehizliparca.com" className="hover:text-amber-500">info@onlinehizliparca.com</a>
             </div>
           </div>
         </div>

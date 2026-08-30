@@ -94,7 +94,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white text-xs sm:text-sm font-extrabold px-6 py-3.5 rounded-xl shadow-lg shadow-orange-500/20 active:scale-95 transition-all cursor-pointer"
+          className="flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm font-black px-6 py-3.5 rounded-xl shadow-md active:scale-95 transition-all cursor-pointer"
         >
           <CreditCard className="w-4 h-4" />
           <span>Hemen Satın Al (iyzico Test)</span>
