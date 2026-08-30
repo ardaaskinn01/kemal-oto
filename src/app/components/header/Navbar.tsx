@@ -58,7 +58,7 @@ export function Navbar() {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 text-[11px] truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-              <span className="truncate">5. Sanayi Sitesi Bornova / İzmir • Depodan Hızlı Sevk</span>
+              <span className="truncate">81 İle Aynı Gün Kargo • Orijinal & Muadil Garantili Teslimat</span>
             </div>
 
             <div className="hidden md:flex items-center gap-4 text-[11px] font-medium shrink-0">

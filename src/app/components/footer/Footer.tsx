@@ -112,8 +112,8 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:text-orange-600 transition-colors">
-                İletişim & Bornova Depo
+              <Link href="/contact" className="hover:text-amber-500 transition-colors">
+                İletişim & Destek
               </Link>
             </li>
           </ul>
