@@ -77,7 +77,7 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-orange-600 shrink-0" />
-              <span>destek@kemaloto.com</span>
+              <a href="mailto:info@onlinehizliparca.com" className="hover:text-orange-600">info@onlinehizliparca.com</a>
             </div>
           </div>
         </div>

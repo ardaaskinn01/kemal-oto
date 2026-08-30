@@ -59,7 +59,7 @@ export default function KvkkPage() {
             KVKK&apos;nın 11. maddesi uyarınca her ilgili kişi; verilerinin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, işlenme amacına uygun kullanılıp kullanılmadığını öğrenme, verilerin düzeltilmesini veya silinmesini talep etme haklarına sahiptir.
           </p>
           <p>
-            Başvurularınızı <a href="mailto:kvkk@kemaloto.com" className="text-orange-600 font-semibold hover:underline">kvkk@kemaloto.com</a> adresine iletebilirsiniz.
+            Başvurularınızı <a href="mailto:info@onlinehizliparca.com" className="text-orange-600 font-semibold hover:underline">info@onlinehizliparca.com</a> adresine iletebilirsiniz.
           </p>
         </section>
       </div>

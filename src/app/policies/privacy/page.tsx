@@ -63,7 +63,7 @@ export default function PrivacyPolicyPage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">5. İletişim ve Haklarınız</h2>
           <p>
-            Kişisel verilerinizin işlenmesine ilişkin her türlü soru ve talepleriniz için <a href="mailto:destek@kemaloto.com" className="text-orange-600 font-semibold hover:underline">destek@kemaloto.com</a> e-posta adresimizden bize ulaşabilirsiniz.
+            Kişisel verilerinizin işlenmesine ilişkin her türlü soru ve talepleriniz için <a href="mailto:info@onlinehizliparca.com" className="text-orange-600 font-semibold hover:underline">info@onlinehizliparca.com</a> e-posta adresimizden bize ulaşabilirsiniz.
           </p>
         </section>
       </div>

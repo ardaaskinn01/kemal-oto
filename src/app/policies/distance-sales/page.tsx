@@ -32,7 +32,7 @@ export default function DistanceSalesAgreementPage() {
             <p><strong>Unvan:</strong> Kemal Oto Otomotiv San. ve Tic. A.Ş.</p>
             <p><strong>Adres:</strong> MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova/İzmir</p>
             <p><strong>Telefon:</strong> 0542 292 44 92</p>
-            <p><strong>E-Posta:</strong> destek@kemaloto.com</p>
+            <p><strong>E-Posta:</strong> info@onlinehizliparca.com</p>
             <p><strong>Mersis No:</strong> 0549098231400018</p>
           </div>
         </section>

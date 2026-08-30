@@ -48,7 +48,7 @@ export class EmailService {
             </div>
 
             <p style="margin-top: 24px; font-size: 12px; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-              Müşteri Hizmetleri: <strong>0542 292 44 92</strong> | <a href="mailto:destek@kemaloto.com" style="color: #ea580c; text-decoration: none;">destek@kemaloto.com</a>
+              Müşteri Hizmetleri: <strong>0542 292 44 92</strong> | <a href="mailto:info@onlinehizliparca.com" style="color: #ea580c; text-decoration: none;">info@onlinehizliparca.com</a>
             </p>
           </div>
         </div>
@@ -133,7 +133,7 @@ export class EmailService {
             </div>
 
             <p style="margin-top: 24px; font-size: 12px; color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 16px; text-align: center;">
-              Kemal Oto Müşteri Hizmetleri: <strong>0542 292 44 92</strong> | <a href="mailto:destek@kemaloto.com" style="color: #ea580c; text-decoration: none;">destek@kemaloto.com</a>
+              Kemal Oto Müşteri Hizmetleri: <strong>0542 292 44 92</strong> | <a href="mailto:info@onlinehizliparca.com" style="color: #ea580c; text-decoration: none;">info@onlinehizliparca.com</a>
             </p>
           </div>
         </div>

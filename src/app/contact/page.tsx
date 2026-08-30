@@ -41,8 +41,11 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-slate-900 dark:text-white font-bold text-sm">E-Posta Adresimiz</h3>
-              <p className="text-xs text-slate-500 mt-0.5">destek@kemaloto.com</p>
-              <p className="text-xs text-slate-500">kurumsal@kemaloto.com</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                <a href="mailto:info@onlinehizliparca.com" className="hover:text-orange-600 font-semibold text-slate-700 dark:text-slate-200">
+                  info@onlinehizliparca.com
+                </a>
+              </p>
             </div>
           </div>
 
