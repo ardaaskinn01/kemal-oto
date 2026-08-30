@@ -93,10 +93,10 @@ export function Navbar() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">
-                    KEMAL <span className="text-amber-500 font-extrabold">OTO</span>
+                    ONLINE HIZLI <span className="text-amber-500 font-extrabold">PARÇA</span>
                   </span>
                   <span className="text-[9px] font-bold text-slate-600 dark:text-slate-300 tracking-wider uppercase">
-                    Orijinal & Muadil Parça
+                    Kemal Oto Güvencesiyle
                   </span>
                 </div>
               </Link>

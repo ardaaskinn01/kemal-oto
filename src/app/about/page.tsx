@@ -9,9 +9,9 @@ export default function AboutPage() {
         <span className="text-orange-600 dark:text-orange-500 font-bold text-xs uppercase tracking-wider">
           40 Yıllık Tecrübe & Güven
         </span>
-        <h1 className="text-4xl font-black text-slate-900 dark:text-white">Kemal Oto Hakkında</h1>
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white">Online Hızlı Parça Hakkında</h1>
         <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-          Kemal Oto, Türkiye genelinde Opel, Peugeot, Citroën, Chevrolet ve DS grubu araçlar için orijinal ve A kalite muadil yedek parça tedariği sağlayan öncü otomotiv çözümleri merkezidir.
+          <strong>Online Hızlı Parça</strong>, 40 yılı aşkın otomotiv tecrübesine sahip <strong>Kemal Oto</strong> güvencesiyle Türkiye genelinde Opel, Peugeot, Citroën, Chevrolet ve DS grubu araçlar için orijinal ve A kalite muadil yedek parça tedariği sağlayan dijital alışveriş platformudur.
         </p>
       </div>
 

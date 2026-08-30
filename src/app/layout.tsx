@@ -19,7 +19,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Kemal Oto | Otomotiv Yedek Parça & Aksesuar',
+  title: 'Online Hızlı Parça | Otomotiv Yedek Parça & Aksesuar',
   description: 'Opel, Peugeot, Citroën, Chevrolet ve DS grubu araçlar için %100 uyumlu orijinal ve muadil yedek parçalar. Hızlı DHL kargo, şasi no ile arama ve güvenli alışveriş.',
 };
 

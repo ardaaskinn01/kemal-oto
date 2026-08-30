@@ -60,11 +60,11 @@ export function Footer() {
               <Wrench className="w-5 h-5 stroke-[2.5]" />
             </div>
             <span className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
-              KEMAL <span className="text-amber-500 font-extrabold">OTO</span>
+              ONLINE HIZLI <span className="text-amber-500 font-extrabold">PARÇA</span>
             </span>
           </Link>
           <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
-            Kemal Oto; Opel, Peugeot, Citroën, Chevrolet ve DS grubu binek ve ticari araç sahiplerine orijinal ve A kalite muadil yedek parça çözümleri sunar.
+            Online Hızlı Parça; Kemal Oto güvencesiyle Opel, Peugeot, Citroën, Chevrolet ve DS grubu binek ve ticari araç sahiplerine orijinal ve A kalite muadil yedek parça çözümleri sunar.
           </p>
           <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
             <div className="flex items-start gap-2">
@@ -197,7 +197,7 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-slate-200 dark:border-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} Kemal Oto A.Ş. Tüm Hakları Saklıdır.</p>
+          <p>© {new Date().getFullYear()} Online Hızlı Parça (Kemal Oto A.Ş.). Tüm Hakları Saklıdır.</p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link href="/policies/privacy" className="hover:text-orange-600 transition-colors">
               Gizlilik Politikası
