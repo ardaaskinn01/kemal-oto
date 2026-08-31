@@ -14,7 +14,10 @@ import {
   Truck, 
   CreditCard, 
   ShieldCheck,
-  Loader2 
+  Loader2,
+  CheckCircle2,
+  Car,
+  FileText
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -28,7 +31,7 @@ export function CartDrawer() {
   const [formHtml, setFormHtml] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Customer checkout info
+  // Customer checkout info including optional VIN
   const [customer, setCustomer] = useState({
     firstName: 'Kemal',
     lastName: 'Müşteri',
@@ -37,6 +40,7 @@ export function CartDrawer() {
     address: 'MUTLUBAŞLAR PLAZA, KEMALPAŞA CAD. NO:344B',
     city: 'İzmir',
     district: 'Bornova',
+    vin: '', // Optional VIN input
   });
 
   const isFreeShipping = subtotal >= shippingSettings.freeThreshold;
@@ -60,6 +64,7 @@ export function CartDrawer() {
           order: {
             id: `ORD-${Date.now()}`,
             total_amount: grandTotal,
+            vin: customer.vin || null,
           },
           customer,
           totalAmount: grandTotal,
@@ -104,44 +109,52 @@ export function CartDrawer() {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-end bg-black/60 dark:bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+      <div className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm animate-in fade-in">
         <div className="w-full max-w-md bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 h-full flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300">
           
-          {/* Header */}
+          {/* Drawer Header */}
           <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/60">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center font-bold">
-                <ShoppingBag className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+                <ShoppingBag className="w-5 h-5 stroke-[2.5]" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Alışveriş Sepetim</h3>
-                <p className="text-xs text-slate-500">{totalItems} adet ürün</p>
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Alışveriş Sepetim</h3>
+                <p className="text-xs text-slate-500 font-semibold">{totalItems} adet parça</p>
               </div>
             </div>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Free Shipping Progress Bar */}
-          <div className="p-3.5 bg-orange-50 dark:bg-orange-950/30 border-b border-orange-200 dark:border-orange-500/20 text-xs">
-            <div className="flex items-center gap-2 text-orange-800 dark:text-orange-300 font-semibold mb-1.5">
-              <Truck className="w-4 h-4 shrink-0 text-orange-600" />
+          <div className="p-3 bg-slate-900 text-white text-xs border-b border-slate-800">
+            <div className="flex items-center gap-2 text-amber-400 font-bold mb-1">
+              <Truck className="w-4 h-4 shrink-0" />
               {isFreeShipping ? (
-                <span>Tebrikler! Siparişinizde <strong>Kargo Ücretsiz (DHL Express)</strong></span>
+                <span>Tebrikler! Siparişinizde <strong>Kargo Ücretsiz</strong></span>
               ) : (
                 <span>Ücretsiz kargo için <strong>{formatCurrency(amountToFreeShipping)}</strong> daha ürün ekleyin</span>
               )}
             </div>
-            <div className="w-full bg-orange-200 dark:bg-orange-950 rounded-full h-1.5 overflow-hidden">
+            <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-orange-600 h-1.5 rounded-full transition-all duration-500"
+                className="bg-amber-400 h-1.5 rounded-full transition-all duration-500"
                 style={{ width: `${Math.min(100, (subtotal / shippingSettings.freeThreshold) * 100)}%` }}
               />
             </div>
+          </div>
+
+          {/* Expert Chassis Verification Notice Banner (onlineyedekparca.com style) */}
+          <div className="p-3 bg-amber-400/10 border-b border-amber-400/30 flex items-center gap-2.5 text-xs font-extrabold text-slate-800 dark:text-slate-200">
+            <ShieldCheck className="w-5 h-5 text-amber-500 shrink-0" />
+            <p className="leading-tight">
+              Siparişiniz kargolanmadan önce <strong className="text-amber-500">uzman ekibimizce şasi kontrolü</strong> yapılacaktır.
+            </p>
           </div>
 
           {/* Cart Items List */}
@@ -152,33 +165,44 @@ export function CartDrawer() {
                 return (
                   <div key={item.product.id} className="py-3.5 flex items-center gap-3">
                     <div className="relative w-16 h-16 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
-                      <Image src={item.product.image_url} alt={item.product.title} fill className="object-cover" />
+                      {item.product.image_url ? (
+                        <Image src={item.product.image_url} alt={item.product.title} fill className="object-cover" />
+                      ) : (
+                        <ShoppingBag className="w-6 h-6 text-slate-400 m-auto mt-5" />
+                      )}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {item.product.title}
                       </h4>
-                      <span className="text-[10px] text-slate-500 font-mono block">OEM: {item.product.part_number}</span>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[10px] text-slate-500 font-mono bg-slate-100 dark:bg-slate-800 px-1 py-0.2 rounded font-bold">
+                          OEM: {item.product.part_number}
+                        </span>
+                        <span className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
+                          <CheckCircle2 className="w-2.5 h-2.5" /> %100 Uyum
+                        </span>
+                      </div>
                       
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-950">
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800"
+                            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer"
                           >
                             <Minus className="w-3 h-3" />
                           </button>
-                          <span className="px-2 text-xs font-bold text-slate-900 dark:text-white">{item.quantity}</span>
+                          <span className="px-2 text-xs font-extrabold text-slate-900 dark:text-white">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800"
+                            className="p-1 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer"
                           >
                             <Plus className="w-3 h-3" />
                           </button>
                         </div>
 
-                        <span className="text-xs font-extrabold text-slate-900 dark:text-white">
+                        <span className="text-xs font-black text-slate-900 dark:text-white">
                           {formatCurrency(itemPrice * item.quantity)}
                         </span>
                       </div>
@@ -186,7 +210,7 @@ export function CartDrawer() {
 
                     <button
                       onClick={() => removeFromCart(item.product.id)}
-                      className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg transition-colors cursor-pointer"
                       title="Sepetten Sil"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -196,52 +220,52 @@ export function CartDrawer() {
               })
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center">
-                  <ShoppingBag className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-2xl bg-amber-400/10 text-amber-500 flex items-center justify-center">
+                  <ShoppingBag className="w-6 h-6 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Sepetiniz Boş</h4>
-                  <p className="text-xs text-slate-500 mt-1 max-w-xs">
-                    Aracınız için uyumlu orijinal ve muadil parçaları inceleyip sepete ekleyin.
+                  <h4 className="text-sm font-black text-slate-900 dark:text-white">Sepetiniz Boş</h4>
+                  <p className="text-xs text-slate-500 mt-1 max-w-xs leading-relaxed">
+                    Aracınız için %100 uyumlu orijinal ve muadil parçaları inceleyip sepetinize ekleyin.
                   </p>
                 </div>
                 <Link
                   href="/shop"
                   onClick={() => setIsCartOpen(false)}
-                  className="bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-lg text-xs"
+                  className="bg-amber-400 hover:bg-amber-500 text-slate-950 font-black px-4 py-2 rounded-xl text-xs"
                 >
-                  Ürünleri İncele
+                  Kataloğu İncele
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Footer & Checkout */}
+          {/* Footer & Checkout Action */}
           {cart.length > 0 && (
             <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 space-y-3">
               <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between text-slate-500 dark:text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400 font-bold">
                   <span>Ara Toplam:</span>
-                  <span className="font-semibold text-slate-900 dark:text-white">{formatCurrency(subtotal)}</span>
+                  <span className="font-extrabold text-slate-900 dark:text-white">{formatCurrency(subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-slate-500 dark:text-slate-400">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400 font-bold">
                   <span>DHL Express Kargo:</span>
-                  <span>{isFreeShipping ? <strong className="text-emerald-600">Ücretsiz</strong> : formatCurrency(shippingFee)}</span>
+                  <span>{isFreeShipping ? <strong className="text-emerald-500 font-black">Ücretsiz Kargo</strong> : formatCurrency(shippingFee)}</span>
                 </div>
                 <div className="flex justify-between text-base font-black text-slate-900 dark:text-white pt-2 border-t border-slate-200 dark:border-slate-800">
                   <span>Toplam Tutar:</span>
-                  <span className="text-amber-500 dark:text-amber-400">{formatCurrency(grandTotal)}</span>
+                  <span className="text-amber-500">{formatCurrency(grandTotal)}</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => setCheckoutModalOpen(true)}
-                className="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3.5 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all cursor-pointer"
+                className="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3.5 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 active:scale-95 transition-all cursor-pointer uppercase"
               >
-                <CreditCard className="w-4 h-4" />
-                <span>Sepeti Onayla & iyzico ile Öde</span>
-                <ArrowRight className="w-4 h-4" />
+                <CreditCard className="w-4 h-4 stroke-[2.5]" />
+                <span>SEPETİ ONAYLA & ÖDEMEYE GEÇ</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               </button>
             </div>
           )}
@@ -249,24 +273,21 @@ export function CartDrawer() {
         </div>
       </div>
 
-      {/* Checkout Modal with iyzico */}
+      {/* Checkout Modal with iyzico & Optional 17-Digit VIN Input */}
       {checkoutModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             
-            <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/60">
+            <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-900 text-white">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center font-bold">
-                  <CreditCard className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+                  <CreditCard className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
                     iyzico Güvenli Ödeme
-                    <span className="bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold">
-                      SANDBOX TEST
-                    </span>
                   </h3>
-                  <p className="text-[11px] text-slate-500">Toplam: {formatCurrency(grandTotal)} (KDV + Kargo Dahil)</p>
+                  <p className="text-[11px] text-amber-400 font-bold">Toplam: {formatCurrency(grandTotal)} (KDV + Kargo Dahil)</p>
                 </div>
               </div>
 
@@ -276,7 +297,7 @@ export function CartDrawer() {
                   setFormHtml(null);
                   setErrorMessage(null);
                 }}
-                className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg"
+                className="p-2 text-slate-400 hover:text-white rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -284,84 +305,104 @@ export function CartDrawer() {
 
             <div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4">
               {errorMessage && (
-                <div className="p-3.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl text-xs text-red-700 dark:text-red-300">
+                <div className="p-3.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl text-xs font-bold text-red-700 dark:text-red-300">
                   <strong>Ödeme Hatası:</strong> {errorMessage}
                 </div>
               )}
 
               {!formHtml ? (
-                <form onSubmit={handleStartCheckout} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3 text-xs">
+                <form onSubmit={handleStartCheckout} className="space-y-3.5">
+                  
+                  {/* Optional VIN Input Banner */}
+                  <div className="p-3 bg-amber-400/10 border border-amber-400/30 rounded-xl space-y-1">
+                    <label className="block text-xs font-black text-amber-500 uppercase flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 shrink-0" />
+                      <span>Araç Şasi Numarası (VIN / 17 Hane - İsteğe Bağlı)</span>
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={17}
+                      value={customer.vin}
+                      onChange={(e) => setCustomer({ ...customer, vin: e.target.value.toUpperCase() })}
+                      placeholder="Örn: W0L0AHL359281XXXX (İsteğe Bağlı)"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 font-mono text-xs font-bold uppercase focus:outline-none focus:border-amber-400"
+                    />
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                      Dilerseniz ruhsatınızdaki 17 haneli şasi numaranızı girin, kargo çıkmadan %100 birebir parça uyumunu teyit edelim.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-xs font-bold">
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Adınız *</label>
+                      <label className="block text-slate-700 dark:text-slate-300 mb-1">Adınız *</label>
                       <input
                         type="text"
                         required
                         value={customer.firstName}
                         onChange={(e) => setCustomer({ ...customer, firstName: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Soyadınız *</label>
+                      <label className="block text-slate-700 dark:text-slate-300 mb-1">Soyadınız *</label>
                       <input
                         type="text"
                         required
                         value={customer.lastName}
                         onChange={(e) => setCustomer({ ...customer, lastName: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="grid grid-cols-2 gap-3 text-xs font-bold">
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">E-Posta *</label>
+                      <label className="block text-slate-700 dark:text-slate-300 mb-1">E-Posta Adresi *</label>
                       <input
                         type="email"
                         required
                         value={customer.email}
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Telefon *</label>
+                      <label className="block text-slate-700 dark:text-slate-300 mb-1">Telefon *</label>
                       <input
                         type="text"
                         required
                         value={customer.phone}
                         onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold"
                       />
                     </div>
                   </div>
 
-                  <div className="text-xs">
-                    <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Teslimat Adresi *</label>
+                  <div className="text-xs font-bold">
+                    <label className="block text-slate-700 dark:text-slate-300 mb-1">Teslimat Adresi *</label>
                     <textarea
                       rows={2}
                       required
                       value={customer.address}
                       onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs resize-none"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={loadingPayment}
-                    className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 disabled:opacity-50 cursor-pointer"
+                    className="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 disabled:opacity-50 cursor-pointer uppercase tracking-wide"
                   >
                     {loadingPayment ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
                         <span>iyzico Ödeme Ekranı Açılıyor...</span>
                       </>
                     ) : (
                       <>
-                        <ShieldCheck className="w-4 h-4" />
-                        <span>Ödeme Formunu Başlat ({formatCurrency(grandTotal)})</span>
+                        <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
+                        <span>ÖDEME FORMUNU BAŞLAT ({formatCurrency(grandTotal)})</span>
                       </>
                     )}
                   </button>

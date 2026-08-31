@@ -3,6 +3,7 @@ import { getProductBySlug, getProducts } from '@/app/lib/actions';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { formatCurrency } from '@/app/lib/utils';
+import { Metadata } from 'next';
 import { 
   Star, 
   ShieldCheck, 
@@ -30,6 +31,62 @@ interface ProductDetailPageProps {
   }>;
 }
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.onlinehizliparca.com';
+
+// Dynamic Metadata Generation for SEO
+export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      title: 'Ürün Bulunamadı | Online Hızlı Parça',
+    };
+  }
+
+  const title = `${product.title} (${product.brand} OEM: ${product.part_number}) | Online Hızlı Parça`;
+  const description = `${product.brand} ${product.title} (OEM ${product.part_number}). %100 Orijinal & Muadil Garantili, 81 ile aynı gün kargo ve ruhsat şasi no ile birebir uyum doğrulama.`;
+  const productUrl = `${baseUrl}/shop/products/${product.slug}`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      product.title,
+      product.part_number,
+      product.brand,
+      `${product.brand} yedek parça`,
+      `${product.brand} ${product.part_number}`,
+      'oem yedek parça'
+    ],
+    alternates: {
+      canonical: productUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: productUrl,
+      siteName: 'Online Hızlı Parça',
+      images: [
+        {
+          url: product.image_url,
+          width: 800,
+          height: 800,
+          alt: product.title,
+        },
+      ],
+      locale: 'tr_TR',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [product.image_url],
+    },
+  };
+}
+
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
@@ -48,189 +105,273 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
     : 0;
 
+  const productUrl = `${baseUrl}/shop/products/${product.slug}`;
+  const finalPrice = product.discount_price || product.price;
+
+  // Schema.org Product, Offer, Brand, and AggregateRating JSON-LD
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    image: [product.image_url],
+    description: product.description,
+    sku: product.part_number,
+    mpn: product.part_number,
+    brand: {
+      '@type': 'Brand',
+      name: product.brand,
+    },
+    offers: {
+      '@type': 'Offer',
+      url: productUrl,
+      priceCurrency: 'TRY',
+      price: finalPrice,
+      priceValidUntil: '2027-12-31',
+      itemCondition: 'https://schema.org/NewCondition',
+      availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Online Hızlı Parça (Kemal Oto A.Ş.)',
+      },
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: product.rating || 4.9,
+      reviewCount: product.reviews_count || 12,
+    },
+  };
+
+  // Schema.org BreadcrumbList JSON-LD
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Ana Sayfa',
+        item: baseUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Yedek Parça Kataloğu',
+        item: `${baseUrl}/shop`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.category,
+        item: `${baseUrl}/shop?category=${product.category_slug}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: product.title,
+        item: productUrl,
+      },
+    ],
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
-      
-      {/* Navigation Breadcrumb & Back button */}
-      <div className="flex items-center justify-between">
-        <Link
-          href="/shop"
-          className="inline-flex items-center gap-2 text-xs font-extrabold text-slate-600 dark:text-slate-400 hover:text-amber-500 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Yedek Parça Kataloğuna Dön</span>
-        </Link>
-        <span className="text-xs text-slate-500 font-mono hidden sm:inline">
-          Kategori: {product.category}
-        </span>
-      </div>
+    <>
+      {/* Schema.org Structured Data Scripts */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
 
-      {/* Main Product Hero Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
         
-        {/* Left Column: Product Image Gallery */}
-        <div className="lg:col-span-6 space-y-4">
-          <div className="relative w-full h-80 sm:h-96 lg:h-[450px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-            {product.image_url ? (
-              <Image
-                src={product.image_url}
-                alt={product.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1200px) 100vw, 50vw"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-400">
-                <Wrench className="w-12 h-12" />
-              </div>
-            )}
-
-            {/* Badges on Image */}
-            <div className="absolute top-4 left-4 flex flex-wrap gap-2 max-w-[90%] z-10">
-              {product.is_original ? (
-                <span className="bg-slate-950 text-amber-400 border border-amber-400/40 text-xs font-black px-3 py-1.5 rounded-xl shadow-lg uppercase tracking-wider flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-amber-400" /> %100 ORİJİNAL OEM
-                </span>
-              ) : (
-                <span className="bg-slate-900 text-slate-100 border border-slate-700 text-xs font-black px-3 py-1.5 rounded-xl shadow-lg uppercase tracking-wider flex items-center gap-1.5">
-                  <Wrench className="w-4 h-4 text-amber-400" /> A KALİTE MUADİL
-                </span>
-              )}
-
-              {discountPercent > 0 && (
-                <span className="bg-red-600 text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg uppercase animate-pulse">
-                  %{discountPercent} İNDİRİM
-                </span>
-              )}
-            </div>
-
-            <div className="absolute bottom-4 left-4 z-10">
-              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-black px-3 py-1 rounded-lg backdrop-blur-md flex items-center gap-1.5">
-                <Truck className="w-3.5 h-3.5" /> Aynı Gün Kargo (16:00 &apos;ya Kadar)
-              </span>
-            </div>
+        {/* Navigation Breadcrumb & Back button */}
+        <div className="flex items-center justify-between text-xs">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 font-extrabold text-slate-600 dark:text-slate-400 hover:text-amber-500 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Yedek Parça Kataloğuna Dön</span>
+          </Link>
+          <div className="hidden sm:flex items-center gap-2 text-slate-500 font-bold">
+            <Link href="/" className="hover:text-amber-500">Ana Sayfa</Link>
+            <span>/</span>
+            <Link href="/shop" className="hover:text-amber-500">Katalog</Link>
+            <span>/</span>
+            <span className="text-slate-900 dark:text-white font-black">{product.category}</span>
           </div>
         </div>
 
-        {/* Right Column: Title, Interactive VIN Verification & Purchase Box */}
-        <div className="lg:col-span-6 space-y-6">
-          <div>
-            {/* Brand, OEM Number & Reference */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-black text-amber-500 uppercase tracking-wider mb-2">
-              <span>{product.brand}</span>
-              <span>•</span>
-              <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 font-mono px-2.5 py-1 rounded-lg text-xs">
-                OEM: {product.part_number}
-              </span>
-              {product.oem_reference_number && (
-                <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-mono px-2 py-1 rounded-lg text-[11px]">
-                  Ref: {product.oem_reference_number}
-                </span>
+        {/* Main Product Hero Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          
+          {/* Left Column: Product Image Gallery */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="relative w-full h-80 sm:h-96 lg:h-[450px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+              {product.image_url ? (
+                <Image
+                  src={product.image_url}
+                  alt={product.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1200px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-slate-400">
+                  <Wrench className="w-12 h-12" />
+                </div>
               )}
-            </div>
 
-            {/* Product Title */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white leading-snug">
-              {product.title}
-            </h1>
+              {/* Badges on Image */}
+              <div className="absolute top-4 left-4 flex flex-wrap gap-2 max-w-[90%] z-10">
+                {product.is_original ? (
+                  <span className="bg-slate-950 text-amber-400 border border-amber-400/40 text-xs font-black px-3 py-1.5 rounded-xl shadow-lg uppercase tracking-wider flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-amber-400" /> %100 ORİJİNAL OEM
+                  </span>
+                ) : (
+                  <span className="bg-slate-900 text-slate-100 border border-slate-700 text-xs font-black px-3 py-1.5 rounded-xl shadow-lg uppercase tracking-wider flex items-center gap-1.5">
+                    <Wrench className="w-4 h-4 text-amber-400" /> A KALİTE MUADİL
+                  </span>
+                )}
 
-            {/* Sub-Badges Bar: Stock & Warranty */}
-            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-              <div className="flex items-center text-amber-500">
-                <Star className="w-4 h-4 fill-amber-400" />
-                <span className="font-extrabold ml-1 text-slate-900 dark:text-white">{product.rating}</span>
-                <span className="text-[11px] text-slate-500 ml-1">({product.reviews_count} değerlendirme)</span>
+                {discountPercent > 0 && (
+                  <span className="bg-red-600 text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg uppercase animate-pulse">
+                    %{discountPercent} İNDİRİM
+                  </span>
+                )}
               </div>
-              <span>•</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1">
-                <CheckCircle2 className="w-4 h-4 shrink-0" /> Stokta Hazır ({product.stock} Adet)
-              </span>
-              <span>•</span>
-              <span className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-1">
-                <Award className="w-4 h-4 text-amber-500 shrink-0" />
-                {product.is_original ? '2 Yıl Garanti' : '1 Yıl Garanti'}
-              </span>
+
+              <div className="absolute bottom-4 left-4 z-10">
+                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-black px-3 py-1 rounded-lg backdrop-blur-md flex items-center gap-1.5">
+                  <Truck className="w-3.5 h-3.5" /> Aynı Gün Kargo (16:00 &apos;ya Kadar)
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Interactive VIN / Şasi Check Widget (OnlineYedekParça Signature Feature) */}
-          <ProductVinCheck product={product} />
-
-          {/* Pricing & Add To Cart Box */}
-          <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 p-5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+          {/* Right Column: Title, Interactive VIN Verification & Purchase Box */}
+          <div className="lg:col-span-6 space-y-6">
             <div>
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">FİYAT</span>
-              {product.discount_price ? (
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                    {formatCurrency(product.discount_price)}
+              {/* Brand, OEM Number & Reference */}
+              <div className="flex flex-wrap items-center gap-2 text-xs font-black text-amber-500 uppercase tracking-wider mb-2">
+                <span>{product.brand}</span>
+                <span>•</span>
+                <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 font-mono px-2.5 py-1 rounded-lg text-xs">
+                  OEM: {product.part_number}
+                </span>
+                {product.oem_reference_number && (
+                  <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-mono px-2 py-1 rounded-lg text-[11px]">
+                    Ref: {product.oem_reference_number}
                   </span>
-                  <span className="text-xs text-slate-400 line-through">
+                )}
+              </div>
+
+              {/* Product Title */}
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white leading-snug">
+                {product.title}
+              </h1>
+
+              {/* Sub-Badges Bar: Stock & Warranty */}
+              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex items-center text-amber-500">
+                  <Star className="w-4 h-4 fill-amber-400" />
+                  <span className="font-extrabold ml-1 text-slate-900 dark:text-white">{product.rating}</span>
+                  <span className="text-[11px] text-slate-500 ml-1">({product.reviews_count} değerlendirme)</span>
+                </div>
+                <span>•</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" /> Stokta Hazır ({product.stock} Adet)
+                </span>
+                <span>•</span>
+                <span className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-1">
+                  <Award className="w-4 h-4 text-amber-500 shrink-0" />
+                  {product.is_original ? '2 Yıl Garanti' : '1 Yıl Garanti'}
+                </span>
+              </div>
+            </div>
+
+            {/* Interactive VIN / Şasi Check Widget (OnlineYedekParça Signature Feature) */}
+            <ProductVinCheck product={product} />
+
+            {/* Pricing & Add To Cart Box */}
+            <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 p-5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+              <div>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">FİYAT</span>
+                {product.discount_price ? (
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                      {formatCurrency(product.discount_price)}
+                    </span>
+                    <span className="text-xs text-slate-400 line-through">
+                      {formatCurrency(product.price)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
                     {formatCurrency(product.price)}
                   </span>
-                </div>
-              ) : (
-                <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                  {formatCurrency(product.price)}
+                )}
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5 font-semibold">
+                  KDV Dahil • Ücretsiz Kargo
                 </span>
-              )}
-              <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5 font-semibold">
-                KDV Dahil • Ücretsiz Kargo
-              </span>
+              </div>
+
+              <div className="w-full sm:w-auto">
+                <AddToCartButton product={product} />
+              </div>
             </div>
 
-            <div className="w-full sm:w-auto">
-              <AddToCartButton product={product} />
+            {/* Trust Value Badges */}
+            <div className="grid grid-cols-3 gap-2 pt-2 text-center text-[11px] font-bold text-slate-700 dark:text-slate-300">
+              <div className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span>Şasi Doğrulamalı</span>
+              </div>
+              <div className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5">
+                <Truck className="w-4 h-4 text-amber-500 shrink-0" />
+                <span>Bugün Kargoda</span>
+              </div>
+              <div className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5">
+                <RotateCcw className="w-4 h-4 text-blue-500 shrink-0" />
+                <span>14 Gün İade</span>
+              </div>
             </div>
-          </div>
 
-          {/* Trust Value Badges */}
-          <div className="grid grid-cols-3 gap-2 pt-2 text-center text-[11px] font-bold text-slate-700 dark:text-slate-300">
-            <div className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>Şasi Doğrulamalı</span>
-            </div>
-            <div className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5">
-              <Truck className="w-4 h-4 text-amber-500 shrink-0" />
-              <span>Bugün Kargoda</span>
-            </div>
-            <div className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5">
-              <RotateCcw className="w-4 h-4 text-blue-500 shrink-0" />
-              <span>14 Gün İade</span>
-            </div>
           </div>
 
         </div>
 
-      </div>
+        {/* Zengin Tablar: Uyumlu Araç Modelleri Tablosu, Çapraz OEM Numaraları ve Genel Açıklama */}
+        <ProductTabsAndCrossRef product={product} />
 
-      {/* Zengin Tablar: Uyumlu Araç Modelleri Tablosu, Çapraz OEM Numaraları ve Genel Açıklama */}
-      <ProductTabsAndCrossRef product={product} />
-
-      {/* Bu Ürünle Birlikte Sık Alınanlar & Benzer Ürünler Slider/Grid */}
-      {relatedProducts.length > 0 && (
-        <section className="pt-6 space-y-6">
-          <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-500" />
-              <h2 className="text-xl font-black text-slate-900 dark:text-white">
-                Bu Ürünle Birlikte Sık Alınanlar & Benzer Parçalar
-              </h2>
+        {/* Bu Ürünle Birlikte Sık Alınanlar & Benzer Ürünler Slider/Grid */}
+        {relatedProducts.length > 0 && (
+          <section className="pt-6 space-y-6">
+            <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-500" />
+                <h2 className="text-xl font-black text-slate-900 dark:text-white">
+                  Bu Ürünle Birlikte Sık Alınanlar & Benzer Parçalar
+                </h2>
+              </div>
+              <Link href="/shop" className="text-xs font-extrabold text-amber-500 hover:underline">
+                Tüm Kataloğu Gör →
+              </Link>
             </div>
-            <Link href="/shop" className="text-xs font-extrabold text-amber-500 hover:underline">
-              Tüm Kataloğu Gör →
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {relatedProducts.map((relProduct) => (
-              <ProductCard key={relProduct.id} product={relProduct} />
-            ))}
-          </div>
-        </section>
-      )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {relatedProducts.map((relProduct) => (
+                <ProductCard key={relProduct.id} product={relProduct} />
+              ))}
+            </div>
+          </section>
+        )}
 
-    </div>
+      </div>
+    </>
   );
 }
