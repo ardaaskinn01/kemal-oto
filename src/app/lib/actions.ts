@@ -8,6 +8,11 @@ export async function getProducts(options?: {
   brand?: string;
   model?: string;
   vin?: string;
+  quality?: string;
+  inStock?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  sort?: string;
 }): Promise<Product[]> {
   let products = [...SAMPLE_PRODUCTS];
 
@@ -17,6 +22,26 @@ export async function getProducts(options?: {
 
   if (options?.categorySlug) {
     products = products.filter((p) => p.category_slug === options.categorySlug);
+  }
+
+  if (options?.quality) {
+    if (options.quality === 'original') {
+      products = products.filter((p) => p.is_original);
+    } else if (options.quality === 'aftermarket') {
+      products = products.filter((p) => !p.is_original);
+    }
+  }
+
+  if (options?.inStock) {
+    products = products.filter((p) => p.stock > 0);
+  }
+
+  if (options?.minPrice !== undefined && !isNaN(options.minPrice)) {
+    products = products.filter((p) => (p.discount_price || p.price) >= options.minPrice!);
+  }
+
+  if (options?.maxPrice !== undefined && !isNaN(options.maxPrice)) {
+    products = products.filter((p) => (p.discount_price || p.price) <= options.maxPrice!);
   }
 
   if (options?.searchQuery) {
@@ -57,6 +82,19 @@ export async function getProducts(options?: {
         return true;
       });
     });
+  }
+
+  // Sıralama Seçenekleri
+  if (options?.sort) {
+    if (options.sort === 'price_asc') {
+      products.sort((a, b) => (a.discount_price || a.price) - (b.discount_price || b.price));
+    } else if (options.sort === 'price_desc') {
+      products.sort((a, b) => (b.discount_price || b.price) - (a.discount_price || a.price));
+    } else if (options.sort === 'newest') {
+      products.reverse();
+    } else if (options.sort === 'popular') {
+      products.sort((a, b) => (b.reviews_count || 0) - (a.reviews_count || 0));
+    }
   }
 
   return products;
