@@ -10,7 +10,8 @@ import {
   Clock, 
   CheckCircle2, 
   ExternalLink, 
-  ShoppingBag
+  ShoppingBag,
+  Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -34,207 +35,156 @@ interface UserOrder {
   created_at: string;
 }
 
-// Demo orders for immediate viewing
-const DEMO_ORDERS: UserOrder[] = [
-  {
-    id: 'KML-ORD-9281',
-    total_amount: 6890,
-    payment_status: 'paid',
-    shipping_status: 'shipped',
-    tracking_number: '930596379034',
-    vin: 'VF3M4DV5RC812948',
-    vehicle_model: 'Peugeot 3008 1.5 BlueHDi (2020)',
-    items: [
-      {
-        title: 'Peugeot 3008 / 5008 1.5 BlueHDi Orijinal 8mm Eksantrik Zincir Kiti',
-        part_number: 'PSA-1638159880',
-        quantity: 1,
-        price: 6890,
-      },
-    ],
-    created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
-  },
-  {
-    id: 'KML-ORD-8841',
-    total_amount: 2450,
-    payment_status: 'paid',
-    shipping_status: 'pending',
-    vin: 'W0L0AHL3582019284',
-    vehicle_model: 'Opel Astra J 1.6 CDTI (2016)',
-    items: [
-      {
-        title: 'Opel Astra J / K Periyodik 4 Parça Bakım Filtre Seti',
-        part_number: 'OPL-FLT-SET',
-        quantity: 1,
-        price: 2450,
-      },
-    ],
-    created_at: new Date().toISOString(),
-  },
-];
-
-export default function OrdersPage() {
+export default function CustomerOrdersPage() {
   const { user } = useAuth();
-  const [orders, setOrders] = useState<UserOrder[]>(DEMO_ORDERS);
-  const [loading, setLoading] = useState(false);
+  const [orders, setOrders] = useState<UserOrder[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      fetchUserOrders();
-    }
+    fetchCustomerOrders();
   }, [user]);
 
-  const fetchUserOrders = async () => {
+  const fetchCustomerOrders = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
+      if (user?.email) {
+        const { data, error } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('contact_info->>email', user.email)
+          .order('created_at', { ascending: false });
 
-      if (data && data.length > 0 && !error) {
-        setOrders(data as UserOrder[]);
+        if (data && !error) {
+          setOrders(data as UserOrder[]);
+        } else {
+          setOrders([]);
+        }
+      } else {
+        setOrders([]);
       }
-    } catch (e) {
-      console.warn('Siparişler yüklenirken demo verisi kullanılıyor.');
+    } catch (err) {
+      setOrders([]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
-        <div>
-          <div className="inline-flex items-center gap-1.5 bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-xs font-bold px-3 py-1 rounded-full mb-2 border border-orange-200 dark:border-orange-500/20">
-            <Package className="w-3.5 h-3.5" />
-            <span>Müşteri Hesap Merkezi</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            Siparişlerim
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Verdiğiniz siparişlerin güncel durumunu ve kargo takip bağlantılarını buradan doğrudan görüntüleyebilirsiniz.
-          </p>
-        </div>
-
-        <Link
-          href="/shop"
-          className="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0"
-        >
-          <ShoppingBag className="w-4 h-4" />
-          <span>Alışverişe Devam Et</span>
-        </Link>
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-5">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white flex items-center gap-2.5">
+          <Package className="w-7 h-7 text-amber-500" />
+          Siparişlerim & Kargo Takibi
+        </h1>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Verdiğiniz siparişlerin güncel kargo ve teslimat durumunu canlı olarak bu ekrandan takip edebilirsiniz.
+        </p>
       </div>
 
       {/* Orders List */}
-      <div className="space-y-4">
-        <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <span>Kayıtlı Siparişleriniz</span>
-          <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full font-mono">
-            {orders.length}
-          </span>
-        </h2>
+      {loading ? (
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center text-slate-500 space-y-3">
+          <Loader2 className="w-8 h-8 animate-spin text-amber-500 mx-auto" />
+          <p className="text-xs font-bold">Siparişleriniz yükleniyor...</p>
+        </div>
+      ) : orders.length > 0 ? (
+        <div className="space-y-4">
+          {orders.map((order) => {
+            const isShipped = order.shipping_status === 'shipped' || order.shipping_status === 'delivered';
 
-        {orders.map((order) => {
-          const isShipped = order.shipping_status === 'shipped';
-          const dhlLink = order.tracking_number
-            ? `https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${encodeURIComponent(order.tracking_number)}&submit=1`
-            : null;
-
-          return (
-            <div
-              key={order.id}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all"
-            >
-              {/* Top Summary Bar */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-100 dark:border-slate-800">
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="font-mono font-black text-sm text-slate-900 dark:text-white">
-                    #{order.id}
-                  </span>
-                  <span className="text-xs text-slate-500">
-                    {new Date(order.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </span>
-                  {order.vin && (
-                    <span className="bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[10px] text-slate-600 dark:text-slate-300 font-mono px-2 py-0.5 rounded">
-                      VIN: {order.vin}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-500/30">
-                    Ödeme Başarılı
-                  </span>
-
-                  {isShipped ? (
-                    <span className="bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                      <Truck className="w-3 h-3" /> Kargoya Verildi
-                    </span>
-                  ) : (
-                    <span className="bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-amber-300 dark:border-amber-500/30">
-                      <Clock className="w-3 h-3" /> Hazırlanıyor
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Items in this Order */}
-              <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                {order.items.map((item, idx) => (
-                  <div key={idx} className="py-2.5 flex items-center justify-between gap-4 text-xs">
-                    <div>
-                      <h4 className="font-bold text-slate-900 dark:text-white">{item.title}</h4>
-                      {item.part_number && (
-                        <span className="text-[10px] text-slate-500 font-mono">OEM Kodu: {item.part_number}</span>
-                      )}
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300 block">
-                        {item.quantity} Adet x {formatCurrency(item.price)}
+            return (
+              <div
+                key={order.id}
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4 shadow-sm"
+              >
+                {/* Header Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3.5">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-sm font-black text-slate-900 dark:text-white">{order.id}</span>
+                      <span className="text-[11px] text-slate-400 font-mono">
+                        {new Date(order.created_at).toLocaleDateString('tr-TR')}
                       </span>
                     </div>
+                    {order.vin && (
+                      <span className="text-[11px] text-slate-500 font-mono block mt-0.5">
+                        Şasi: <strong>{order.vin}</strong>
+                      </span>
+                    )}
                   </div>
-                ))}
-              </div>
 
-              {/* Order Bottom Footer: Total Price & Direct 1-Click DHL Link */}
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="text-xs">
-                  <span className="text-slate-500">Toplam Tutar: </span>
-                  <strong className="text-base font-black text-slate-900 dark:text-white">
-                    {formatCurrency(order.total_amount)}
-                  </strong>
+                  <div className="flex items-center gap-2 self-start sm:self-auto">
+                    {isShipped ? (
+                      <span className="bg-emerald-600 text-white text-[10px] font-black px-3 py-1 rounded-lg flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Kargoya Verildi (DHL Express)
+                      </span>
+                    ) : (
+                      <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-3 py-1 rounded-lg flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" /> Sipariş Hazırlanıyor
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
-                  {order.tracking_number && dhlLink ? (
+                {/* Items Row */}
+                <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                  {order.items?.map((item, idx) => (
+                    <div key={idx} className="py-2.5 flex items-center justify-between gap-2">
+                      <div>
+                        <p className="font-bold text-slate-900 dark:text-white">{item.title}</p>
+                        {item.part_number && <span className="text-[10px] text-slate-500 font-mono">OEM: {item.part_number}</span>}
+                      </div>
+                      <span className="font-mono font-extrabold text-slate-700 dark:text-slate-300">
+                        {item.quantity}x {formatCurrency(item.price)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Shipping Tracking Direct Link */}
+                {isShipped && order.tracking_number && (
+                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs pt-3">
+                    <div className="flex items-center gap-2">
+                      <Truck className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <span className="font-bold text-slate-700 dark:text-slate-300">DHL Takip No:</span>
+                      <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 bg-white dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                        {order.tracking_number}
+                      </span>
+                    </div>
+
                     <a
-                      href={dhlLink}
+                      href={`https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${order.tracking_number}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-md shadow-red-600/20 active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-2 rounded-xl text-xs transition-colors shadow-sm cursor-pointer"
                     >
-                      <Truck className="w-4 h-4" />
-                      <span>DHL'de Doğrudan Takip Et ({order.tracking_number})</span>
+                      <span>1 Tıkla DHL Resmi Takip Yap</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
-                  ) : (
-                    <span className="text-xs text-slate-500 italic flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" /> Depoda hazırlanıyor, kargo takip linki birazdan tanımlanacak.
-                    </span>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-            </div>
-          );
-        })}
-      </div>
-
+            );
+          })}
+        </div>
+      ) : (
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 text-center space-y-3 shadow-sm">
+          <div className="w-12 h-12 rounded-2xl bg-amber-400/10 text-amber-500 flex items-center justify-center mx-auto">
+            <ShoppingBag className="w-6 h-6 stroke-[2.5]" />
+          </div>
+          <h3 className="text-base font-black text-slate-900 dark:text-white">Henüz Siparişiniz Bulunmuyor</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            Aracınız için %100 uyumlu orijinal ve muadil parçaları inceleyip sipariş verebilirsiniz.
+          </p>
+          <Link
+            href="/shop"
+            className="inline-block bg-amber-400 hover:bg-amber-500 text-slate-950 font-black px-5 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-amber-400/20"
+          >
+            Yedek Parça Kataloğunu İncele
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
