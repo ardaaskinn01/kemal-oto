@@ -119,7 +119,7 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
       {/* Title */}
       <div className="text-center mb-6">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-          {mode === 'login' && 'Kemal Oto\'ya Giriş Yap'}
+          {mode === 'login' && 'Giriş Yap'}
           {mode === 'signup' && 'Müşteri Hesabı Oluştur'}
           {mode === 'forgot_password' && 'Şifrenizi Sıfırlayın'}
         </h2>
@@ -294,11 +294,6 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
           )}
         </form>
       )}
-
-      <div className="mt-5 pt-3.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
-        <ShieldCheck className="w-3.5 h-3.5 text-orange-600" />
-        <span>Supabase 256-Bit SSL ile güvenli kimlik doğrulama.</span>
-      </div>
     </div>
   );
 }
