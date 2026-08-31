@@ -1,19 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  Search, 
-  Car, 
-  ShieldCheck, 
-  Truck, 
-  ArrowRight, 
-  Wrench, 
-  CheckCircle2, 
-  FileText,
-  Fuel,
-  Sparkles,
-  Zap
-} from 'lucide-react';
+import { Search, Car, ShieldCheck, Truck, Wrench, CheckCircle2, FileText, ArrowRight } from 'lucide-react';
 import { VinSearchWidget } from '../vin/VinSearchWidget';
 
 export function HeroBanner() {
@@ -23,7 +11,6 @@ export function HeroBanner() {
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedEngine, setSelectedEngine] = useState('');
 
-  // Primary Focus Brands: Opel, Peugeot, Citroën, Chevrolet, DS
   const brandList = ['Opel', 'Peugeot', 'Citroën', 'Chevrolet', 'DS Automobiles'];
 
   const modelsMap: Record<string, string[]> = {
@@ -54,220 +41,159 @@ export function HeroBanner() {
   };
 
   return (
-    <section className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white border-b border-slate-800 py-8 sm:py-12 relative overflow-hidden">
+    <section className="bg-[#f7f8fa] dark:bg-[#0d0f12] border-b border-gray-200 dark:border-[#2a2d35] py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-      {/* Decorative subtle background accents */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          {/* Left Column: Heading & Value Proposition */}
-          <div className="lg:col-span-5 space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-xs font-bold text-amber-400">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Türkiye&apos;nin Hızlı Yedek Parça Portalı</span>
+          {/* Left column */}
+          <div className="lg:col-span-5 space-y-5 pt-2">
+            <div>
+              <p className="text-sm font-medium text-[#E8820C] mb-2">Kemal Oto — 40 Yıllık Uzmanlık</p>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+                Aracınıza uyumlu<br />
+                <span className="text-[#E8820C]">doğru yedek parçayı</span> bulun
+              </h1>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">
-              Aracınıza %100 Uyumlu <br />
-              <span className="text-amber-400">Doğru Yedek Parçayı</span> Anında Bulun
-            </h1>
-
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Opel, Peugeot, Citroën, Chevrolet ve DS araçlarınız için marka/model seçin veya 17 haneli şasi numaranızla hatasız eşleştirin. Tüm siparişler uzman ekibimizce şasi doğrulaması yapılarak kargolanır.
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+              Opel, Peugeot, Citroën, Chevrolet ve DS araçlarınız için marka/model seçin
+              veya 17 haneli şasi numaranızla hatasız eşleştirin.
             </p>
 
-            <div className="grid grid-cols-2 gap-2.5 pt-2">
-              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 transition-all flex items-center gap-3 shadow-inner">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold shrink-0">
-                  <CheckCircle2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-white block">%100 Uyum Garantisi</span>
-                  <span className="text-[10px] text-slate-400 block font-medium">Uzman Şasi Kontrolü</span>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-amber-400/50 transition-all flex items-center gap-3 shadow-inner">
-                <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center font-bold shrink-0">
-                  <Truck className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-white block">Aynı Gün Hızlı Kargo</span>
-                  <span className="text-[10px] text-slate-400 block font-medium">Saat 16:00&apos;ya Kadar</span>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-blue-400/50 transition-all flex items-center gap-3 shadow-inner">
-                <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold shrink-0">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-white block">Orijinal & A Kalite</span>
-                  <span className="text-[10px] text-slate-400 block font-medium">PSA / GM Garantili</span>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-amber-400/50 transition-all flex items-center gap-3 shadow-inner">
-                <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center font-bold shrink-0">
-                  <Wrench className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-white block">40 Yıllık Tecrübe</span>
-                  <span className="text-[10px] text-slate-400 block font-medium">Kemal Oto Güvencesi</span>
-                </div>
-              </div>
-            </div>
+            {/* Trust list — inline, no card boxes */}
+            <ul className="space-y-2.5">
+              <li className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-400">
+                <CheckCircle2 className="w-4 h-4 text-[#E8820C] shrink-0" />
+                <span>%100 Uyum Garantisi — Uzman şasi kontrolü</span>
+              </li>
+              <li className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-400">
+                <Truck className="w-4 h-4 text-[#E8820C] shrink-0" />
+                <span>Aynı Gün DHL Kargo — Saat 16:00'ya kadar</span>
+              </li>
+              <li className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-400">
+                <ShieldCheck className="w-4 h-4 text-[#E8820C] shrink-0" />
+                <span>Orijinal & A Kalite — PSA / GM garantili</span>
+              </li>
+              <li className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-400">
+                <Wrench className="w-4 h-4 text-[#E8820C] shrink-0" />
+                <span>40 Yıllık Tecrübe — Kemal Oto güvencesi</span>
+              </li>
+            </ul>
           </div>
 
-          {/* Right Column: High-Utility 4-Step Selector Card (OnlineYedekParça Style) */}
+          {/* Right column — clean card, no glassmorphism */}
           <div className="lg:col-span-7">
-            <div className="bg-slate-900/90 border-2 border-slate-800 p-5 sm:p-7 rounded-2xl shadow-2xl backdrop-blur-md">
-              
-              {/* Tab Selector Header */}
-              <div className="flex border-b border-slate-800 mb-6 gap-2">
+            <div className="bg-white dark:bg-[#1a1d23] border border-gray-200 dark:border-[#2a2d35] rounded-xl p-5 sm:p-6 shadow-sm">
+
+              {/* Tabs — underline style, no bg */}
+              <div className="flex border-b border-gray-200 dark:border-[#2a2d35] mb-5">
                 <button
                   type="button"
                   onClick={() => setActiveTab('manual')}
-                  className={`pb-3 px-4 text-xs font-black transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
+                  className={`flex items-center gap-2 pb-3 px-1 mr-6 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
                     activeTab === 'manual'
-                      ? 'border-amber-400 text-amber-400 text-sm'
-                      : 'border-transparent text-slate-400 hover:text-white'
+                      ? 'border-[#E8820C] text-[#E8820C]'
+                      : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                   }`}
                 >
-                  <Car className="w-4 h-4 shrink-0" />
-                  <span>ARACINI SEÇEREK BUL</span>
+                  <Car className="w-4 h-4" />
+                  Araç seçerek bul
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab('vin')}
-                  className={`pb-3 px-4 text-xs font-black transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
+                  className={`flex items-center gap-2 pb-3 px-1 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
                     activeTab === 'vin'
-                      ? 'border-amber-400 text-amber-400 text-sm'
-                      : 'border-transparent text-slate-400 hover:text-white'
+                      ? 'border-[#E8820C] text-[#E8820C]'
+                      : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                   }`}
                 >
-                  <ShieldCheck className="w-4 h-4 shrink-0" />
-                  <span>17 HANELİ ŞASİ NO (VIN)</span>
+                  <ShieldCheck className="w-4 h-4" />
+                  Şasi No (VIN) ile sorgula
                 </button>
               </div>
 
               {activeTab === 'vin' ? (
                 <div className="space-y-4">
                   <VinSearchWidget compact={true} />
-
-                  <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center gap-2.5 text-xs text-slate-300">
-                    <FileText className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span>Şasi numaranızı araç ruhsatınızın <strong>(E)</strong> maddesinde veya ön cam alt kısmında bulabilirsiniz.</span>
+                  <div className="flex items-start gap-2.5 text-xs text-gray-400 bg-gray-50 dark:bg-[#111318] border border-gray-100 dark:border-[#2a2d35] rounded-lg p-3">
+                    <FileText className="w-4 h-4 text-[#E8820C] shrink-0 mt-0.5" />
+                    <span>Şasi numaranızı araç ruhsatının <strong className="text-gray-600 dark:text-gray-300">(E)</strong> hanesinde veya ön cam alt kısmında bulabilirsiniz.</span>
                   </div>
                 </div>
               ) : (
                 <form onSubmit={handleManualSearch} className="space-y-4">
-                  
-                  {/* 4 Step Grid Dropdowns */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    
-                    {/* 1. Marka */}
+
                     <div>
-                      <label className="block text-[11px] font-black uppercase text-amber-400 tracking-wider mb-1.5 flex items-center gap-1">
-                        <span>1. Marka Seçiniz</span>
+                      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+                        Marka
                       </label>
                       <select
                         value={selectedBrand}
-                        onChange={(e) => {
-                          setSelectedBrand(e.target.value);
-                          setSelectedModel('');
-                          setSelectedEngine('');
-                        }}
-                        className="w-full bg-slate-950 text-white border border-slate-700 rounded-xl py-3 px-3.5 text-xs font-bold focus:outline-none focus:border-amber-400 transition-colors"
+                        onChange={(e) => { setSelectedBrand(e.target.value); setSelectedModel(''); setSelectedEngine(''); }}
+                        className="w-full border border-gray-200 dark:border-[#2a2d35] rounded-lg py-2.5 px-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-[#111318] focus:outline-none focus:border-[#E8820C] transition-colors"
                       >
-                        <option value="">-- Tüm Markalar --</option>
-                        {brandList.map((b) => (
-                          <option key={b} value={b}>
-                            {b}
-                          </option>
-                        ))}
+                        <option value="">Tüm Markalar</option>
+                        {brandList.map((b) => <option key={b} value={b}>{b}</option>)}
                       </select>
                     </div>
 
-                    {/* 2. Model */}
                     <div>
-                      <label className="block text-[11px] font-black uppercase text-amber-400 tracking-wider mb-1.5 flex items-center gap-1">
-                        <span>2. Model Seçiniz</span>
+                      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+                        Model
                       </label>
                       <select
                         value={selectedModel}
                         onChange={(e) => setSelectedModel(e.target.value)}
                         disabled={!selectedBrand}
-                        className="w-full bg-slate-950 text-white border border-slate-700 rounded-xl py-3 px-3.5 text-xs font-bold focus:outline-none focus:border-amber-400 disabled:opacity-40 transition-colors"
+                        className="w-full border border-gray-200 dark:border-[#2a2d35] rounded-lg py-2.5 px-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-[#111318] focus:outline-none focus:border-[#E8820C] disabled:opacity-40 transition-colors"
                       >
-                        <option value="">-- Model Seçiniz --</option>
-                        {selectedBrand &&
-                          modelsMap[selectedBrand]?.map((m) => (
-                            <option key={m} value={m}>
-                              {m}
-                            </option>
-                          ))}
+                        <option value="">Model seçin</option>
+                        {selectedBrand && modelsMap[selectedBrand]?.map((m) => <option key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
 
-                    {/* 3. Yıl */}
                     <div>
-                      <label className="block text-[11px] font-black uppercase text-amber-400 tracking-wider mb-1.5">
-                        3. Model Yılı
+                      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+                        Model Yılı
                       </label>
                       <select
                         value={selectedYear}
                         onChange={(e) => setSelectedYear(e.target.value)}
-                        className="w-full bg-slate-950 text-white border border-slate-700 rounded-xl py-3 px-3.5 text-xs font-bold focus:outline-none focus:border-amber-400 transition-colors"
+                        className="w-full border border-gray-200 dark:border-[#2a2d35] rounded-lg py-2.5 px-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-[#111318] focus:outline-none focus:border-[#E8820C] transition-colors"
                       >
-                        <option value="">-- Tüm Yıllar --</option>
-                        {years.map((y) => (
-                          <option key={y} value={y}>
-                            {y}
-                          </option>
-                        ))}
+                        <option value="">Tüm Yıllar</option>
+                        {years.map((y) => <option key={y} value={y}>{y}</option>)}
                       </select>
                     </div>
 
-                    {/* 4. Motor / Yakıt Tipi */}
                     <div>
-                      <label className="block text-[11px] font-black uppercase text-amber-400 tracking-wider mb-1.5">
-                        4. Motor & Hacim
+                      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+                        Motor & Hacim
                       </label>
                       <select
                         value={selectedEngine}
                         onChange={(e) => setSelectedEngine(e.target.value)}
                         disabled={!selectedBrand}
-                        className="w-full bg-slate-950 text-white border border-slate-700 rounded-xl py-3 px-3.5 text-xs font-bold focus:outline-none focus:border-amber-400 disabled:opacity-40 transition-colors"
+                        className="w-full border border-gray-200 dark:border-[#2a2d35] rounded-lg py-2.5 px-3 text-sm text-gray-900 dark:text-white bg-white dark:bg-[#111318] focus:outline-none focus:border-[#E8820C] disabled:opacity-40 transition-colors"
                       >
-                        <option value="">-- Motor Tipi Seçiniz --</option>
-                        {selectedBrand &&
-                          engineMap[selectedBrand]?.map((eng) => (
-                            <option key={eng} value={eng}>
-                              {eng}
-                            </option>
-                          ))}
+                        <option value="">Motor tipi seçin</option>
+                        {selectedBrand && engineMap[selectedBrand]?.map((eng) => <option key={eng} value={eng}>{eng}</option>)}
                       </select>
                     </div>
 
                   </div>
 
-                  {/* Submit Button */}
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      className="w-full bg-amber-400 hover:bg-amber-500 text-slate-950 font-black py-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-transform active:scale-[0.99] cursor-pointer shadow-lg shadow-amber-400/20"
-                    >
-                      <Search className="w-4 h-4 stroke-[3]" />
-                      <span>UYUMLU YEDEK PARÇALARI LİSTELE</span>
-                      <ArrowRight className="w-4 h-4 stroke-[3]" />
-                    </button>
-                  </div>
-
+                  <button
+                    type="submit"
+                    className="w-full bg-[#E8820C] hover:bg-[#d4740a] text-white font-semibold py-2.5 rounded-lg text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  >
+                    <Search className="w-4 h-4" />
+                    Uyumlu parçaları listele
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </form>
               )}
 

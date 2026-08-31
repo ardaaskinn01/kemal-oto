@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Figtree, Syne } from 'next/font/google';
 import './globals.css';
 import { Navbar } from './components/header/Navbar';
 import { Footer } from './components/footer/Footer';
@@ -12,10 +12,17 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { CartProvider } from './contexts/CartContext';
 import { CartDrawer } from './components/cart/CartDrawer';
 
-const jakarta = Plus_Jakarta_Sans({
+const figtree = Figtree({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-jakarta',
+  variable: '--font-figtree',
+  weight: ['400', '500', '600', '700', '800'],
+});
+
+const syne = Syne({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-syne',
   weight: ['400', '500', '600', '700', '800'],
 });
 
@@ -108,7 +115,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="tr" suppressHydrationWarning className={`dark ${jakarta.variable}`}>
+    <html lang="tr" suppressHydrationWarning className={`dark ${figtree.variable} ${syne.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -136,7 +143,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased selection:bg-amber-400 selection:text-slate-950" suppressHydrationWarning>
+        <body className="min-h-screen flex flex-col bg-[#f7f8fa] dark:bg-[#0d0f12] text-slate-900 dark:text-slate-100 antialiased selection:bg-[#E8820C]/20 selection:text-[#E8820C]" suppressHydrationWarning>
         <ThemeProvider>
           <AuthProvider>
             <ShippingSettingsProvider>

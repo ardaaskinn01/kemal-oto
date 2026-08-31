@@ -10,49 +10,35 @@ import {
   User,
   Menu,
   X,
-  PhoneCall,
-  ShieldCheck,
   Wrench,
-  Truck,
   LayoutDashboard,
   LogOut,
-  MapPin,
-  ChevronDown,
-  Sparkles,
   Package,
-  Tag,
-  ArrowRight,
-  SlidersHorizontal
+  ChevronDown,
 } from 'lucide-react';
 import { useGarage } from '../../contexts/GarageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useShippingSettings } from '../../contexts/ShippingSettingsContext';
 import { useCart } from '../../contexts/CartContext';
 import { ThemeToggle } from '../ui/ThemeToggle';
-import { SAMPLE_PRODUCTS, formatCurrency } from '../../lib/utils';
+import { formatCurrency } from '../../lib/utils';
 import { Product } from '../../types/database.types';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
-  const categoryRef = useRef<HTMLDivElement>(null);
 
   const { activeVehicle, setIsGarageModalOpen } = useGarage();
   const { user, profile, isAdmin, signOut } = useAuth();
   const { shippingSettings } = useShippingSettings();
   const { totalItems, setIsCartOpen } = useCart();
 
-  // Close search suggestions & category menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsSearchOpen(false);
-      }
-      if (categoryRef.current && !categoryRef.current.contains(event.target as Node)) {
-        setCategoryMenuOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -61,7 +47,6 @@ export function Navbar() {
 
   const [searchResults, setSearchResults] = useState<Product[]>([]);
 
-  // Query Supabase live for instant search autocomplete
   useEffect(() => {
     const q = searchQuery.trim();
     if (q.length >= 2) {
@@ -73,7 +58,6 @@ export function Navbar() {
             .select('*')
             .or(`title.ilike.%${q}%,part_number.ilike.%${q}%,brand.ilike.%${q}%`)
             .limit(5);
-
           setSearchResults((data as Product[]) || []);
         } catch (e) {
           setSearchResults([]);
@@ -86,77 +70,58 @@ export function Navbar() {
   }, [searchQuery]);
 
   const mainBrands = [
-    { name: 'Opel', href: '/shop?brand=Opel', color: 'border-yellow-400 text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30' },
-    { name: 'Peugeot', href: '/shop?brand=Peugeot', color: 'border-blue-400 text-blue-600 bg-blue-50 dark:bg-blue-950/30' },
-    { name: 'Citroën', href: '/shop?brand=Citro%C3%ABn', color: 'border-red-400 text-red-600 bg-red-50 dark:bg-red-950/30' },
-    { name: 'Chevrolet', href: '/shop?brand=Chevrolet', color: 'border-amber-500 text-amber-700 bg-amber-50 dark:bg-amber-950/30' },
-    { name: 'DS', href: '/shop?brand=DS%20Automobiles', color: 'border-purple-400 text-purple-600 bg-purple-50 dark:bg-purple-950/30' },
+    { name: 'Opel', href: '/shop?brand=Opel' },
+    { name: 'Peugeot', href: '/shop?brand=Peugeot' },
+    { name: 'Citroën', href: '/shop?brand=Citro%C3%ABn' },
+    { name: 'Chevrolet', href: '/shop?brand=Chevrolet' },
+    { name: 'DS Automobiles', href: '/shop?brand=DS%20Automobiles' },
   ];
 
   const categories = [
-    { name: 'Periyodik Bakım Setleri & Filtreler', href: '/shop?category=ic-donanim-bakim', icon: Sparkles },
-    { name: 'Fren & Süspansiyon Sistemleri', href: '/shop?category=fren-suspansiyon', icon: SlidersHorizontal },
-    { name: 'Motor & Triger Aksamı', href: '/shop?category=motor-aktarma', icon: Wrench },
-    { name: 'Soğutma & Isıtma Sistemleri', href: '/shop?category=motor-aktarma', icon: Wrench },
-    { name: 'Aydınlatma & Elektrik Aksamı', href: '/shop?category=aydinlatma-elektrik', icon: Tag },
-    { name: 'Kaporta & Dış Aksesuarlar', href: '/shop?category=kaporta-aksesuar', icon: Package },
-    { name: 'İç Donanım & Direksiyon Kutusu', href: '/shop?category=ic-donanim-bakim', icon: SlidersHorizontal },
+    { name: 'Periyodik Bakım & Filtreler', href: '/shop?category=ic-donanim-bakim' },
+    { name: 'Fren & Süspansiyon', href: '/shop?category=fren-suspansiyon' },
+    { name: 'Motor & Triger Aksamı', href: '/shop?category=motor-aktarma' },
+    { name: 'Soğutma & Isıtma', href: '/shop?category=motor-aktarma' },
+    { name: 'Aydınlatma & Elektrik', href: '/shop?category=aydinlatma-elektrik' },
+    { name: 'Kaporta & Dış Aksesuar', href: '/shop?category=kaporta-aksesuar' },
+    { name: 'İç Donanım & Direksiyon', href: '/shop?category=ic-donanim-bakim' },
   ];
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 transition-colors shadow-sm">
+      <header className="sticky top-0 z-40 bg-white dark:bg-[#0d0f12] border-b border-gray-200 dark:border-[#2a2d35] transition-colors">
 
-        {/* 1. Top Utility Strip (Duyuru & Kurumsal Bilgi Bandı) */}
-        <div className="bg-slate-900 text-slate-200 text-xs py-1.5 px-3 sm:px-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-            <div className="flex items-center gap-3 text-[11px] font-medium truncate">
-              <span className="flex items-center gap-1 text-amber-400 font-bold">
-                <Truck className="w-3.5 h-3.5 shrink-0" />
-                <span>81 İle Aynı Gün Kargo</span>
-              </span>
-              <span className="hidden sm:inline text-slate-600">•</span>
-              <span className="hidden sm:flex items-center gap-1 text-slate-300">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Şasi Numarası ile %100 Uyum Garantisi</span>
-              </span>
-            </div>
-
-            <div className="flex items-center gap-4 text-[11px] font-medium shrink-0">
-              <a href="tel:05422924492" className="flex items-center gap-1 text-amber-400 hover:text-amber-300 transition-colors">
-                <PhoneCall className="w-3.5 h-3.5" />
-                <span className="font-bold">0542 292 44 92 / Destek Hattı</span>
+        {/* 1. Top strip — minimal, text only */}
+        <div className="bg-gray-50 dark:bg-[#111318] border-b border-gray-200 dark:border-[#2a2d35] text-xs text-gray-500 dark:text-gray-400 py-1.5 px-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <span>81 ile aynı gün DHL kargo · Şasi no ile %100 uyum garantisi</span>
+            <div className="flex items-center gap-4">
+              <a href="tel:05422924492" className="hover:text-[#E8820C] transition-colors">
+                0542 292 44 92
               </a>
-              <span className="hidden md:inline text-slate-700">•</span>
-              <Link href="/orders" className="hidden md:flex items-center gap-1 text-slate-300 hover:text-white transition-colors">
-                <Package className="w-3.5 h-3.5 text-amber-400" />
-                <span>Kargo & Sipariş Takibi</span>
+              <Link href="/orders" className="hover:text-[#E8820C] transition-colors hidden sm:inline">
+                Kargo Takibi
               </Link>
             </div>
           </div>
         </div>
 
-        {/* 2. Main E-Commerce Header (Yüksek Yoğunluklu Logo, Canlı Arama, Araç & Sepet) */}
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center justify-between gap-3 sm:gap-6">
+        {/* 2. Main header */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center gap-4">
 
-            {/* Brand Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-md shadow-amber-400/20 group-hover:scale-105 transition-transform">
-                <Wrench className="w-5 h-5 stroke-[2.5]" />
+            {/* Logo */}
+            <Link href="/" className="shrink-0 flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[#E8820C] flex items-center justify-center">
+                <Wrench className="w-4 h-4 text-white stroke-[2.5]" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">
-                  ONLINE HIZLI <span className="text-amber-500 font-extrabold">PARÇA</span>
-                </span>
-                <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase mt-0.5">
-                  Kemal Oto Güvencesiyle
-                </span>
-              </div>
+              <span className="text-base font-bold text-gray-900 dark:text-white tracking-tight leading-none">
+                Online Hızlı<span className="text-[#E8820C]">Parça</span>
+              </span>
             </Link>
 
-            {/* Live Autocomplete Search Bar (Desktop) */}
-            <div ref={searchRef} className="hidden md:block flex-1 max-w-2xl relative">
+            {/* Search — centered, flex-1 */}
+            <div ref={searchRef} className="hidden md:block flex-1 max-w-xl relative mx-auto">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -165,154 +130,116 @@ export function Navbar() {
                     window.location.href = `/shop?q=${encodeURIComponent(searchQuery.trim())}`;
                   }
                 }}
-                className="w-full flex rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 overflow-hidden focus-within:border-amber-400 focus-within:bg-white dark:focus-within:bg-slate-950 transition-all shadow-inner"
+                className="flex items-center border border-gray-200 dark:border-[#2a2d35] rounded-lg overflow-hidden bg-gray-50 dark:bg-[#111318] focus-within:border-[#E8820C] focus-within:bg-white dark:focus-within:bg-[#1a1d23] transition-colors"
               >
-                <div className="flex-1 flex items-center px-3.5">
-                  <Search className="w-4 h-4 text-slate-400 shrink-0" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onFocus={() => setIsSearchOpen(true)}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setIsSearchOpen(true);
-                    }}
-                    placeholder="Parça adı, OEM referans numarası veya araç modeli ile arayın..."
-                    className="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 text-xs sm:text-sm py-2.5 pl-2.5 pr-3 focus:outline-none"
-                  />
-                </div>
+                <Search className="w-4 h-4 text-gray-400 ml-3 shrink-0" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onFocus={() => setIsSearchOpen(true)}
+                  onChange={(e) => { setSearchQuery(e.target.value); setIsSearchOpen(true); }}
+                  placeholder="Parça adı veya OEM no..."
+                  className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 py-2.5 px-2.5 focus:outline-none"
+                />
                 <button
                   type="submit"
-                  className="bg-amber-400 hover:bg-amber-500 text-slate-950 px-6 font-extrabold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                  className="bg-[#E8820C] hover:bg-[#d4740a] text-white px-4 py-2.5 text-sm font-semibold transition-colors shrink-0 cursor-pointer"
                 >
-                  <span>ARA</span>
-                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                  Ara
                 </button>
               </form>
 
-              {/* Instant Search Results Autocomplete Dropdown */}
+              {/* Autocomplete dropdown */}
               {isSearchOpen && searchQuery.trim().length >= 2 && (
-                <div className="absolute left-0 right-0 top-full mt-1.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl z-50 overflow-hidden text-xs">
-                  <div className="p-2 bg-slate-50 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 font-bold text-slate-500 flex justify-between items-center text-[11px]">
-                    <span>ARAMA SONUÇLARI SUGGESTIONS</span>
-                    <span>{searchResults.length} Ürün Bulundu</span>
-                  </div>
-
+                <div className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d35] rounded-lg shadow-lg z-50 overflow-hidden text-xs">
                   {searchResults.length > 0 ? (
-                    <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                    <div className="divide-y divide-gray-100 dark:divide-[#2a2d35]">
                       {searchResults.map((product) => (
                         <Link
                           key={product.id}
                           href={`/shop/products/${product.slug}`}
                           onClick={() => setIsSearchOpen(false)}
-                          className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
+                          className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-[#1a1d23] transition-colors"
                         >
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden relative shrink-0 border border-slate-200 dark:border-slate-700">
+                          <div className="w-9 h-9 rounded-md bg-gray-100 dark:bg-[#2a2d35] overflow-hidden relative shrink-0">
                             {product.image_url ? (
-                              <Image
-                                src={product.image_url}
-                                alt={product.title}
-                                fill
-                                className="object-cover"
-                              />
+                              <Image src={product.image_url} alt={product.title} fill className="object-cover" />
                             ) : (
-                              <Wrench className="w-5 h-5 text-slate-400 m-auto mt-2.5" />
+                              <Wrench className="w-4 h-4 text-gray-400 m-auto mt-2.5" />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-bold text-slate-900 dark:text-white truncate">
-                              {product.title}
-                            </p>
-                            <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
-                              <span className="font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-amber-600 dark:text-amber-400 font-bold">
-                                OEM: {product.part_number}
-                              </span>
-                              <span>•</span>
-                              <span>{product.brand}</span>
-                            </div>
+                            <p className="font-medium text-gray-900 dark:text-white truncate">{product.title}</p>
+                            <p className="text-gray-400 font-mono mt-0.5">OEM: {product.part_number}</p>
                           </div>
-                          <div className="text-right shrink-0">
-                            <span className="font-black text-slate-900 dark:text-white text-sm">
-                              {formatCurrency(product.price)}
-                            </span>
-                          </div>
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white shrink-0">
+                            {formatCurrency(product.price)}
+                          </span>
                         </Link>
                       ))}
-
                       <Link
                         href={`/shop?q=${encodeURIComponent(searchQuery.trim())}`}
                         onClick={() => setIsSearchOpen(false)}
-                        className="block text-center p-2.5 bg-amber-400/10 hover:bg-amber-400/20 text-slate-900 dark:text-amber-400 font-bold transition-colors text-xs"
+                        className="block text-center p-2.5 text-[#E8820C] font-medium hover:bg-gray-50 dark:hover:bg-[#1a1d23] transition-colors"
                       >
-                        Tüm &quot;{searchQuery}&quot; sonuçlarını göster →
+                        Tüm "{searchQuery}" sonuçlarını gör →
                       </Link>
                     </div>
                   ) : (
-                    <div className="p-6 text-center text-slate-500">
-                      <p className="font-semibold text-slate-700 dark:text-slate-300">Aramanızla eşleşen ürün bulunamadı.</p>
-                      <p className="text-[11px] mt-1">Lütfen OEM numarasını veya araç modelini kontrol edip tekrar deneyin.</p>
+                    <div className="p-4 text-center text-gray-500">
+                      <p className="font-medium text-gray-700 dark:text-gray-300">Ürün bulunamadı.</p>
+                      <p className="text-[11px] mt-1">OEM numarasını veya araç modelini deneyin.</p>
                     </div>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Header Right Action Tools */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            {/* Right actions */}
+            <div className="flex items-center gap-2 ml-auto">
 
-              {/* Garage Vehicle Button (OnlineYedekParça Style) */}
+              {/* Garaj butonu */}
               <button
                 type="button"
                 onClick={() => setIsGarageModalOpen(true)}
-                title={activeVehicle ? `Seçili Araç: ${activeVehicle.make} ${activeVehicle.model}` : 'Aracınızı Seçin'}
-                className={`flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+                title={activeVehicle ? `${activeVehicle.make} ${activeVehicle.model}` : 'Aracınızı seçin'}
+                className={`hidden sm:flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg border transition-colors cursor-pointer ${
                   activeVehicle
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40 text-emerald-900 dark:text-emerald-300 shadow-sm'
-                    : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-amber-400'
+                    ? 'border-emerald-300 dark:border-emerald-600 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30'
+                    : 'border-gray-200 dark:border-[#2a2d35] text-gray-600 dark:text-gray-400 hover:border-[#E8820C] hover:text-[#E8820C]'
                 }`}
               >
-                <Car className={`w-4 h-4 shrink-0 ${activeVehicle ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-500'}`} />
-                <div className="hidden sm:flex flex-col text-left leading-tight">
-                  <span className="text-[9px] text-slate-500 uppercase font-extrabold tracking-wider">
-                    {activeVehicle ? 'SEÇİLİ ARAÇ' : 'ARACINIZI SEÇİN'}
-                  </span>
-                  <span className="truncate max-w-[100px] lg:max-w-[130px] font-extrabold text-slate-900 dark:text-white">
-                    {activeVehicle ? `${activeVehicle.make} ${activeVehicle.model}` : 'GARAJ EKLE'}
-                  </span>
-                </div>
+                <Car className="w-4 h-4 shrink-0" />
+                <span className="font-medium max-w-[110px] truncate">
+                  {activeVehicle ? `${activeVehicle.make} ${activeVehicle.model}` : 'Araç seç'}
+                </span>
               </button>
 
-              {/* Theme Toggle */}
               <ThemeToggle />
 
-              {/* Admin Access (If Admin) */}
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-xs font-bold p-2 sm:px-2.5 sm:py-2 rounded-xl hover:bg-amber-500/20 transition-all flex items-center gap-1.5"
+                  className="hidden lg:flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-[#2a2d35] text-gray-600 dark:text-gray-400 hover:border-[#E8820C] hover:text-[#E8820C] transition-colors"
                   title="Admin Paneli"
                 >
                   <LayoutDashboard className="w-4 h-4" />
-                  <span className="hidden lg:inline">Admin</span>
                 </Link>
               )}
 
-              {/* Account / Login */}
+              {/* Hesabım */}
               {user ? (
                 <div className="flex items-center gap-1">
                   <Link
                     href="/garage"
-                    className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 flex flex-col text-left text-xs hover:border-slate-300 dark:hover:border-slate-700"
                     title="Hesabım"
+                    className="p-2 rounded-lg border border-gray-200 dark:border-[#2a2d35] text-gray-600 dark:text-gray-400 hover:border-[#E8820C] hover:text-[#E8820C] transition-colors"
                   >
-                    <span className="text-[9px] text-slate-500 font-extrabold uppercase">Hesabım</span>
-                    <span className="font-extrabold text-slate-900 dark:text-white truncate max-w-[80px]">
-                      {profile?.full_name?.split(' ')[0] || user.email?.split('@')[0]}
-                    </span>
+                    <User className="w-4 h-4" />
                   </Link>
                   <button
                     onClick={() => signOut()}
-                    className="p-2 text-slate-400 hover:text-red-600 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors"
+                    className="p-2 rounded-lg border border-gray-200 dark:border-[#2a2d35] text-gray-400 hover:text-red-500 hover:border-red-300 transition-colors"
                     title="Çıkış Yap"
                   >
                     <LogOut className="w-4 h-4" />
@@ -321,143 +248,108 @@ export function Navbar() {
               ) : (
                 <Link
                   href="/login"
-                  className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-amber-500 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 transition-all"
                   title="Giriş Yap"
+                  className="p-2 rounded-lg border border-gray-200 dark:border-[#2a2d35] text-gray-600 dark:text-gray-400 hover:border-[#E8820C] hover:text-[#E8820C] transition-colors"
                 >
-                  <User className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span className="hidden sm:inline">Giriş Yap</span>
+                  <User className="w-4 h-4" />
                 </Link>
               )}
 
-              {/* Cart Button */}
+              {/* Sepet */}
               <button
                 type="button"
                 onClick={() => setIsCartOpen(true)}
-                className="relative bg-amber-400 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-2 rounded-xl transition-transform active:scale-95 flex items-center gap-2 shrink-0 shadow-md shadow-amber-400/20 cursor-pointer"
+                className="relative flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#E8820C] hover:bg-[#d4740a] text-white text-sm font-semibold transition-colors cursor-pointer"
                 title="Sepetim"
               >
-                <ShoppingBag className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-                <span className="hidden sm:inline text-xs font-black tracking-wide">
-                  SEPET ({totalItems})
-                </span>
-                <span className="sm:hidden text-[10px] font-extrabold bg-slate-950 text-white rounded-full w-4 h-4 flex items-center justify-center">
-                  {totalItems}
-                </span>
+                <ShoppingBag className="w-4 h-4" />
+                {totalItems > 0 && (
+                  <span className="text-xs font-bold leading-none">{totalItems}</span>
+                )}
               </button>
 
-              {/* Mobile Menu Trigger */}
+              {/* Mobile menu */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 focus:outline-none"
-                aria-label="Menüyü Aç"
+                className="md:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                aria-label="Menü"
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
 
-          {/* Mobile Search Bar (Only visible on small screens) */}
+          {/* Mobile search */}
           <div className="mt-2.5 md:hidden">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if (searchQuery.trim()) {
-                  window.location.href = `/shop?q=${encodeURIComponent(searchQuery.trim())}`;
-                }
+                if (searchQuery.trim()) window.location.href = `/shop?q=${encodeURIComponent(searchQuery.trim())}`;
               }}
-              className="flex rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 overflow-hidden"
+              className="flex border border-gray-200 dark:border-[#2a2d35] rounded-lg overflow-hidden bg-gray-50 dark:bg-[#111318]"
             >
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Parça no veya araç ara..."
-                className="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 text-xs py-2 px-3 focus:outline-none"
+                placeholder="Parça adı veya OEM no..."
+                className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 py-2 px-3 focus:outline-none"
               />
-              <button
-                type="submit"
-                className="bg-amber-400 text-slate-950 px-4 font-bold text-xs flex items-center justify-center"
-              >
+              <button type="submit" className="bg-[#E8820C] text-white px-4 flex items-center">
                 <Search className="w-4 h-4" />
               </button>
             </form>
           </div>
         </div>
 
-        {/* 3. Mega Menu & Brand Category Bar (onlineyedekparca.com Visual Style) */}
-        <div className="hidden md:block bg-slate-100 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 relative z-30">
+        {/* 3. Category & brand nav bar */}
+        <div className="hidden md:block border-t border-gray-100 dark:border-[#1e2128] bg-white dark:bg-[#0d0f12]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between text-xs font-bold py-2 gap-4">
+            <div className="flex items-center justify-between py-1.5 overflow-x-auto scrollbar-none gap-6">
 
-              {/* Category Dropdown Trigger */}
-              <div ref={categoryRef} className="relative z-50">
-                <button
-                  type="button"
-                  onClick={() => setCategoryMenuOpen(!categoryMenuOpen)}
-                  className="flex items-center gap-2 bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-950 px-3.5 py-2 rounded-xl font-black text-xs hover:bg-slate-800 dark:hover:bg-amber-500 transition-all cursor-pointer shadow-md"
-                >
-                  <Menu className="w-4 h-4 stroke-[2.5]" />
-                  <span>TÜM KATEGORİLER</span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${categoryMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                {/* Dropdown Menu */}
-                {categoryMenuOpen && (
-                  <div
-                    className="absolute left-0 top-full mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 py-2 divide-y divide-slate-100 dark:divide-slate-800/80 animate-in fade-in slide-in-from-top-2 duration-200"
+              {/* Category scroll links */}
+              <nav className="flex items-center gap-0.5 overflow-x-auto scrollbar-none">
+                {categories.map((cat, idx) => (
+                  <Link
+                    key={idx}
+                    href={cat.href}
+                    className="whitespace-nowrap px-3 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:text-[#E8820C] dark:hover:text-[#E8820C] font-medium transition-colors rounded"
                   >
-                    {categories.map((cat, idx) => {
-                      const IconComponent = cat.icon;
-                      return (
-                        <Link
-                          key={idx}
-                          href={cat.href}
-                          onClick={() => setCategoryMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-amber-400/10 hover:text-amber-600 dark:hover:text-amber-400 font-extrabold transition-colors text-xs"
-                        >
-                          <div className="w-7 h-7 rounded-lg bg-amber-400/10 text-amber-500 flex items-center justify-center shrink-0">
-                            <IconComponent className="w-4 h-4" />
-                          </div>
-                          <span>{cat.name}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+                    {cat.name}
+                  </Link>
+                ))}
+              </nav>
 
-              {/* Brand Selector Badges (Opel, Peugeot, Citroën, Chevrolet, DS) */}
-              <div className="flex items-center gap-2 shrink-0 overflow-x-auto scrollbar-none">
-                <span className="text-[10px] text-slate-400 uppercase font-black tracking-wider mr-1">Markalar:</span>
+              {/* Brand links — underline text, no pills */}
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="text-[11px] text-gray-400 mr-1">Marka:</span>
                 {mainBrands.map((brand) => (
                   <Link
                     key={brand.name}
                     href={brand.href}
-                    className={`px-3 py-1 rounded-lg border text-xs font-black transition-all hover:scale-105 ${brand.color}`}
+                    className="whitespace-nowrap text-xs text-gray-600 dark:text-gray-400 hover:text-[#E8820C] dark:hover:text-[#E8820C] font-medium underline-offset-2 hover:underline transition-colors px-1.5"
                   >
                     {brand.name}
                   </Link>
                 ))}
               </div>
 
-
-
             </div>
           </div>
         </div>
 
-        {/* 4. Mobile Menu Drawer */}
+        {/* 4. Mobile drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 p-4 space-y-4">
-            <div className="space-y-2">
-              <p className="text-[10px] font-extrabold text-slate-400 uppercase">Araç Markaları</p>
-              <div className="grid grid-cols-3 gap-2">
+          <div className="md:hidden bg-white dark:bg-[#0d0f12] border-t border-gray-100 dark:border-[#2a2d35] p-4 space-y-4">
+            <div>
+              <p className="text-[10px] font-semibold text-gray-400 uppercase mb-2">Markalar</p>
+              <div className="flex flex-wrap gap-2">
                 {mainBrands.map((b) => (
                   <Link
                     key={b.name}
                     href={b.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 text-center rounded-lg border text-xs font-bold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200"
+                    className="text-xs text-gray-700 dark:text-gray-300 hover:text-[#E8820C] underline-offset-2 hover:underline"
                   >
                     {b.name}
                   </Link>
@@ -465,35 +357,27 @@ export function Navbar() {
               </div>
             </div>
 
-            <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
-              <p className="text-[10px] font-extrabold text-slate-400 uppercase mb-1">Kategoriler</p>
+            <div className="border-t border-gray-100 dark:border-[#2a2d35] pt-3 space-y-1">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase mb-1">Kategoriler</p>
               {categories.map((cat, i) => (
                 <Link
                   key={i}
                   href={cat.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-amber-500"
+                  className="block py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-[#E8820C]"
                 >
                   {cat.name}
                 </Link>
               ))}
             </div>
 
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <Link
-                href="/orders"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"
-              >
-                <Package className="w-4 h-4 text-amber-500" />
+            <div className="border-t border-gray-100 dark:border-[#2a2d35] pt-3 flex items-center justify-between">
+              <Link href="/orders" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
+                <Package className="w-4 h-4" />
                 <span>Sipariş Takibi</span>
               </Link>
-              <a
-                href="tel:05422924492"
-                className="text-xs font-bold text-amber-500 flex items-center gap-1"
-              >
-                <PhoneCall className="w-4 h-4" />
-                <span>0542 292 44 92</span>
+              <a href="tel:05422924492" className="text-sm font-semibold text-[#E8820C]">
+                0542 292 44 92
               </a>
             </div>
           </div>

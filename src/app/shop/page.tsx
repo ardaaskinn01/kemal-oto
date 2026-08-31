@@ -128,72 +128,46 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         
-        {/* 1. VIN / Vehicle Active Filter Banner & Şasi Sorgulama Bandı */}
+        {/* 1. Page header */}
         {(vinFilter || brandFilter) ? (
-          <div className="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-lg">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shrink-0">
-                <ShieldCheck className="w-6 h-6 stroke-[2.5]" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-black uppercase text-amber-400 tracking-wider">
-                    Şasi & Araç Filtresi Aktif
-                  </span>
-                  {vinFilter && (
-                    <span className="bg-slate-950 text-slate-200 font-mono text-[10px] px-2 py-0.5 rounded border border-slate-700 font-bold">
-                      VIN: {vinFilter}
-                    </span>
-                  )}
-                </div>
-                <h2 className="text-base sm:text-lg font-black text-white">
-                  {brandFilter} {modelFilter} İçin Uyumlu Yedek Parçalar
-                </h2>
-              </div>
+          <div className="border border-gray-200 dark:border-[#2a2d35] bg-white dark:bg-[#111318] rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <p className="text-xs text-[#E8820C] font-medium mb-0.5">Araç Filtresi Aktif</p>
+              <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+                {brandFilter} {modelFilter} için uyumlu parçalar
+              </h2>
+              {vinFilter && (
+                <span className="font-mono text-xs text-gray-400 mt-0.5 block">VIN: {vinFilter}</span>
+              )}
             </div>
-
-            <div className="flex items-center gap-2">
-              <Link
-                href="/shop"
-                className="bg-slate-800 hover:bg-slate-700 text-white px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 font-extrabold border border-slate-700 transition-colors"
-              >
-                <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
-                <span>Filtreyi Temizle</span>
-              </Link>
-            </div>
+            <Link
+              href="/shop"
+              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border border-gray-200 dark:border-[#2a2d35] px-3 py-1.5 rounded-lg transition-colors shrink-0"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Filtreyi temizle
+            </Link>
           </div>
         ) : (
-          /* Standard Header Banner for Shop Page */
-          <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 text-white rounded-2xl p-5 sm:p-7 border border-slate-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <span className="text-[10px] font-black uppercase text-amber-400 tracking-widest block mb-1">
-                ONLINE YEDEK PARÇA KATALOĞU
-              </span>
-              <h1 className="text-xl sm:text-2xl font-black text-white">
-                {currentCatObj ? currentCatObj.name : 'Tüm Yedek Parçalar & Bakım Ürünleri'}
-              </h1>
-              <p className="text-xs text-slate-400 mt-1">
-                Opel, Peugeot, Citroën, Chevrolet ve DS araçları için 100% şasi uyum garantili parçalar
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3 bg-slate-950/80 px-4 py-2.5 rounded-xl border border-slate-800 text-xs text-slate-300 font-bold shrink-0">
-              <Truck className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>81 İle Aynı Gün Kargo</span>
-            </div>
+          <div className="border-b border-gray-100 dark:border-[#2a2d35] pb-4">
+            <p className="text-xs text-[#E8820C] font-medium mb-0.5">Yedek Parça Kataloğu</p>
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {currentCatObj ? currentCatObj.name : 'Tüm Yedek Parçalar'}
+            </h1>
+            <p className="text-sm text-gray-400 mt-1">
+              Opel, Peugeot, Citroën, Chevrolet ve DS araçları için şasi uyum garantili parçalar
+            </p>
           </div>
         )}
 
-        {/* 2. Sorting & Listing Top Bar */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
-          <div className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-            <span>Toplam <strong className="text-amber-500 font-black text-sm">{products.length}</strong> adet parça listeleniyor</span>
-          </div>
-
-          {/* Sorting Dropdown */}
-          <div className="flex items-center gap-2 self-end sm:self-auto text-xs">
-            <span className="text-slate-500 font-bold text-[11px] whitespace-nowrap">Sıralama:</span>
-            <form method="GET" action="/shop" className="flex items-center">
+        {/* 2. Sort bar */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="font-medium text-gray-900 dark:text-white">{products.length}</span> parça listeleniyor
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-400">Sırala:</span>
+            <form method="GET" action="/shop">
               {searchQuery && <input type="hidden" name="q" value={searchQuery} />}
               {categorySlug && <input type="hidden" name="category" value={categorySlug} />}
               {brandFilter && <input type="hidden" name="brand" value={brandFilter} />}
@@ -202,7 +176,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               {inStockFilter && <input type="hidden" name="inStock" value="true" />}
               {params.minPrice && <input type="hidden" name="minPrice" value={params.minPrice} />}
               {params.maxPrice && <input type="hidden" name="maxPrice" value={params.maxPrice} />}
-
               <ShopSortSelect sortFilter={sortFilter} />
             </form>
           </div>
@@ -221,24 +194,22 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                 ))}
               </div>
             ) : (
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 sm:p-14 text-center space-y-4 shadow-sm">
-                <div className="w-14 h-14 rounded-2xl bg-amber-400/10 text-amber-500 flex items-center justify-center mx-auto">
-                  <Search className="w-7 h-7 stroke-[2.5]" />
-                </div>
+              <div className="border border-gray-200 dark:border-[#2a2d35] bg-white dark:bg-[#111318] rounded-xl p-10 text-center space-y-3">
+                <Search className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto" />
                 <div>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                    Aradığınız Kriterlere Uygun Parça Bulunamadı
+                  <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
+                    Uygun parça bulunamadı
                   </h3>
-                  <p className="text-xs text-slate-500 max-w-md mx-auto mt-1 leading-relaxed">
-                    Lütfen arama terimini değiştirin veya <strong>0542 292 44 92</strong> Müşteri Destek hattımızı arayarak ruhsat şasi numaranızla parça teyidi alın.
+                  <p className="text-sm text-gray-400 max-w-md mx-auto mt-1 leading-relaxed">
+                    Arama teriminizi değiştirin veya <strong className="text-gray-600 dark:text-gray-300">0542 292 44 92</strong> numaralı hattı arayın.
                   </p>
                 </div>
                 <Link
                   href="/shop"
-                  className="inline-flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-black px-5 py-2.5 rounded-xl transition-all shadow-md shadow-amber-400/20"
+                  className="inline-flex items-center gap-1.5 bg-[#E8820C] hover:bg-[#d4740a] text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  <span>TÜM FİLTRELERİ SIFIRLA</span>
+                  Filtreleri temizle
                 </Link>
               </div>
             )}

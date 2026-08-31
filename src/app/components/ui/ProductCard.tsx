@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '../../types/database.types';
 import { formatCurrency } from '../../lib/utils';
-import { ShoppingCart, CheckCircle2, AlertTriangle, ShieldCheck, Wrench, Truck, Sparkles } from 'lucide-react';
+import { ShoppingCart, CheckCircle2, AlertTriangle, ShieldCheck, Wrench, Truck } from 'lucide-react';
 import { useGarage } from '../../contexts/GarageContext';
 import { useCart } from '../../contexts/CartContext';
 
@@ -24,127 +24,125 @@ export function ProductCard({ product }: ProductCardProps) {
   const compatibility = isProductCompatible(product);
 
   return (
-    <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-amber-400 dark:hover:border-amber-400 transition-all flex flex-col justify-between shadow-sm hover:shadow-xl hover:-translate-y-0.5">
-      
-      {/* Top Left Badges: Quality & Discount */}
-      <div className="absolute top-2.5 left-2.5 z-10 flex flex-wrap gap-1 max-w-[70%]">
+    <div className="group relative bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d35] rounded-xl overflow-hidden hover:border-[#E8820C] dark:hover:border-[#E8820C] transition-colors flex flex-col shadow-sm">
+
+      {/* Top badges — no bg, border + colored text only */}
+      <div className="absolute top-2.5 left-2.5 z-10 flex flex-wrap gap-1">
         {product.is_original ? (
-          <span className="bg-slate-950 text-amber-400 border border-amber-400/40 text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3 text-amber-400" /> ORİJİNAL OEM
+          <span className="border border-amber-400/60 text-amber-600 dark:text-amber-400 text-[10px] font-medium px-1.5 py-0.5 rounded bg-white/80 dark:bg-[#111318]/80 backdrop-blur-sm">
+            OEM
           </span>
         ) : (
-          <span className="bg-slate-800 text-slate-100 text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1">
-            <Wrench className="w-3 h-3 text-amber-400" /> A KALİTE MUADİL
+          <span className="border border-gray-300 dark:border-[#2a2d35] text-gray-500 dark:text-gray-400 text-[10px] font-medium px-1.5 py-0.5 rounded bg-white/80 dark:bg-[#111318]/80 backdrop-blur-sm">
+            A Kalite
           </span>
         )}
-
         {discountPercent > 0 && (
-          <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-md animate-pulse">
+          <span className="border border-red-300 text-red-600 dark:text-red-400 text-[10px] font-medium px-1.5 py-0.5 rounded bg-white/80 dark:bg-[#111318]/80 backdrop-blur-sm">
             -%{discountPercent}
           </span>
         )}
       </div>
 
-      {/* Top Right: Stock Status ("Aynı Gün Kargo") */}
-      <div className="absolute top-2.5 right-2.5 z-10">
-        <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[9px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-1 backdrop-blur-sm">
-          <Truck className="w-2.5 h-2.5" /> Aynı Gün Kargo
-        </span>
-      </div>
-
-      {/* Product Image */}
-      <Link href={`/shop/products/${product.slug}`} className="block relative w-full h-44 sm:h-48 bg-slate-50 dark:bg-slate-950 overflow-hidden border-b border-slate-100 dark:border-slate-800/80">
+      {/* Product image */}
+      <Link
+        href={`/shop/products/${product.slug}`}
+        className="block relative w-full h-40 sm:h-44 bg-gray-50 dark:bg-[#0d0f12] overflow-hidden border-b border-gray-100 dark:border-[#2a2d35]"
+      >
         {product.image_url ? (
           <Image
             src={product.image_url}
             alt={product.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400">
+          <div className="w-full h-full flex items-center justify-center text-gray-300 dark:text-gray-700">
             <Wrench className="w-8 h-8" />
           </div>
         )}
       </Link>
 
-      {/* Product Information */}
-      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+      {/* Info */}
+      <div className="p-3.5 flex-1 flex flex-col gap-2.5">
         <div>
-          {/* Brand, OEM Number & Vin Check Tag */}
-          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mb-1.5 gap-2">
-            <span className="font-extrabold text-amber-500 uppercase tracking-wide">{product.brand}</span>
-            <span className="font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-700 dark:text-slate-300 truncate max-w-[120px]">
-              OEM: {product.part_number}
+          {/* Brand & OEM */}
+          <div className="flex items-center justify-between mb-1.5 gap-2">
+            <span className="text-[11px] font-medium text-[#E8820C]">{product.brand}</span>
+            <span className="font-mono text-[10px] text-gray-400 dark:text-gray-500 truncate max-w-[110px]">
+              {product.part_number}
             </span>
           </div>
 
           {/* Title */}
-          <Link href={`/shop/products/${product.slug}`} className="block group-hover:text-amber-500 transition-colors">
-            <h3 className="text-slate-900 dark:text-white font-bold text-xs sm:text-sm line-clamp-2 leading-snug">
+          <Link href={`/shop/products/${product.slug}`} className="block">
+            <h3 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#E8820C] transition-colors">
               {product.title}
             </h3>
           </Link>
 
-          {/* Garage Vehicle Compatibility Indicator */}
+          {/* Compatibility — inline, no card box */}
           {activeVehicle ? (
-            <div
-              className={`flex items-center gap-1.5 text-[10px] font-bold mt-2.5 px-2.5 py-1 rounded-lg border ${
-                compatibility.compatible
-                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40'
-                  : 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-500/40'
-              }`}
-            >
+            <div className={`flex items-center gap-1.5 text-[11px] mt-2 ${
+              compatibility.compatible
+                ? 'text-emerald-600 dark:text-emerald-400'
+                : 'text-amber-600 dark:text-amber-400'
+            }`}>
               {compatibility.compatible ? (
                 <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span className="truncate">{activeVehicle.make} {activeVehicle.model} (%100 UYUMLU)</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">{activeVehicle.make} {activeVehicle.model} ile uyumlu</span>
                 </>
               ) : (
                 <>
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                  <span className="truncate">Seçili Aracınızla Uyumsuz</span>
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">Seçili araçla uyumsuz</span>
                 </>
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mt-2">
-              <ShieldCheck className="w-3 h-3 text-emerald-500 shrink-0" />
-              <span className="truncate">Şasi Kontrollü Güvenli Teslimat</span>
+            <div className="flex items-center gap-1.5 text-[11px] text-gray-400 mt-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600 shrink-0" />
+              <span>Şasi kontrollü teslimat</span>
             </div>
           )}
         </div>
 
-        {/* Price & Action */}
-        <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+        {/* Price + action */}
+        <div className="flex items-end justify-between gap-2 pt-2.5 border-t border-gray-100 dark:border-[#2a2d35] mt-auto">
           <div>
             {product.discount_price ? (
               <div className="flex flex-col leading-tight">
-                <span className="text-[11px] text-slate-400 line-through">
+                <span className="text-[11px] text-gray-400 line-through">
                   {formatCurrency(product.price)}
                 </span>
-                <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                <span className="text-base font-semibold text-gray-900 dark:text-white">
                   {formatCurrency(product.discount_price)}
                 </span>
               </div>
             ) : (
-              <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+              <span className="text-base font-semibold text-gray-900 dark:text-white">
                 {formatCurrency(product.price)}
               </span>
             )}
+            {/* Aynı Gün Kargo — below price, small green text */}
+            <span className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-500 mt-0.5">
+              <Truck className="w-3 h-3 shrink-0" />
+              Aynı gün kargo
+            </span>
           </div>
 
+          {/* Add to cart — right-aligned, compact, sentence case */}
           <button
             type="button"
             onClick={() => addToCart(product)}
-            className="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-xl transition-all shadow-md shadow-amber-400/20 active:scale-95 cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 bg-[#E8820C] hover:bg-[#d4740a] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0"
           >
-            <ShoppingCart className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>SEPETE EKLE</span>
+            <ShoppingCart className="w-3.5 h-3.5" />
+            <span>Sepete ekle</span>
           </button>
         </div>
-
       </div>
     </div>
   );
