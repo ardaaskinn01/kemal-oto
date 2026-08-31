@@ -5,51 +5,6 @@ import { Wrench, Phone, Mail, MapPin, ShieldCheck, Truck, RefreshCw, CreditCard 
 export function Footer() {
   return (
     <footer className="bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 transition-colors">
-      {/* Advantage Banner */}
-      <div className="border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <Truck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-slate-900 dark:text-white font-semibold text-sm">DHL Express Hızlı Kargo</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400">2500 TL üzeri ücretsiz teslimat</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-slate-900 dark:text-white font-semibold text-sm">%100 Şasi Uyumu</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400">17 haneli VIN ile parça garantisi</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <RefreshCw className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-slate-900 dark:text-white font-semibold text-sm">Kolay Değişim & İade</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400">14 gün koşulsuz iade hakkı</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <CreditCard className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-slate-900 dark:text-white font-semibold text-sm">İyzico Güvenli Ödeme</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400">256-bit SSL korumalı altyapı</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
 

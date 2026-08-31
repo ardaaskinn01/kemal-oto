@@ -2,6 +2,7 @@ import React from 'react';
 import { getCategories, getProducts } from '../lib/actions';
 import { ProductCard } from '../components/ui/ProductCard';
 import { ShopFilters } from '../components/shop/ShopFilters';
+import { ShopSortSelect } from '../components/shop/ShopSortSelect';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { 
@@ -202,18 +203,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               {params.minPrice && <input type="hidden" name="minPrice" value={params.minPrice} />}
               {params.maxPrice && <input type="hidden" name="maxPrice" value={params.maxPrice} />}
 
-              <select
-                name="sort"
-                defaultValue={sortFilter}
-                // @ts-ignore
-                onChange={(e) => e.target.form?.submit()}
-                className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-extrabold focus:outline-none focus:border-amber-400 cursor-pointer"
-              >
-                <option value="popular">Popülerliğe Göre</option>
-                <option value="price_asc">Fiyat: Düşükten Yükseğe</option>
-                <option value="price_desc">Fiyat: Yüksekten Düşüğe</option>
-                <option value="newest">En Yeniler</option>
-              </select>
+              <ShopSortSelect sortFilter={sortFilter} />
             </form>
           </div>
         </div>

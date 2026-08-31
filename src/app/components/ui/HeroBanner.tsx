@@ -66,7 +66,7 @@ export function HeroBanner() {
           {/* Left Column: Heading & Value Proposition */}
           <div className="lg:col-span-5 space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-xs font-bold text-amber-400">
-              <Zap className="w-3.5 h-3.5 fill-amber-400" />
+              <ShieldCheck className="w-3.5 h-3.5" />
               <span>Türkiye&apos;nin Hızlı Yedek Parça Portalı</span>
             </div>
 
@@ -79,22 +79,45 @@ export function HeroBanner() {
               Opel, Peugeot, Citroën, Chevrolet ve DS araçlarınız için marka/model seçin veya 17 haneli şasi numaranızla hatasız eşleştirin. Tüm siparişler uzman ekibimizce şasi doğrulaması yapılarak kargolanır.
             </p>
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center gap-2.5 text-xs font-bold text-slate-200">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>%100 Uyum Garantisi</span>
+            <div className="grid grid-cols-2 gap-2.5 pt-2">
+              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 transition-all flex items-center gap-3 shadow-inner">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold shrink-0">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-black text-white block">%100 Uyum Garantisi</span>
+                  <span className="text-[10px] text-slate-400 block font-medium">Uzman Şasi Kontrolü</span>
+                </div>
               </div>
-              <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center gap-2.5 text-xs font-bold text-slate-200">
-                <Truck className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Aynı Gün Hızlı Kargo</span>
+
+              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-amber-400/50 transition-all flex items-center gap-3 shadow-inner">
+                <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center font-bold shrink-0">
+                  <Truck className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-black text-white block">Aynı Gün Hızlı Kargo</span>
+                  <span className="text-[10px] text-slate-400 block font-medium">Saat 16:00&apos;ya Kadar</span>
+                </div>
               </div>
-              <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center gap-2.5 text-xs font-bold text-slate-200">
-                <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>Orijinal & A Kalite</span>
+
+              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-blue-400/50 transition-all flex items-center gap-3 shadow-inner">
+                <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-black text-white block">Orijinal & A Kalite</span>
+                  <span className="text-[10px] text-slate-400 block font-medium">PSA / GM Garantili</span>
+                </div>
               </div>
-              <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center gap-2.5 text-xs font-bold text-slate-200">
-                <Wrench className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>40 Yıllık Tecrübe</span>
+
+              <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-amber-400/50 transition-all flex items-center gap-3 shadow-inner">
+                <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center font-bold shrink-0">
+                  <Wrench className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-black text-white block">40 Yıllık Tecrübe</span>
+                  <span className="text-[10px] text-slate-400 block font-medium">Kemal Oto Güvencesi</span>
+                </div>
               </div>
             </div>
           </div>

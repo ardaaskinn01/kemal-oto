@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { Product } from '../../types/database.types';
-import { SAMPLE_PRODUCTS, formatCurrency } from '../../lib/utils';
+import { formatCurrency } from '../../lib/utils';
 import { optimizeImageForUpload } from '../../lib/utils/imageOptimizer';
 import { 
   Package, 
@@ -24,7 +24,7 @@ import {
 import Image from 'next/image';
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<Product[]>(SAMPLE_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [savingProduct, setSavingProduct] = useState(false);

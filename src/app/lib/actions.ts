@@ -1,6 +1,15 @@
 import { Category, Product } from '../types/database.types';
-import { SAMPLE_CATEGORIES, SAMPLE_PRODUCTS } from './utils';
-import { createClient as createBrowserClient } from '@/utils/supabase/client';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+function getSupabaseClient() {
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('placeholder')) {
+    return null;
+  }
+  return createClient(supabaseUrl, supabaseAnonKey);
+}
 
 export async function getProducts(options?: {
   categorySlug?: string;
@@ -18,7 +27,9 @@ export async function getProducts(options?: {
   let products: Product[] = [];
 
   try {
-    const supabase = createBrowserClient();
+    const supabase = getSupabaseClient();
+    if (!supabase) return [];
+
     let query = supabase.from('products').select('*');
 
     if (options?.featuredOnly) {
@@ -27,19 +38,14 @@ export async function getProducts(options?: {
     if (options?.categorySlug) {
       query = query.eq('category_slug', options.categorySlug);
     }
-    if (options?.brand) {
-      query = query.ilike('brand', `%${options.brand}%`);
-    }
 
     const { data, error } = await query;
 
-    if (data && data.length > 0 && !error) {
+    if (data && !error) {
       products = data as Product[];
-    } else {
-      products = [...SAMPLE_PRODUCTS];
     }
   } catch (e) {
-    products = [...SAMPLE_PRODUCTS];
+    products = [];
   }
 
   // Quality filter
@@ -64,7 +70,7 @@ export async function getProducts(options?: {
     products = products.filter((p) => (p.discount_price || p.price) <= options.maxPrice!);
   }
 
-  // Search query
+  // Search query filter
   if (options?.searchQuery) {
     const q = options.searchQuery.toLowerCase();
     products = products.filter(
@@ -81,26 +87,34 @@ export async function getProducts(options?: {
     );
   }
 
-  // Brand & Model filter
+  // Brand & Model filter (Matching for Opel, Peugeot, Citroën, Chevrolet, DS)
   if (options?.brand) {
-    const brandQ = options.brand.toLowerCase();
-    const modelQ = options?.model ? options.model.toLowerCase() : '';
+    const brandQ = options.brand.toLowerCase().trim();
+    const modelQ = options?.model ? options.model.toLowerCase().trim() : '';
 
     products = products.filter((p) => {
-      if (!p.vehicle_compatibility || p.vehicle_compatibility.length === 0) return true;
-      const hasUniversal = p.vehicle_compatibility.some((vc) =>
-        vc.brand.toLowerCase().includes('evrensel')
-      );
-      if (hasUniversal) return true;
+      // Direct match on product.brand
+      const directBrandMatch = p.brand.toLowerCase().includes(brandQ);
+      if (directBrandMatch) return true;
 
-      return p.vehicle_compatibility.some((vc) => {
-        const brandMatch = vc.brand.toLowerCase().includes(brandQ);
-        if (!brandMatch) return false;
-        if (modelQ) {
-          return vc.model.toLowerCase().includes(modelQ);
-        }
-        return true;
-      });
+      // Match vehicle_compatibility array
+      if (p.vehicle_compatibility && p.vehicle_compatibility.length > 0) {
+        const hasUniversal = p.vehicle_compatibility.some((vc) =>
+          vc.brand.toLowerCase().includes('evrensel')
+        );
+        if (hasUniversal) return true;
+
+        return p.vehicle_compatibility.some((vc) => {
+          const brandMatch = vc.brand.toLowerCase().includes(brandQ) || brandQ.includes(vc.brand.toLowerCase());
+          if (!brandMatch) return false;
+          if (modelQ) {
+            return vc.model.toLowerCase().includes(modelQ);
+          }
+          return true;
+        });
+      }
+
+      return false;
     });
   }
 
@@ -122,21 +136,24 @@ export async function getProducts(options?: {
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
-    const supabase = createBrowserClient();
-    const { data } = await supabase.from('products').select('*').eq('slug', slug).single();
-    if (data) return data as Product;
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      const { data } = await supabase.from('products').select('*').eq('slug', slug).single();
+      if (data) return data as Product;
+    }
   } catch (e) {}
 
-  const product = SAMPLE_PRODUCTS.find((p) => p.slug === slug);
-  return product || null;
+  return null;
 }
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const supabase = createBrowserClient();
-    const { data } = await supabase.from('categories').select('*');
-    if (data && data.length > 0) return data as Category[];
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      const { data } = await supabase.from('categories').select('*');
+      if (data && data.length > 0) return data as Category[];
+    }
   } catch (e) {}
 
-  return SAMPLE_CATEGORIES;
+  return [];
 }

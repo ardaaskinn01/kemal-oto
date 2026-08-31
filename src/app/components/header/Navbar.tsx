@@ -38,37 +38,52 @@ export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLDivElement>(null);
 
   const { activeVehicle, setIsGarageModalOpen } = useGarage();
   const { user, profile, isAdmin, signOut } = useAuth();
   const { shippingSettings } = useShippingSettings();
   const { totalItems, setIsCartOpen } = useCart();
 
-  // Close search suggestions when clicking outside
+  // Close search suggestions & category menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsSearchOpen(false);
+      }
+      if (categoryRef.current && !categoryRef.current.contains(event.target as Node)) {
+        setCategoryMenuOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter products for instant autocomplete
-  const searchResults: Product[] = searchQuery.trim().length >= 2
-    ? SAMPLE_PRODUCTS.filter((p) => {
-        const q = searchQuery.toLowerCase().trim();
-        return (
-          p.title.toLowerCase().includes(q) ||
-          p.part_number.toLowerCase().includes(q) ||
-          p.brand.toLowerCase().includes(q) ||
-          p.vehicle_compatibility.some(
-            (vc) => vc.brand.toLowerCase().includes(q) || vc.model.toLowerCase().includes(q)
-          )
-        );
-      }).slice(0, 5)
-    : [];
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+
+  // Query Supabase live for instant search autocomplete
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length >= 2) {
+      const fetchLiveSearch = async () => {
+        try {
+          const { supabase } = await import('../../lib/supabaseClient');
+          const { data } = await supabase
+            .from('products')
+            .select('*')
+            .or(`title.ilike.%${q}%,part_number.ilike.%${q}%,brand.ilike.%${q}%`)
+            .limit(5);
+
+          setSearchResults((data as Product[]) || []);
+        } catch (e) {
+          setSearchResults([]);
+        }
+      };
+      fetchLiveSearch();
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
 
   const mainBrands = [
     { name: 'Opel', href: '/shop?brand=Opel', color: 'border-yellow-400 text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30' },
@@ -79,11 +94,13 @@ export function Navbar() {
   ];
 
   const categories = [
-    { name: 'İç Donanım & Periyodik Bakım', href: '/shop?category=ic-donanim-bakim', icon: Sparkles },
+    { name: 'Periyodik Bakım Setleri & Filtreler', href: '/shop?category=ic-donanim-bakim', icon: Sparkles },
     { name: 'Fren & Süspansiyon Sistemleri', href: '/shop?category=fren-suspansiyon', icon: SlidersHorizontal },
-    { name: 'Motor & Aktarma Organları', href: '/shop?category=motor-aktarma', icon: Wrench },
+    { name: 'Motor & Triger Aksamı', href: '/shop?category=motor-aktarma', icon: Wrench },
+    { name: 'Soğutma & Isıtma Sistemleri', href: '/shop?category=motor-aktarma', icon: Wrench },
     { name: 'Aydınlatma & Elektrik Aksamı', href: '/shop?category=aydinlatma-elektrik', icon: Tag },
     { name: 'Kaporta & Dış Aksesuarlar', href: '/shop?category=kaporta-aksesuar', icon: Package },
+    { name: 'İç Donanım & Direksiyon Kutusu', href: '/shop?category=ic-donanim-bakim', icon: SlidersHorizontal },
   ];
 
   return (
@@ -368,17 +385,18 @@ export function Navbar() {
         </div>
 
         {/* 3. Mega Menu & Brand Category Bar (onlineyedekparca.com Visual Style) */}
-        <div className="hidden md:block bg-slate-100 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800">
+        <div className="hidden md:block bg-slate-100 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 relative z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between text-xs font-bold py-2 overflow-x-auto scrollbar-none gap-4">
+            <div className="flex items-center justify-between text-xs font-bold py-2 gap-4">
 
               {/* Category Dropdown Trigger */}
-              <div className="relative">
+              <div ref={categoryRef} className="relative z-50">
                 <button
+                  type="button"
                   onClick={() => setCategoryMenuOpen(!categoryMenuOpen)}
-                  className="flex items-center gap-2 bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-950 px-3.5 py-1.5 rounded-lg font-extrabold hover:opacity-95 transition-opacity cursor-pointer"
+                  className="flex items-center gap-2 bg-slate-900 text-white dark:bg-amber-400 dark:text-slate-950 px-3.5 py-2 rounded-xl font-black text-xs hover:bg-slate-800 dark:hover:bg-amber-500 transition-all cursor-pointer shadow-md"
                 >
-                  <Menu className="w-4 h-4" />
+                  <Menu className="w-4 h-4 stroke-[2.5]" />
                   <span>TÜM KATEGORİLER</span>
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform ${categoryMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -386,8 +404,7 @@ export function Navbar() {
                 {/* Dropdown Menu */}
                 {categoryMenuOpen && (
                   <div
-                    onMouseLeave={() => setCategoryMenuOpen(false)}
-                    className="absolute left-0 top-full mt-1 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 py-2 divide-y divide-slate-100 dark:divide-slate-800"
+                    className="absolute left-0 top-full mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 py-2 divide-y divide-slate-100 dark:divide-slate-800/80 animate-in fade-in slide-in-from-top-2 duration-200"
                   >
                     {categories.map((cat, idx) => {
                       const IconComponent = cat.icon;
@@ -396,9 +413,11 @@ export function Navbar() {
                           key={idx}
                           href={cat.href}
                           onClick={() => setCategoryMenuOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-amber-400/10 hover:text-amber-600 dark:hover:text-amber-400 font-bold transition-colors"
+                          className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-amber-400/10 hover:text-amber-600 dark:hover:text-amber-400 font-extrabold transition-colors text-xs"
                         >
-                          <IconComponent className="w-4 h-4 text-amber-500" />
+                          <div className="w-7 h-7 rounded-lg bg-amber-400/10 text-amber-500 flex items-center justify-center shrink-0">
+                            <IconComponent className="w-4 h-4" />
+                          </div>
                           <span>{cat.name}</span>
                         </Link>
                       );
@@ -408,7 +427,7 @@ export function Navbar() {
               </div>
 
               {/* Brand Selector Badges (Opel, Peugeot, Citroën, Chevrolet, DS) */}
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 overflow-x-auto scrollbar-none">
                 <span className="text-[10px] text-slate-400 uppercase font-black tracking-wider mr-1">Markalar:</span>
                 {mainBrands.map((brand) => (
                   <Link
@@ -421,20 +440,7 @@ export function Navbar() {
                 ))}
               </div>
 
-              {/* Quick Links */}
-              <div className="flex items-center gap-4 text-slate-700 dark:text-slate-300 shrink-0 text-[11px] font-bold">
-                <Link href="/shop?category=ic-donanim-bakim" className="hover:text-amber-500 transition-colors">
-                  Periyodik Bakım Setleri
-                </Link>
-                <span>•</span>
-                <Link href="/shop?category=fren-suspansiyon" className="hover:text-amber-500 transition-colors">
-                  Fren & Balata
-                </Link>
-                <span>•</span>
-                <Link href="/shop?category=motor-aktarma" className="hover:text-amber-500 transition-colors">
-                  Triger & Motor
-                </Link>
-              </div>
+
 
             </div>
           </div>
