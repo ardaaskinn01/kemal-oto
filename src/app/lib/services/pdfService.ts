@@ -13,7 +13,7 @@ export function generateOrderInvoicePDF(order: any): jsPDF {
   doc.text('Otomotiv Yedek Parça & Aksesuar', 20, 32);
   doc.text('MUTLUBAŞLAR PLAZA, KEMALPAŞA CAD. 5.SANAYİ SİTESİ PINARBAŞI NO:344B', 20, 37);
   doc.text('35060 Bornova / İzmir | Tel: 0542 292 44 92', 20, 42);
-  doc.text('Vergi Dairesi: Bornova V.D. | Mersis: 0549098231400018', 20, 47);
+  doc.text('Vergi Dairesi: Hasan Tahsin V.D. (İzmir)', 20, 47);
 
   // Invoice & Vehicle VIN Details
   doc.setFontSize(11);

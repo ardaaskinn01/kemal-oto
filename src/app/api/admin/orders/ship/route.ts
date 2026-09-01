@@ -4,6 +4,31 @@ import { emailService } from '@/app/lib/services/emailService';
 
 export async function POST(request: Request) {
   try {
+    const supabase = await createClient();
+
+    // 1. Sunucu Taraflı Kimlik Doğrulama (Session & User Check)
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json(
+        { success: false, error: 'Yetkisiz erişim. Lütfen yönetici hesabınızla giriş yapınız.' },
+        { status: 401 }
+      );
+    }
+
+    // 2. Sunucu Taraflı Rol Kontrolü (Role: Admin)
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (profile?.role !== 'admin') {
+      return NextResponse.json(
+        { success: false, error: 'Erişim engellendi. Bu işlem için Admin yetkisi gereklidir.' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const { orderId, trackingNumber, carrier = 'DHL Express' } = body;
 
@@ -15,9 +40,8 @@ export async function POST(request: Request) {
     }
 
     const cleanTracking = trackingNumber.trim().toUpperCase();
-    const supabase = await createClient();
 
-    // 1. Fetch current order
+    // 3. Siparişi Veritabanında Güncelle
     const { data: order, error: fetchError } = await supabase
       .from('orders')
       .select('*')
@@ -25,28 +49,27 @@ export async function POST(request: Request) {
       .single();
 
     if (fetchError || !order) {
-      // If running with mock/fallback order in memory
-      console.warn('Supabase order not found, processing fallback order:', orderId);
+      console.warn('Supabase siparişi bulunamadı, fallback veri işleniyor:', orderId);
     }
 
-    // 2. Update order status in Supabase
     const { error: updateError } = await supabase
       .from('orders')
       .update({
         shipping_status: 'shipped',
         tracking_number: cleanTracking,
+        carrier: carrier,
       })
       .eq('id', orderId);
 
     if (updateError) {
-      console.warn('Order status update error in DB:', updateError);
+      console.warn('Sipariş kargo durumu DB güncelleme uyarısı:', updateError);
     }
 
-    // 3. Send email to customer via Resend
-    const origin = request.headers.get('origin') || 'http://localhost:3000';
+    // 4. Müşteriye Kargo Bildirim E-postası Gönder
+    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://www.onlinehizliparca.com';
     const orderData = order || {
       id: orderId,
-      contact_info: { email: body.customerEmail || 'musteri@example.com' },
+      contact_info: { email: body.customerEmail || 'info@onlinehizliparca.com' },
       shipping_address: { full_name: body.customerName || 'Değerli Müşterimiz' },
       total_amount: body.totalAmount || 0,
     };
@@ -59,6 +82,7 @@ export async function POST(request: Request) {
       success: true,
       message: 'Sipariş başarıyla kargoya verildi ve müşteriye takip e-postası gönderildi.',
       trackingNumber: cleanTracking,
+      carrier,
       dhlUrl,
     });
   } catch (err: any) {

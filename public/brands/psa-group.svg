@@ -1,0 +1,8 @@
+<svg viewBox="0 0 240 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20 20H45C55 20 62 26 62 35C62 44 55 50 45 50H32V65H20V20ZM32 30V40H44C48 40 50 38 50 35C50 32 48 30 44 30H32Z" fill="currentColor"/>
+  <path d="M80 65C68 65 65 57 65 52H76C76 54 78 57 82 57C86 57 88 55 88 52C88 48 84 47 78 45C68 42 66 38 66 32C66 25 72 20 81 20C90 20 95 25 96 32H85C85 29 83 28 80 28C77 28 76 29 76 31C76 33 78 34 84 36C93 39 98 42 98 49C98 57 92 65 80 65Z" fill="currentColor"/>
+  <path d="M110 65L128 20H138L156 65H144L140 54H126L122 65H110ZM129 45H137L133 33L129 45Z" fill="currentColor"/>
+  <rect x="20" y="72" width="136" height="3" rx="1.5" fill="#E8820C"/>
+  <text x="165" y="45" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="16" letter-spacing="2" fill="currentColor">GROUPE</text>
+  <text x="165" y="62" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11" letter-spacing="1" fill="#E8820C">STELLANTIS</text>
+</svg>

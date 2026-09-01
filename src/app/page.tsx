@@ -1,107 +1,85 @@
 import React from 'react';
 import Link from 'next/link';
-import { HeroBanner } from './components/ui/HeroBanner';
+import Image from 'next/image';
+import { getProducts, getCategories } from './lib/actions';
 import { ProductCard } from './components/ui/ProductCard';
-import { getCategories, getProducts } from './lib/actions';
-import {
+import { HeroBanner } from './components/ui/HeroBanner';
+import { PsaGroupShowcase } from './components/ui/PsaGroupShowcase';
+import { 
+  ShieldCheck, 
+  Truck, 
+  Award, 
+  Clock, 
+  ArrowRight, 
+  Wrench, 
+  Disc, 
+  Zap, 
+  CheckCircle2, 
   ChevronRight,
-  ShieldCheck,
-  Truck,
-  Award,
-  Clock,
-  ArrowRight,
-  Phone,
+  Filter
 } from 'lucide-react';
 
-export default async function HomePage() {
-  const categories = await getCategories();
-  const allProducts = await getProducts({});
-  const featuredProducts = allProducts.filter((p) => p.is_featured);
-  const brakeProducts = allProducts.filter((p) => p.category_slug === 'fren-suspansiyon');
+export const revalidate = 60; // ISR 1 minute
 
-  // Supabase'den gelen gerçek kategori sayıları
+export default async function HomePage() {
+  const [products, categories] = await Promise.all([
+    getProducts(),
+    getCategories()
+  ]);
+
+  const featuredProducts = products.filter(p => p.is_featured);
+  const brakeProducts = products.filter(p => p.category === 'Fren Sistemi' || p.category_slug === 'fren-sistemi');
+  const maintenanceProducts = products.filter(p => p.category === 'Filtre & Bakım' || p.category_slug === 'filtre-bakim');
+
+  // Real product count per category
   const getCategoryCount = (slug: string) => {
-    const cat = categories.find((c) => c.slug === slug);
-    return cat ? cat.item_count : 0;
+    return products.filter(p => p.category_slug === slug || p.category?.toLowerCase() === slug.toLowerCase()).length;
   };
 
   const mainCategories = [
     {
-      title: 'Periyodik Bakım & Filtre',
-      desc: 'Hava, yağ, yakıt ve polen filtreleri, orijinal motor yağları',
-      slug: 'ic-donanim-bakim',
-      popular: ['Filtre Bakım Seti', 'Motor Yağı', 'Buji Takımı']
+      title: 'Periyodik Bakım & Filtre Seti',
+      desc: 'Hava, yağ, yakıt, polen filtreleri ve motor yağları',
+      icon: Filter,
+      slug: 'filtre-bakim',
+      popular: ['4\'lü Filtre Bakım Seti', 'Motor Yağı (Dexos2)', 'Yağ Filtresi']
     },
     {
-      title: 'Fren & Süspansiyon',
-      desc: 'Ön/arka diskler, balatalar, amortisörler ve salıncaklar',
-      slug: 'fren-suspansiyon',
-      popular: ['Ön Fren Balatası', 'Hava Kanallı Disk', 'Z-Rot Takımı']
+      title: 'Fren Sistemi & Güvenlik',
+      desc: 'Ön/arka fren diskleri, balatalar ve hidrolik aksam',
+      icon: Disc,
+      slug: 'fren-sistemi',
+      popular: ['Ön Fren Balata Takımı', 'Hava Kanallı Fren Diski', 'Fren Kaliperi']
     },
     {
-      title: 'Motor & Triger Seti',
-      desc: 'Eksantrik kayış kitleri, devirdaim, kasnak ve contalar',
-      slug: 'motor-aktarma',
-      popular: ['Triger Seti + Devirdaim', 'Termostat Gövdesi', 'Külbütör Kapağı']
+      title: 'Motor & Mekanik Parçalar',
+      desc: 'Triger setleri, devirdaim, debriyaj ve conta takımları',
+      icon: Wrench,
+      slug: 'motor-mekanik',
+      popular: ['Triger Seti & Devirdaim', 'Eksantrik Mili', 'Termostat']
     },
     {
-      title: 'Aydınlatma & Elektrik',
-      desc: 'Far üniteleri, stop lambaları, sinyal, sensör ve marş',
+      title: 'Aydınlatma & Elektrik Aksamı',
+      desc: 'Farlar, stop lambaları, sensörler ve beyinler',
+      icon: Zap,
       slug: 'aydinlatma-elektrik',
       popular: ['LED Far Komple', 'Arka Stop Lambası', 'Krank Sensörü']
     },
   ];
 
-  const popularBrands = [
-    {
-      name: 'Opel',
-      slug: 'Opel',
-      origin: 'Alman Mühendisliği · PSA/GM',
-      models: ['Astra (H, J, K, L)', 'Corsa (D, E, F)', 'Insignia (A, B)', 'Mokka', 'Grandland'],
-      highlight: 'Astra & Corsa Uyumlu Stoklar'
-    },
-    {
-      name: 'Peugeot',
-      slug: 'Peugeot',
-      origin: 'Stellantis Orijinal',
-      models: ['208', '308', '2008', '3008', '5008', 'Rifter', 'Partner'],
-      highlight: 'BlueHDi & PureTech Uyumlu'
-    },
-    {
-      name: 'Citroën',
-      slug: 'Citroën',
-      origin: 'Stellantis Orijinal',
-      models: ['C3', 'C4', 'C5 Aircross', 'Berlingo', 'C-Elysée'],
-      highlight: 'Konfor & Süspansiyon Parçaları'
-    },
-    {
-      name: 'Chevrolet',
-      slug: 'Chevrolet',
-      origin: 'GM Yetkili Stok',
-      models: ['Cruze 1.6 / 1.4T', 'Aveo T300', 'Captiva 2.0D', 'Trax'],
-      highlight: 'Orijinal GM Parça Garantisi'
-    },
-    {
-      name: 'DS Automobiles',
-      slug: 'DS Automobiles',
-      origin: 'Premium Stellantis Grubu',
-      models: ['DS 7 Crossback', 'DS 4', 'DS 3 Crossback', 'DS 9'],
-      highlight: 'Prestij & Orijinal Parça'
-    },
-  ];
-
   const badges = [
-    { title: '40 Yıllık Tecrübe', subtitle: 'Kemal Oto Güvencesi' },
-    { title: '%100 Uyum Garantisi', subtitle: 'Şasi (VIN) ile Kontrol' },
+    { title: 'PSA Grubu & GM Uzmanı', subtitle: 'Peugeot • Citroën • Opel • Chevrolet • DS' },
+    { title: '%100 Uyum Garantisi', subtitle: '17 Haneli Şasi (VIN) ile Kontrol' },
     { title: 'Aynı Gün Kargo', subtitle: 'Saat 16:00\'ya Kadar' },
-    { title: '81 İle Gönderim', subtitle: 'Hızlı & Güvenli Teslimat' },
+    { title: '81 İle Hızlı Gönderim', subtitle: 'Anlaşmalı Güvenli Teslimat' },
   ];
 
   return (
     <div className="pb-16 space-y-12">
+      {/* 1. HERO BANNER WITH 4-STEP CAR SELECTOR */}
       <HeroBanner />
 
-      {/* Badges Band (No mock numbers, pure value propositions) */}
+      {/* 2. VALUE PROPOSITIONS BAND */}
       <div className="bg-[#E8820C]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-orange-400/40">
@@ -115,14 +93,17 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 
-        {/* 1. KATEGORİ REHBERİ */}
+        {/* 3. PSA GROUPE AUTHORITATIVE SHOWCASE (Peugeot, Citroen, Opel, DS, Vauxhall) */}
+        <PsaGroupShowcase />
+
+        {/* 4. KATEGORİ REHBERİ */}
         <section className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
             <div>
               <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Yedek Parça Kataloğu</span>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Popüler Ana Gruplar</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Popüler Ana Parça Grupları</h2>
             </div>
             <Link href="/shop/categories" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
               Tüm Kategorileri Listele ({categories.length}) <ChevronRight className="w-3.5 h-3.5" />
@@ -135,7 +116,7 @@ export default async function HomePage() {
               return (
                 <div
                   key={i}
-                  className="border border-gray-200 dark:border-[#2a2d35] bg-white dark:bg-[#111318] rounded-lg p-4 flex flex-col justify-between hover:border-[#E8820C] transition-colors"
+                  className="border border-gray-200 dark:border-[#2a2d35] bg-white dark:bg-[#111318] rounded-2xl p-5 flex flex-col justify-between hover:border-[#E8820C] transition-all hover:shadow-md"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2 mb-2">
@@ -158,7 +139,7 @@ export default async function HomePage() {
                       <ul className="text-xs text-gray-600 dark:text-gray-300 space-y-0.5">
                         {cat.popular.map((item, idx) => (
                           <li key={idx} className="flex items-center gap-1.5 truncate">
-                            <span className="w-1 h-1 rounded-full bg-[#E8820C]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#E8820C]" />
                             <span className="truncate">{item}</span>
                           </li>
                         ))}
@@ -179,49 +160,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 2. MARKA PARÇA DİZİNİ */}
-        <section className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
-            <div>
-              <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Uzmanlık Alanımız</span>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Araç Marka Merkezleri</h2>
-            </div>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              Ruhsat şasi numarası ile %100 birebir doğrulama
-            </span>
-          </div>
-
-          <div className="border border-gray-200 dark:border-[#2a2d35] rounded-lg bg-white dark:bg-[#111318] divide-y divide-gray-100 dark:divide-[#1e2128] overflow-hidden">
-            {popularBrands.map((brand, i) => (
-              <div
-                key={i}
-                className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-gray-50/70 dark:hover:bg-[#15181e] transition-colors"
-              >
-                {/* Brand Title & Origin */}
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base sm:text-lg text-gray-900 dark:text-white">{brand.name}</h3>
-                    <span className="text-xs text-gray-400 font-medium">Yedek Parçaları</span>
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{brand.origin}</p>
-                </div>
-
-                {/* Action Link */}
-                <div className="shrink-0 flex items-center">
-                  <Link
-                    href={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#E8820C] hover:bg-[#d4740a] px-4 py-2 rounded transition-colors shadow-sm"
-                  >
-                    <span>{brand.name} Parçaları</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 3. ÖNE ÇIKAN ÜRÜNLER VİTRİNİ */}
+        {/* 5. ÖNE ÇIKAN ÜRÜNLER VİTRİNİ */}
         {featuredProducts.length > 0 && (
           <section className="space-y-4">
             <div className="flex items-end justify-between pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
@@ -241,7 +180,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* 4. FREN & SÜSPANSİYON VİTRİNİ */}
+        {/* 6. FREN & SÜSPANSİYON VİTRİNİ */}
         {brakeProducts.length > 0 && (
           <section className="space-y-4">
             <div className="flex items-end justify-between pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
@@ -249,8 +188,8 @@ export default async function HomePage() {
                 <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Güvenlik & Sürüş</span>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Fren Disk, Balata & Süspansiyon</h2>
               </div>
-              <Link href="/shop?category=fren-suspansiyon" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
-                Tüm Fren Parçaları <ChevronRight className="w-3.5 h-3.5" />
+              <Link href="/shop?category=fren-sistemi" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
+                Tümünü Listele <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -261,60 +200,71 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* 5. KURUMSAL BİLGİ & ÇÖZÜM HATTI */}
-        <section>
-          <div className="bg-gray-900 dark:bg-[#111318] rounded-xl border border-gray-800 dark:border-[#2a2d35] p-6 sm:p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              
-              <div className="lg:col-span-7 space-y-3">
-                <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider">Kemal Oto Doğrulama Sistemi</span>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
-                  Aracınıza yanlış parça alma riskine son verin
-                </h2>
-                <p className="text-gray-400 text-xs sm:text-sm leading-relaxed max-w-xl">
-                  Siparişinizi vermeden önce veya verdikten sonra 17 haneli şasi numaranızı (VIN) girin; uzman ekibimiz orijinal fabrika parça kataloglarından (PSA ServiceBox / GM EPC) teyit ederek siparişinizi hatasız sevk etsin.
-                </p>
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <Link
-                    href="/shop"
-                    className="inline-flex items-center gap-2 bg-[#E8820C] hover:bg-[#d4740a] text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded transition-colors"
-                  >
-                    Parça Kataloğunu Aç
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <a
-                    href="tel:05422924492"
-                    className="inline-flex items-center gap-2 border border-gray-700 text-gray-200 hover:text-white hover:border-gray-500 text-xs sm:text-sm font-medium px-4 py-2.5 rounded transition-colors"
-                  >
-                    <Phone className="w-3.5 h-3.5" />
-                    0542 292 44 92
-                  </a>
-                </div>
+        {/* 7. PERİYODİK BAKIM VİTRİNİ */}
+        {maintenanceProducts.length > 0 && (
+          <section className="space-y-4">
+            <div className="flex items-end justify-between pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
+              <div>
+                <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Düzenli Bakım</span>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Filtre & Bakım Setleri</h2>
               </div>
+              <Link href="/shop?category=filtre-bakim" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
+                Tümünü Listele <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {maintenanceProducts.slice(0, 4).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </section>
+        )}
 
-              <div className="lg:col-span-5 grid grid-cols-2 gap-3">
-                <div className="bg-gray-800/50 dark:bg-[#1a1d23] border border-gray-700/40 dark:border-[#2a2d35] p-3.5 rounded">
-                  <ShieldCheck className="w-5 h-5 text-[#E8820C] mb-1.5" />
-                  <p className="text-xs font-bold text-white">Şasi Doğrulama</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">17 haneli VIN ile %100 uyum</p>
-                </div>
-                <div className="bg-gray-800/50 dark:bg-[#1a1d23] border border-gray-700/40 dark:border-[#2a2d35] p-3.5 rounded">
-                  <Truck className="w-5 h-5 text-[#E8820C] mb-1.5" />
-                  <p className="text-xs font-bold text-white">Aynı Gün Sevk</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">16:00&apos;ya kadar DHL Express</p>
-                </div>
-                <div className="bg-gray-800/50 dark:bg-[#1a1d23] border border-gray-700/40 dark:border-[#2a2d35] p-3.5 rounded">
-                  <Award className="w-5 h-5 text-[#E8820C] mb-1.5" />
-                  <p className="text-xs font-bold text-white">PSA & GM Orijinal</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Faturalı & garantili parça</p>
-                </div>
-                <div className="bg-gray-800/50 dark:bg-[#1a1d23] border border-gray-700/40 dark:border-[#2a2d35] p-3.5 rounded">
-                  <Clock className="w-5 h-5 text-[#E8820C] mb-1.5" />
-                  <p className="text-xs font-bold text-white">Teknik Destek</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Usta desteği 08:30-18:30</p>
-                </div>
+        {/* 8. EXPERT TRUST & CHASSIS VERIFICATION FOOTPRINT */}
+        <section className="bg-gray-900 text-white rounded-3xl p-6 sm:p-10 border border-gray-800">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 space-y-4">
+              <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">
+                PSA Grubu Şasi Doğrulama Hizmeti
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+                Yanlış Parça Siparişi Verme Riskine Son
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed max-w-xl">
+                Otomotiv yedek parçalarında motor kodu, şanzıman türü ve donanım varyasyonları nedeniyle aynı model araçlarda dahi parçalar farklılık gösterebilir. Ruhsatınızdaki 17 haneli şasi numaranızı girdiğinizde siparişiniz depodan çıkmadan önce uzman teknisyenlerimizce fabrika EPC kataloglarından teyit edilir.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 bg-[#E8820C] hover:bg-[#d4740a] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl transition-colors shadow-md"
+                >
+                  <span>WhatsApp ile Ustaya Sor</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
+            </div>
 
+            <div className="lg:col-span-5 grid grid-cols-2 gap-3">
+              <div className="bg-gray-800/50 border border-gray-700/40 p-4 rounded-2xl">
+                <ShieldCheck className="w-6 h-6 text-[#E8820C] mb-2" />
+                <p className="text-xs font-bold text-white">Şasi Doğrulama</p>
+                <p className="text-[11px] text-gray-400 mt-0.5">17 haneli VIN ile %100 uyum</p>
+              </div>
+              <div className="bg-gray-800/50 border border-gray-700/40 p-4 rounded-2xl">
+                <Truck className="w-6 h-6 text-[#E8820C] mb-2" />
+                <p className="text-xs font-bold text-white">Aynı Gün Sevk</p>
+                <p className="text-[11px] text-gray-400 mt-0.5">16:00&apos;ya kadar Anlaşmalı Kargo</p>
+              </div>
+              <div className="bg-gray-800/50 border border-gray-700/40 p-4 rounded-2xl">
+                <Award className="w-6 h-6 text-[#E8820C] mb-2" />
+                <p className="text-xs font-bold text-white">PSA Orijinal</p>
+                <p className="text-[11px] text-gray-400 mt-0.5">Faturalı & garantili parça</p>
+              </div>
+              <div className="bg-gray-800/50 border border-gray-700/40 p-4 rounded-2xl">
+                <Clock className="w-6 h-6 text-[#E8820C] mb-2" />
+                <p className="text-xs font-bold text-white">Teknik Destek</p>
+                <p className="text-[11px] text-gray-400 mt-0.5">Usta desteği 08:30-18:30</p>
+              </div>
             </div>
           </div>
         </section>

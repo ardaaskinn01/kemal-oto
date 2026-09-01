@@ -30,11 +30,12 @@ export default function DistanceSalesAgreementPage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Satıcı Bilgileri</h2>
           <div className="bg-slate-50 dark:bg-[#111318] p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1 text-xs">
-            <p><strong>Satıcı / Platform:</strong> Online Hızlı Parça (Kemal Oto Yedek Parça)</p>
+            <p><strong>Satıcı / Platform:</strong> Online Hızlı Parça (Kemal Oto - Ferhat Gazan)</p>
+            <p><strong>Vergi Dairesi:</strong> Hasan Tahsin Vergi Dairesi (İzmir)</p>
+            <p><strong>Vergi / Mükellef No:</strong> 34861971414</p>
             <p><strong>Adres:</strong> MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova/İzmir</p>
             <p><strong>Telefon:</strong> 0542 292 44 92</p>
             <p><strong>E-Posta:</strong> info@onlinehizliparca.com</p>
-            <p><strong>Mersis No:</strong> 0549098231400018</p>
           </div>
         </section>
 

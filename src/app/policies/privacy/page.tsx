@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Genel Bilgilendirme ve Amaç</h2>
           <p>
-            Online Hızlı Parça (&quot;Online Hızlı Parça&quot;) olarak, çevrim içi mağazamız (<Link href="https://www.onlinehizliparca.com" className="text-[#E8820C] hover:underline">onlinehizliparca.com</Link>) üzerinden alışveriş yapan bireysel ve kurumsal müşterilerimizin kişisel ve ticari verilerinin gizliliğine ve güvenliğine en üst düzeyde önem vermekteyiz. Bu Gizlilik Politikası, web sitemizi kullanırken toplanan, işlenen ve saklanan verilerin niteliğini, işlenme amaçlarını ve haklarınızı açıklamaktadır.
+            Kemal Oto (&quot;Kemal Oto&quot;) olarak, çevrim içi mağazamız (<Link href="https://www.onlinehizliparca.com" className="text-[#E8820C] hover:underline">onlinehizliparca.com</Link>) üzerinden alışveriş yapan bireysel ve kurumsal müşterilerimizin kişisel ve ticari verilerinin gizliliğine ve güvenliğine en üst düzeyde önem vermekteyiz. Bu Gizlilik Politikası, web sitemizi kullanırken toplanan, işlenen ve saklanan verilerin niteliğini, işlenme amaçlarını ve haklarınızı açıklamaktadır.
           </p>
         </section>
 
@@ -49,7 +49,7 @@ export default function PrivacyPolicyPage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">3. Ödeme ve Kart Güvenliği (256-Bit SSL & 3D Secure)</h2>
           <p>
-            Online Hızlı Parça, kredi kartı ve banka kartı bilgilerinizi kesinlikle kendi sunucularında saklamaz. Sitemiz üzerinden gerçekleştirilen tüm ödeme işlemleri, BDDK lisanslı ve uluslararası PCI-DSS Level 1 güvenlik sertifikasına sahip <strong>İyzico / Güvenli Ödeme Altyapısı</strong> üzerinden 256-Bit SSL şifreleme ve 3D Secure güvenli doğrulama protokolü ile doğrudan banka sistemlerine iletilir.
+            Kemal Oto, kredi kartı ve banka kartı bilgilerinizi kesinlikle kendi sunucularında saklamaz. Sitemiz üzerinden gerçekleştirilen tüm ödeme işlemleri, BDDK lisanslı ve uluslararası PCI-DSS Level 1 güvenlik sertifikasına sahip <strong>İyzico / Güvenli Ödeme Altyapısı</strong> üzerinden 256-Bit SSL şifreleme ve 3D Secure güvenli doğrulama protokolü ile doğrudan banka sistemlerine iletilir.
           </p>
         </section>
 

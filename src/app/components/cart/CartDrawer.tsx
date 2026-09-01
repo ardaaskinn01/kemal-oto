@@ -4,15 +4,15 @@ import React, { useState } from 'react';
 import { useCart } from '../../contexts/CartContext';
 import { useShippingSettings } from '../../contexts/ShippingSettingsContext';
 import { formatCurrency } from '../../lib/utils';
-import { 
-  ShoppingBag, 
-  X, 
-  Trash2, 
-  Plus, 
-  Minus, 
-  ArrowRight, 
-  Truck, 
-  CreditCard, 
+import {
+  ShoppingBag,
+  X,
+  Trash2,
+  Plus,
+  Minus,
+  ArrowRight,
+  Truck,
+  CreditCard,
   ShieldCheck,
   Loader2,
   Building2,
@@ -133,7 +133,7 @@ export function CartDrawer() {
     <>
       <div className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm animate-in fade-in">
         <div className="w-full max-w-md bg-white dark:bg-[#111318] border-l border-gray-200 dark:border-[#2a2d35] h-full flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300">
-          
+
           {/* Drawer Header */}
           <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-[#2a2d35] flex items-center justify-between bg-gray-50 dark:bg-[#0d0f12]">
             <div className="flex items-center gap-2.5">
@@ -300,7 +300,7 @@ export function CartDrawer() {
       {checkoutModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in">
           <div className="bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d35] rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            
+
             <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-[#2a2d35] flex items-center justify-between bg-gray-900 text-white">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-[#E8820C] text-white flex items-center justify-center font-bold">
@@ -335,7 +335,7 @@ export function CartDrawer() {
 
               {!formHtml ? (
                 <form onSubmit={handleStartCheckout} className="space-y-4">
-                  
+
                   {/* Fatura Türü Seçimi (Bireysel vs Kurumsal) */}
                   <div>
                     <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
@@ -345,11 +345,10 @@ export function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => setCustomer({ ...customer, invoiceType: 'individual' })}
-                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          customer.invoiceType === 'individual'
+                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${customer.invoiceType === 'individual'
                             ? 'bg-white dark:bg-[#0d0f12] text-[#E8820C] shadow-sm border border-gray-200/50 dark:border-[#2a2d35]'
                             : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                        }`}
+                          }`}
                       >
                         <UserCheck className="w-4 h-4" />
                         <span>Bireysel Fatura</span>
@@ -358,11 +357,10 @@ export function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => setCustomer({ ...customer, invoiceType: 'corporate' })}
-                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          customer.invoiceType === 'corporate'
+                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${customer.invoiceType === 'corporate'
                             ? 'bg-white dark:bg-[#0d0f12] text-[#E8820C] shadow-sm border border-gray-200/50 dark:border-[#2a2d35]'
                             : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                        }`}
+                          }`}
                       >
                         <Building2 className="w-4 h-4" />
                         <span>Kurumsal Fatura</span>

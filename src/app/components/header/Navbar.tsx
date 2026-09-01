@@ -70,34 +70,34 @@ export function Navbar() {
   }, [searchQuery]);
 
   const mainBrands = [
-    { name: 'Opel', href: '/shop?brand=Opel' },
     { name: 'Peugeot', href: '/shop?brand=Peugeot' },
     { name: 'Citroën', href: '/shop?brand=Citro%C3%ABn' },
+    { name: 'Opel', href: '/shop?brand=Opel' },
     { name: 'Chevrolet', href: '/shop?brand=Chevrolet' },
     { name: 'DS Automobiles', href: '/shop?brand=DS%20Automobiles' },
   ];
 
   const categories = [
-    { name: 'Periyodik Bakım & Filtreler', href: '/shop?category=ic-donanim-bakim' },
-    { name: 'Fren & Süspansiyon', href: '/shop?category=fren-suspansiyon' },
-    { name: 'Motor & Triger Aksamı', href: '/shop?category=motor-aktarma' },
-    { name: 'Soğutma & Isıtma', href: '/shop?category=motor-aktarma' },
+    { name: 'Periyodik Bakım & Filtreler', href: '/shop?category=filtre-bakim' },
+    { name: 'Fren & Süspansiyon', href: '/shop?category=fren-sistemi' },
+    { name: 'Motor & Triger Aksamı', href: '/shop?category=motor-mekanik' },
     { name: 'Aydınlatma & Elektrik', href: '/shop?category=aydinlatma-elektrik' },
-    { name: 'Kaporta & Dış Aksesuar', href: '/shop?category=kaporta-aksesuar' },
-    { name: 'İç Donanım & Direksiyon', href: '/shop?category=ic-donanim-bakim' },
+    { name: 'Kaporta & Dış Aksam', href: '/shop?category=kaporta-karoser' },
   ];
 
   return (
     <>
       <header className="sticky top-0 z-40 bg-white dark:bg-[#0d0f12] border-b border-gray-200 dark:border-[#2a2d35] transition-colors">
 
-        {/* 1. Top strip — minimal, text only */}
+        {/* 1. Top strip — PSA Authority */}
         <div className="bg-gray-50 dark:bg-[#111318] border-b border-gray-200 dark:border-[#2a2d35] text-xs text-gray-500 dark:text-gray-400 py-1.5 px-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <span>81 ile aynı gün DHL kargo · Şasi no ile %100 uyum garantisi</span>
+            <span className="font-medium text-gray-700 dark:text-gray-300">
+              <strong className="text-[#E8820C]">PSA Grubu & GM</strong> (Peugeot • Citroën • Opel • Chevrolet • DS) Yedek Parça Merkezi
+            </span>
             <div className="flex items-center gap-4">
-              <a href="tel:05422924492" className="hover:text-[#E8820C] transition-colors font-medium">
-                0542 292 44 92
+              <a href="tel:05422924492" className="hover:text-[#E8820C] transition-colors font-semibold">
+                Destek: 0542 292 44 92
               </a>
             </div>
           </div>

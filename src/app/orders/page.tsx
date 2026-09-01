@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
 import { formatCurrency } from '../lib/utils';
-import { 
-  Package, 
-  Truck, 
-  Clock, 
-  CheckCircle2, 
-  ExternalLink, 
+import {
+  Package,
+  Truck,
+  Clock,
+  CheckCircle2,
+  ExternalLink,
   ShoppingBag,
   Loader2
 } from 'lucide-react';

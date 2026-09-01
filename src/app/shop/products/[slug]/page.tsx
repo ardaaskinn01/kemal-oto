@@ -298,31 +298,45 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             <ProductVinCheck product={product} />
 
             {/* Pricing & Add To Cart Box */}
-            <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 p-5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
-              <div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">FİYAT</span>
-                {product.discount_price ? (
-                  <div className="flex items-baseline gap-2">
+            <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 p-5 rounded-3xl space-y-4 shadow-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">FİYAT</span>
+                  {product.discount_price ? (
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                        {formatCurrency(product.discount_price)}
+                      </span>
+                      <span className="text-xs text-slate-400 line-through">
+                        {formatCurrency(product.price)}
+                      </span>
+                    </div>
+                  ) : (
                     <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                      {formatCurrency(product.discount_price)}
-                    </span>
-                    <span className="text-xs text-slate-400 line-through">
                       {formatCurrency(product.price)}
                     </span>
-                  </div>
-                ) : (
-                  <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                    {formatCurrency(product.price)}
+                  )}
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5 font-semibold">
+                    KDV Dahil • Güvenli Teslimat
                   </span>
-                )}
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5 font-semibold">
-                  KDV Dahil • Ücretsiz Kargo
-                </span>
+                </div>
+
+                <div className="w-full sm:w-auto">
+                  <AddToCartButton product={product} />
+                </div>
               </div>
 
-              <div className="w-full sm:w-auto">
-                <AddToCartButton product={product} />
-              </div>
+              {/* WhatsApp ile Ustaya Sor / Ruhsat Gönder Butonu */}
+              <a
+                href={`https://wa.me/905422924492?text=${encodeURIComponent(
+                  `Merhaba, onlinehizliparca.com üzerinden "${product.title}" (OEM: ${product.part_number}) parçasını inceliyorum. Aracımın ruhsat/şasi numarası ile uyumunu teyit etmek istiyorum.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-98"
+              >
+                <span>💬 Bu Parça Aracıma Uyar mı? (WhatsApp Ruhsat Teyidi)</span>
+              </a>
             </div>
 
             {/* Trust Value Badges */}

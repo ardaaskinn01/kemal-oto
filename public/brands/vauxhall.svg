@@ -1,0 +1,7 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="44" fill="#E11D48"/>
+  <circle cx="50" cy="50" r="40" stroke="#FFFFFF" stroke-width="2.5"/>
+  <path d="M30 30H42L48 48L54 30H66L56 56H40L30 30Z" fill="#FFFFFF"/>
+  <path d="M42 58H54L64 74H52L48 66L44 74H32L42 58Z" fill="#FFFFFF"/>
+  <text x="50" y="93" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="9" text-anchor="middle" fill="#FFFFFF" letter-spacing="1">VAUXHALL</text>
+</svg>

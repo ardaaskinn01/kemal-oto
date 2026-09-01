@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { 
-  Truck, 
-  Search, 
-  Check, 
-  Send, 
-  ExternalLink, 
-  Clock, 
-  Package, 
-  FileText, 
+import {
+  Truck,
+  Search,
+  Check,
+  Send,
+  ExternalLink,
+  Clock,
+  Package,
+  FileText,
   AlertCircle,
   Loader2,
   RefreshCw
@@ -52,7 +52,7 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'shipped'>('all');
-  
+
   // Tracking number input state keyed by orderId
   const [trackingInputs, setTrackingInputs] = useState<Record<string, string>>({});
   const [shippingLoading, setShippingLoading] = useState<Record<string, boolean>>({});
@@ -170,31 +170,28 @@ export default function AdminOrdersPage() {
       <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
         <button
           onClick={() => setActiveFilter('all')}
-          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-            activeFilter === 'all'
+          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${activeFilter === 'all'
               ? 'bg-amber-400 text-slate-950 font-black'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-          }`}
+            }`}
         >
           Tüm Siparişler ({orders.length})
         </button>
         <button
           onClick={() => setActiveFilter('pending')}
-          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-            activeFilter === 'pending'
+          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${activeFilter === 'pending'
               ? 'bg-amber-400 text-slate-950 font-black'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-          }`}
+            }`}
         >
           Bekleyenler ({orders.filter((o) => o.shipping_status === 'pending').length})
         </button>
         <button
           onClick={() => setActiveFilter('shipped')}
-          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-            activeFilter === 'shipped'
+          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${activeFilter === 'shipped'
               ? 'bg-amber-400 text-slate-950 font-black'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-          }`}
+            }`}
         >
           Kargolananlar ({orders.filter((o) => o.shipping_status === 'shipped').length})
         </button>
@@ -215,16 +212,14 @@ export default function AdminOrdersPage() {
             return (
               <div
                 key={order.id}
-                className={`bg-white dark:bg-slate-900 border rounded-3xl p-5 sm:p-6 space-y-4 transition-all shadow-sm ${
-                  isShipped ? 'border-emerald-300 dark:border-emerald-500/30' : 'border-slate-200 dark:border-slate-800'
-                }`}
+                className={`bg-white dark:bg-slate-900 border rounded-3xl p-5 sm:p-6 space-y-4 transition-all shadow-sm ${isShipped ? 'border-emerald-300 dark:border-emerald-500/30' : 'border-slate-200 dark:border-slate-800'
+                  }`}
               >
                 {/* Header info */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3.5">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold shrink-0 ${
-                      isShipped ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-400/10 text-amber-500'
-                    }`}>
+                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold shrink-0 ${isShipped ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-400/10 text-amber-500'
+                      }`}>
                       <Truck className="w-5 h-5" />
                     </div>
                     <div>
@@ -349,11 +344,10 @@ export default function AdminOrdersPage() {
 
                   {currentNotification && (
                     <div
-                      className={`mt-2 p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${
-                        currentNotification.type === 'success'
+                      className={`mt-2 p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${currentNotification.type === 'success'
                           ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
                           : 'bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400'
-                      }`}
+                        }`}
                     >
                       <AlertCircle className="w-4 h-4 shrink-0" />
                       <span>{currentNotification.message}</span>
