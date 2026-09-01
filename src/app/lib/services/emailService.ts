@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 const resendApiKey = process.env.RESEND_API_KEY || 're_mock_api_key_kemaloto_2026';
-const fromEmail = process.env.EMAIL_FROM || 'Kemal Oto <bilgi@kemaloto.com>';
+const fromEmail = process.env.EMAIL_FROM || 'Online Hızlı Parça <info@onlinehizliparca.com>';
 
 export class EmailService {
   private resend: Resend;
@@ -153,7 +153,7 @@ export class EmailService {
    * Yöneticiye Yeni Sipariş Bildirimi
    */
   async sendAdminOrderNotification(order: any) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'bilgi@kemaloto.com';
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'info@onlinehizliparca.com';
 
     try {
       const data = await this.resend.emails.send({

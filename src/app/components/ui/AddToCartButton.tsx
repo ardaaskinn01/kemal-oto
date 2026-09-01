@@ -18,9 +18,9 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
   // Simple customer form
   const [customer, setCustomer] = useState({
-    firstName: 'Ahmet',
-    lastName: 'Yılmaz',
-    email: 'ahmet.yilmaz@kemaloto.com',
+    firstName: 'Müşteri',
+    lastName: 'Alıcı',
+    email: 'musteri@onlinehizliparca.com',
     phone: '+905422924492',
     address: 'MUTLUBAŞLAR PLAZA, KEMALPAŞA CAD. NO:344B',
     city: 'İzmir',

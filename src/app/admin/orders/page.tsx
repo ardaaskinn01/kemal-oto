@@ -104,7 +104,7 @@ export default function AdminOrdersPage() {
         body: JSON.stringify({
           orderId: order.id,
           trackingNumber: trackingCode,
-          customerEmail: order.contact_info?.email || 'musteri@kemaloto.com',
+          customerEmail: order.contact_info?.email || 'musteri@onlinehizliparca.com',
           customerName: order.shipping_address?.full_name || 'Müşteri',
           items: order.items,
         }),
