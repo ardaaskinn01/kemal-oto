@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Genel Bilgilendirme ve Amaç</h2>
           <p>
-            Kemal Oto A.Ş. (&quot;Kemal Oto&quot;) olarak, çevrim içi mağazamız (<Link href="https://kemaloto.com" className="text-orange-600 hover:underline">kemaloto.com</Link>) üzerinden alışveriş yapan müşterilerimizin ve ziyaretçilerimizin kişisel verilerinin gizliliğine ve güvenliğine en üst düzeyde önem vermekteyiz. Bu Gizlilik Politikası, web sitemizi kullanırken toplanan, işlenen ve saklanan verilerin niteliğini, işlenme amaçlarını ve haklarınızı açıklamaktadır.
+            Kemal Oto (&quot;Kemal Oto&quot;) olarak, çevrim içi mağazamız (<Link href="https://kemaloto.com" className="text-orange-600 hover:underline">kemaloto.com</Link>) üzerinden alışveriş yapan müşterilerimizin ve ziyaretçilerimizin kişisel verilerinin gizliliğine ve güvenliğine en üst düzeyde önem vermekteyiz. Bu Gizlilik Politikası, web sitemizi kullanırken toplanan, işlenen ve saklanan verilerin niteliğini, işlenme amaçlarını ve haklarınızı açıklamaktadır.
           </p>
         </section>
 

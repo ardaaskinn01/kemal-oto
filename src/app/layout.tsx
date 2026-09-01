@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Figtree, Syne } from 'next/font/google';
+import { Figtree, Outfit } from 'next/font/google';
 import './globals.css';
 import { Navbar } from './components/header/Navbar';
 import { Footer } from './components/footer/Footer';
@@ -11,6 +11,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 
 import { CartProvider } from './contexts/CartContext';
 import { CartDrawer } from './components/cart/CartDrawer';
+import { GarageModal } from './components/garage/GarageModal';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -19,10 +20,10 @@ const figtree = Figtree({
   weight: ['400', '500', '600', '700', '800'],
 });
 
-const syne = Syne({
+const outfit = Outfit({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-syne',
+  variable: '--font-outfit',
   weight: ['400', '500', '600', '700', '800'],
 });
 
@@ -46,6 +47,10 @@ export const metadata: Metadata = {
     'orijinal oem yedek parça',
     'periyodik bakım seti'
   ],
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   alternates: {
     canonical: '/',
   },
@@ -93,7 +98,7 @@ export default function RootLayout({
   const organizationJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'AutoPartsStore',
-    name: 'Online Hızlı Parça (Kemal Oto A.Ş.)',
+    name: 'Online Hızlı Parça (Kemal Oto)',
     url: baseUrl,
     logo: `${baseUrl}/logo.png`,
     description: 'Opel, Peugeot, Citroën, Chevrolet ve DS grubu otomotiv yedek parçaları e-ticaret platformu.',
@@ -115,7 +120,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="tr" suppressHydrationWarning className={`dark ${figtree.variable} ${syne.variable}`}>
+    <html lang="tr" suppressHydrationWarning className={`dark ${figtree.variable} ${outfit.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -154,6 +159,7 @@ export default function RootLayout({
                   <Footer />
                   <MobileBottomBar />
                   <CartDrawer />
+                  <GarageModal />
                 </CartProvider>
               </GarageProvider>
             </ShippingSettingsProvider>

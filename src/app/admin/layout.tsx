@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -40,8 +41,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Brand & ThemeToggle */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center font-bold shadow-lg shadow-orange-500/20 shrink-0">
-                  <Wrench className="w-4 h-4 md:w-5 md:h-5" />
+                <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800 bg-white shrink-0">
+                  <Image
+                    src="/logo.png"
+                    alt="Kemal Oto"
+                    fill
+                    className="object-contain p-0.5"
+                  />
                 </div>
                 <div>
                   <span className="font-black text-base md:text-lg text-slate-900 dark:text-white">KEMAL OTO</span>

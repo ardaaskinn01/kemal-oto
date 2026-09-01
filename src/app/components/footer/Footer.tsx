@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Wrench, Phone, Mail, MapPin } from 'lucide-react';
 
 export function Footer() {
@@ -12,8 +13,13 @@ export function Footer() {
         {/* Brand info */}
         <div className="lg:col-span-2 space-y-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#E8820C] flex items-center justify-center">
-              <Wrench className="w-4 h-4 text-white stroke-[2.5]" />
+            <div className="relative w-9 h-9 rounded-lg overflow-hidden border border-gray-200 dark:border-[#2a2d35] bg-white">
+              <Image
+                src="/logo.png"
+                alt="Kemal Oto Logo"
+                fill
+                className="object-contain p-0.5"
+              />
             </div>
             <span className="text-base font-bold text-gray-900 dark:text-white tracking-tight">
               Online Hızlı<span className="text-[#E8820C]">Parça</span>
@@ -91,16 +97,10 @@ export function Footer() {
 
       </div>
 
-      {/* Bottom bar — hairline separator */}
+      {/* Bottom bar — centered, no side links */}
       <div className="border-t border-gray-200/50 dark:border-[#2a2d35]/50 py-5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
-          <p>© {new Date().getFullYear()} Online Hızlı Parça (Kemal Oto A.Ş.). Tüm Hakları Saklıdır.</p>
-          <div className="flex items-center gap-4">
-            <Link href="/policies/privacy" className="hover:text-[#E8820C] transition-colors">Gizlilik</Link>
-            <Link href="/policies/terms" className="hover:text-[#E8820C] transition-colors">Koşullar</Link>
-            <Link href="/policies/kvkk" className="hover:text-[#E8820C] transition-colors">KVKK</Link>
-            <Link href="/policies/distance-sales" className="hover:text-[#E8820C] transition-colors">Mesafeli Satış</Link>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-400">
+          <p>© {new Date().getFullYear()} Online Hızlı Parça (Kemal Oto). Tüm Hakları Saklıdır.</p>
         </div>
       </div>
 

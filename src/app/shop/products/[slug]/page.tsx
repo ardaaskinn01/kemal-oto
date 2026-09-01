@@ -130,8 +130,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       itemCondition: 'https://schema.org/NewCondition',
       availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
       seller: {
-        '@type': 'Organization',
-        name: 'Online Hızlı Parça (Kemal Oto A.Ş.)',
+        '@type': 'AutoPartsStore',
+        name: 'Online Hızlı Parça (Kemal Oto)',
       },
     },
     aggregateRating: {

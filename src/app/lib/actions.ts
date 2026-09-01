@@ -146,14 +146,86 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return null;
 }
 
+export const DEFAULT_CATEGORIES: Category[] = [
+  {
+    id: 'cat-1',
+    name: 'İç Donanım & Periyodik Bakım',
+    slug: 'ic-donanim-bakim',
+    description: 'Yağ, hava, yakıt, polen filtreleri ve periyodik bakım sarf malzemeleri.',
+    image_url: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=800',
+    icon_name: 'Wrench',
+    item_count: 0,
+  },
+  {
+    id: 'cat-2',
+    name: 'Fren & Süspansiyon Sistemleri',
+    slug: 'fren-suspansiyon',
+    description: 'Ön ve arka fren diskleri, balatalar, amortisörler ve helezon yaylar.',
+    image_url: 'https://images.unsplash.com/photo-1600705722908-bab1e61c0b4d?auto=format&fit=crop&q=80&w=800',
+    icon_name: 'Disc',
+    item_count: 0,
+  },
+  {
+    id: 'cat-3',
+    name: 'Motor & Aktarma Organları',
+    slug: 'motor-aktarma',
+    description: 'Triger setleri, devirdaim pompaları, termostatlar, baskı balata ve şanzıman parçaları.',
+    image_url: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&q=80&w=800',
+    icon_name: 'Cpu',
+    item_count: 0,
+  },
+  {
+    id: 'cat-4',
+    name: 'Aydınlatma & Elektrik Aksamı',
+    slug: 'aydinlatma-elektrik',
+    description: 'Farlar, stop lambaları, sinyal lambaları, sensörler, bujiler ve akü bağlantıları.',
+    image_url: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&q=80&w=800',
+    icon_name: 'Zap',
+    item_count: 0,
+  },
+  {
+    id: 'cat-5',
+    name: 'Kaporta & Dış Aksesuar',
+    slug: 'kaporta-aksesuar',
+    description: 'Tamponlar, çamurluklar, ızgaralar, aynalar ve dış gövde koruma aksesuarları.',
+    image_url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800',
+    icon_name: 'Package',
+    item_count: 0,
+  },
+];
+
 export async function getCategories(): Promise<Category[]> {
   try {
     const supabase = getSupabaseClient();
-    if (supabase) {
-      const { data } = await supabase.from('categories').select('*');
-      if (data && data.length > 0) return data as Category[];
-    }
-  } catch (e) {}
+    if (!supabase) return DEFAULT_CATEGORIES;
 
-  return [];
+    // 1. Try fetching from categories table
+    const { data: dbCategories, error } = await supabase.from('categories').select('*');
+    
+    // 2. Fetch products to get accurate live item counts
+    const { data: products } = await supabase.from('products').select('category_slug');
+    const countMap: Record<string, number> = {};
+    if (products) {
+      products.forEach((p: { category_slug: string }) => {
+        if (p.category_slug) {
+          countMap[p.category_slug] = (countMap[p.category_slug] || 0) + 1;
+        }
+      });
+    }
+
+    if (dbCategories && dbCategories.length > 0 && !error) {
+      return dbCategories.map((c: Category) => ({
+        ...c,
+        item_count: countMap[c.slug] ?? c.item_count ?? 0,
+      }));
+    }
+
+    // 3. If categories table is empty or missing in Supabase, return standard categories with live product counts
+    return DEFAULT_CATEGORIES.map((c) => ({
+      ...c,
+      item_count: countMap[c.slug] || 0,
+    }));
+  } catch (e) {
+    return DEFAULT_CATEGORIES;
+  }
 }

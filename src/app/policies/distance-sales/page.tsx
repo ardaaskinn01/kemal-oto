@@ -29,7 +29,7 @@ export default function DistanceSalesAgreementPage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Satıcı Bilgileri</h2>
           <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1 text-xs">
-            <p><strong>Unvan:</strong> Kemal Oto Otomotiv San. ve Tic. A.Ş.</p>
+            <p><strong>Unvan:</strong> Kemal Oto Otomotiv San. ve Tic.</p>
             <p><strong>Adres:</strong> MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova/İzmir</p>
             <p><strong>Telefon:</strong> 0542 292 44 92</p>
             <p><strong>E-Posta:</strong> info@onlinehizliparca.com</p>

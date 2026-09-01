@@ -29,21 +29,28 @@ export default function TermsOfServicePage() {
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Taraflar ve Sözleşmenin Konusu</h2>
           <p>
-            İşbu Kullanım Koşulları ve Üyelik Sözleşmesi (&quot;Sözleşme&quot;), Kemal Oto A.Ş. (&quot;Kemal Oto&quot;) ile <Link href="https://kemaloto.com" className="text-orange-600 hover:underline">kemaloto.com</Link> sitesine üye olan veya site üzerinden sipariş oluşturan kullanıcı (&quot;Müşteri / Üye&quot;) arasında akdedilmiştir.
+            İşbu Kullanım Koşulları ve Üyelik Sözleşmesi (&quot;Sözleşme&quot;), Kemal Oto (&quot;Kemal Oto&quot;) ile <Link href="https://kemaloto.com" className="text-orange-600 hover:underline">kemaloto.com</Link> sitesine üye olan veya site üzerinden sipariş oluşturan kullanıcı (&quot;Müşteri / Üye&quot;) arasında akdedilmiştir.
+          </p>
+        </section>
+
+        {/* 2. Hizmet Kapsamı */}
+        <section className="space-y-3">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">2. Sunulan Hizmetin Kapsamı</h2>
+          <p>
+            Online Hızlı Parça platformu; Opel, Peugeot, Citroën, Chevrolet ve DS grubu araç sahiplerine yönelik orijinal ve muadil yedek parça satışı, şasi numarası (VIN) üzerinden uyumluluk doğrulama ve kargo takip hizmeti sunmaktadır.
+          </p>
+        </section>
+
+        {/* 3. Fikri Mülkiyet */}
+        <section className="space-y-3">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">3. Fikri Mülkiyet Hakları</h2>
+          <p>
+            kemaloto.com sitesinde yer alan tüm yazılımlar, tasarım bileşenleri, ürün açıklamaları, logolar ve veri tabanı Kemal Oto&apos;ya aittir. İzinsiz kopyalanamaz, çoğaltılamaz veya ticari amaçla kullanılamaz.
           </p>
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">2. Üyelik ve Hizmet Kullanımı</h2>
-          <ul className="list-disc pl-5 space-y-1.5">
-            <li>Üye, siteye kayıt olurken veya sipariş verirken verdiği tüm bilgilerin doğru ve güncel olduğunu taahhüt eder.</li>
-            <li>Üye, hesap şifresinin gizliliğini korumakla yükümlüdür. Hesabın üçüncü şahıslarca kullanımından doğabilecek sorumluluk üyeye aittir.</li>
-            <li>Kemal Oto, kötü niyetli sipariş veya suistimal tespitinde ilgili hesabı dondurma veya sonlandırma hakkını saklı tutar.</li>
-          </ul>
-        </section>
-
-        <section className="space-y-3">
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">3. Parça Uyumluluğu ve Şasi (VIN) Sorumluluğu</h2>
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">4. Parça Uyumluluğu ve Şasi (VIN) Sorumluluğu</h2>
           <p>
             Otomotiv yedek parçalarında araç şasi numarası, motor kodu ve donanım varyasyonlarına göre uyumluluk farklılık gösterebilir. Kemal Oto; şasi numarası ile teyit edilen parçaların birebir uyumunu garanti eder. Şasi numarası belirtilmeksizin verilen siparişlerde doğabilecek uyumsuzluk hallerinde 14 günlük iade ve değişim prosedürümüz işletilmektedir.
           </p>

@@ -44,9 +44,9 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Syne for all headings — distinctive, editorial, not AI-template */
+/* Outfit for all headings — geometric, editorial, clean Turkish support */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-syne), system-ui, sans-serif;
+  font-family: var(--font-outfit), system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;

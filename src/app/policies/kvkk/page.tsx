@@ -21,15 +21,15 @@ export default function KvkkPage() {
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
           KVKK Aydınlatma Metni ve Çerez Politikası
         </h1>
-        <p className="text-xs text-slate-500">Veri Sorumlusu: Kemal Oto A.Ş.</p>
+        <p className="text-xs text-slate-500">Veri Sorumlusu: Kemal Oto</p>
       </div>
 
-      {/* Content */}
-      <div className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-6 leading-relaxed">
+      <div className="space-y-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        {/* 1. Veri Sorumlusu */}
         <section className="space-y-3">
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Veri Sorumlusunun Kimliği</h2>
           <p>
-            6698 sayılı Kişisel Verilerin Korunması Kanunu (&quot;KVKK&quot;) uyarınca, kişisel verileriniz veri sorumlusu sıfatıyla Kemal Oto A.Ş. (&quot;Şirket&quot;) tarafından aşağıda açıklanan kapsamda işlenmektedir.
+            6698 sayılı Kişisel Verilerin Korunması Kanunu (&quot;KVKK&quot;) uyarınca, kişisel verileriniz veri sorumlusu sıfatıyla Kemal Oto (&quot;Şirket&quot;) tarafından aşağıda açıklanan kapsamda işlenmektedir.
           </p>
         </section>
 

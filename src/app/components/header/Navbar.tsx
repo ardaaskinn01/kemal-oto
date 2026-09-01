@@ -96,12 +96,9 @@ export function Navbar() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <span>81 ile aynı gün DHL kargo · Şasi no ile %100 uyum garantisi</span>
             <div className="flex items-center gap-4">
-              <a href="tel:05422924492" className="hover:text-[#E8820C] transition-colors">
+              <a href="tel:05422924492" className="hover:text-[#E8820C] transition-colors font-medium">
                 0542 292 44 92
               </a>
-              <Link href="/orders" className="hover:text-[#E8820C] transition-colors hidden sm:inline">
-                Kargo Takibi
-              </Link>
             </div>
           </div>
         </div>
@@ -111,9 +108,15 @@ export function Navbar() {
           <div className="flex items-center gap-4">
 
             {/* Logo */}
-            <Link href="/" className="shrink-0 flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#E8820C] flex items-center justify-center">
-                <Wrench className="w-4 h-4 text-white stroke-[2.5]" />
+            <Link href="/" className="shrink-0 flex items-center gap-2.5">
+              <div className="relative w-9 h-9 rounded-lg overflow-hidden border border-gray-200 dark:border-[#2a2d35] bg-white">
+                <Image
+                  src="/logo.png"
+                  alt="Kemal Oto Logo"
+                  fill
+                  className="object-contain p-0.5"
+                  priority
+                />
               </div>
               <span className="text-base font-bold text-gray-900 dark:text-white tracking-tight leading-none">
                 Online Hızlı<span className="text-[#E8820C]">Parça</span>

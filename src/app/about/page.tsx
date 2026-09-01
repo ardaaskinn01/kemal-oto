@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Wrench, Award, Users, ShieldCheck, MapPin, Phone, Mail } from 'lucide-react';
 
 export default function AboutPage() {
@@ -6,7 +7,16 @@ export default function AboutPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
-        <span className="text-orange-600 dark:text-orange-500 font-bold text-xs uppercase tracking-wider">
+        <div className="relative w-16 h-16 mx-auto rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-800 bg-white shadow-sm">
+          <Image
+            src="/logo.png"
+            alt="Kemal Oto"
+            fill
+            className="object-contain p-1.5"
+            priority
+          />
+        </div>
+        <span className="text-orange-600 dark:text-orange-500 font-bold text-xs uppercase tracking-wider block">
           40 Yıllık Tecrübe & Güven
         </span>
         <h1 className="text-4xl font-black text-slate-900 dark:text-white">Online Hızlı Parça Hakkında</h1>
