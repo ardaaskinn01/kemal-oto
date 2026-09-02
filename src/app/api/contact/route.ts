@@ -71,12 +71,19 @@ export async function POST(req: NextRequest) {
         </div>
       `;
 
+      const plainTextMessage = `Yeni Müşteri Mesajı - Online Hızlı Parça\n\nGönderen: ${name}\nE-Posta: ${email}\nTelefon: ${phone || 'Belirtilmedi'}\nŞasi No: ${vin || 'Belirtilmedi'}\nTarih: ${new Date().toLocaleString('tr-TR')}\n\nMesaj:\n${message}\n\n--\nBu e-posta onlinehizliparca.com üzerinden gönderilmiştir.`;
+
       await resend.emails.send({
-        from: fromEmail,
-        to: [adminEmail, 'kemalotomotivyedekparca@outlook.com'],
+        from: 'Online Hızlı Parça <info@onlinehizliparca.com>',
+        to: adminEmail,
         replyTo: email,
-        subject: `[İletişim Formu] ${name} - ${vin ? `VIN: ${vin}` : 'Yeni Mesaj'}`,
+        subject: `[Web Formu] ${name} - Parça / VIN Talebi`,
+        text: plainTextMessage,
         html: htmlContent,
+        headers: {
+          'X-Auto-Response-Suppress': 'OOF, AutoReply',
+          'Precedence': 'bulk',
+        },
       });
     }
 
