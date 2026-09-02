@@ -1,7 +1,8 @@
 import { Resend } from 'resend';
 
-const resendApiKey = process.env.RESEND_API_KEY || 're_mock_api_key_kemaloto_2026';
+const resendApiKey = process.env.RESEND_API_KEY || '';
 const fromEmail = process.env.EMAIL_FROM || 'Online Hızlı Parça <info@onlinehizliparca.com>';
+const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'kemalotomotivyedekparca@outlook.com';
 
 export class EmailService {
   private resend: Resend;

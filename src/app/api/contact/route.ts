@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 const resendApiKey = process.env.RESEND_API_KEY || '';
-const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'info@onlinehizliparca.com';
+const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'kemalotomotivyedekparca@outlook.com';
 const fromEmail = process.env.EMAIL_FROM || 'Online Hızlı Parça <info@onlinehizliparca.com>';
 
 export async function POST(req: NextRequest) {
@@ -17,6 +17,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 1. Supabase veritabanına mesajı güvenle kaydet (Mesaj asla kaybolmaz)
+    try {
+      const { createClient } = await import('@/utils/supabase/server');
+      const supabase = await createClient();
+      await supabase.from('contact_messages').insert([
+        {
+          name,
+          email,
+          phone: phone || null,
+          vin: vin || null,
+          message,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+    } catch (dbErr) {
+      console.warn('DB message insert warning (table might not exist yet):', dbErr);
+    }
+
+    // 2. Resend API Key varsa doğrudan Outlook'a e-posta gönder
     if (resendApiKey) {
       const resend = new Resend(resendApiKey);
 
@@ -54,7 +73,7 @@ export async function POST(req: NextRequest) {
 
       await resend.emails.send({
         from: fromEmail,
-        to: adminEmail,
+        to: [adminEmail, 'kemalotomotivyedekparca@outlook.com'],
         replyTo: email,
         subject: `[İletişim Formu] ${name} - ${vin ? `VIN: ${vin}` : 'Yeni Mesaj'}`,
         html: htmlContent,
