@@ -2,15 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  Filter,
-  X,
-  ShieldCheck,
-  Wrench,
-  RotateCcw,
-  SlidersHorizontal,
-} from 'lucide-react';
+import { X, SlidersHorizontal } from 'lucide-react';
 import { Category } from '../../types/database.types';
+import { VEHICLE_CATALOG } from '../../data/vehicleCatalogData';
 
 interface ShopFiltersProps {
   categories: Category[];
@@ -23,6 +17,7 @@ export function ShopFilters({ categories, totalProductsCount }: ShopFiltersProps
 
   const currentCategory = searchParams.get('category') || '';
   const currentBrand = searchParams.get('brand') || '';
+  const currentModel = searchParams.get('model') || '';
   const currentQuality = searchParams.get('quality') || '';
   const currentInStock = searchParams.get('inStock') === 'true';
   const currentMinPrice = searchParams.get('minPrice') || '';
@@ -41,10 +36,17 @@ export function ShopFilters({ categories, totalProductsCount }: ShopFiltersProps
     { name: 'DS Automobiles', label: 'DS Automobiles' },
   ];
 
+  // Get vehicle models for the currently selected brand
+  const selectedBrandCatalog = currentBrand
+    ? VEHICLE_CATALOG.find((b) => b.brand.toLowerCase() === currentBrand.toLowerCase())
+    : null;
+
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
     if (value) params.set(key, value);
     else params.delete(key);
+    // When changing brand, clear model
+    if (key === 'brand') params.delete('model');
     router.push(`/shop?${params.toString()}`);
   };
 
@@ -69,193 +71,266 @@ export function ShopFilters({ categories, totalProductsCount }: ShopFiltersProps
   );
 
   const FilterContent = () => (
-    <div className="bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d35] rounded-xl p-4 space-y-5 shadow-sm">
+    <div className="bg-white dark:bg-[#111318] rounded-xl border border-slate-200 dark:border-[#2a2d35] overflow-hidden text-sm">
 
-      {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-[#2a2d35]">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
-          <Filter className="w-4 h-4 text-[#E8820C]" />
-          <span>Filtreler</span>
-        </div>
-        <div className="flex items-center gap-2">
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={clearAllFilters}
-              className="text-xs text-red-500 hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <RotateCcw className="w-3 h-3" />
-              Sıfırla
-            </button>
-          )}
-          {mobileDrawerOpen && (
-            <button
-              onClick={() => setMobileDrawerOpen(false)}
-              className="p-1 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+      {/* Panel Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-[#2a2d35] bg-slate-50 dark:bg-[#141822]">
+        <span className="font-black text-slate-900 dark:text-white text-sm">Filtrele</span>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="text-xs font-bold text-[#E8820C] hover:underline flex items-center gap-1 cursor-pointer"
+          >
+            <X className="w-3.5 h-3.5" />
+            Temizle
+          </button>
+        )}
+        {mobileDrawerOpen && (
+          <button onClick={() => setMobileDrawerOpen(false)} className="text-slate-400 hover:text-slate-700 cursor-pointer">
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
-      {/* 1. Araç Markası */}
-      <div className="space-y-2">
-        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 block">Araç Markası</span>
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="brand"
-              checked={!currentBrand}
-              onChange={() => updateParam('brand', null)}
-              className="w-3.5 h-3.5 accent-[#E8820C] cursor-pointer"
-            />
-            <span className={`text-sm ${!currentBrand ? 'text-[#E8820C] font-medium' : 'text-gray-700 dark:text-gray-300'}`}>
-              Tüm Markalar
+      {/* ── Görseldeki gibi: Marka Seçiliyse En Üstte Kategori Modelleri ── */}
+      {selectedBrandCatalog ? (
+        <div className="border-b border-slate-100 dark:border-[#2a2d35]">
+          <div className="px-4 pt-4 pb-1">
+            <span className="text-xs font-black uppercase tracking-wider text-[#E8820C] block">
+              Kategoriler
             </span>
-          </label>
+            <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase mt-1 tracking-tight">
+              {currentBrand}
+            </h3>
+          </div>
+          <ul className="max-h-72 overflow-y-auto py-1 scrollbar-thin">
+            <li>
+              <button
+                type="button"
+                onClick={() => updateParam('model', null)}
+                className={`w-full text-left px-4 py-1.5 text-xs font-bold transition-colors cursor-pointer uppercase ${
+                  !currentModel
+                    ? 'text-[#E8820C] bg-orange-50 dark:bg-orange-950/30 font-black'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-[#E8820C]'
+                }`}
+              >
+                TÜM {currentBrand.toUpperCase()} MODELLERİ
+              </button>
+            </li>
+            {selectedBrandCatalog.models.map((m) => {
+              const isSelected = currentModel?.toLowerCase() === m.name.toLowerCase();
+              return (
+                <li key={m.name}>
+                  <button
+                    type="button"
+                    onClick={() => updateParam('model', isSelected ? null : m.name)}
+                    className={`w-full text-left px-4 py-1.5 text-xs transition-colors cursor-pointer uppercase flex items-center justify-between ${
+                      isSelected
+                        ? 'text-[#E8820C] bg-orange-50 dark:bg-orange-950/40 font-black'
+                        : 'text-slate-700 dark:text-slate-300 hover:text-[#E8820C] font-semibold'
+                    }`}
+                  >
+                    <span>{m.name}</span>
+                    {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#E8820C]" />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
+
+      {/* ── Parça Kategorileri ── */}
+      <div className="border-b border-slate-100 dark:border-[#2a2d35]">
+        <div className="px-4 pt-4 pb-2">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            {currentBrand ? 'Parça Grubu' : 'Kategoriler'}
+          </span>
+        </div>
+        <ul className="max-h-56 overflow-y-auto py-1 scrollbar-thin">
+          <li>
+            <button
+              type="button"
+              onClick={() => updateParam('category', null)}
+              className={`w-full text-left px-4 py-2 flex items-center justify-between transition-colors cursor-pointer ${
+                !currentCategory
+                  ? 'text-[#E8820C] font-bold bg-orange-50 dark:bg-orange-950/30'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1a1d23] font-medium'
+              }`}
+            >
+              <span>Tüm Gruplar</span>
+              {!currentCategory && <span className="w-1.5 h-1.5 rounded-full bg-[#E8820C] shrink-0" />}
+            </button>
+          </li>
+          {categories.map((cat) => {
+            const isSelected = currentCategory === cat.slug;
+            return (
+              <li key={cat.id}>
+                <button
+                  type="button"
+                  onClick={() => updateParam('category', isSelected ? null : cat.slug)}
+                  className={`w-full text-left px-4 py-2 flex items-center justify-between transition-colors cursor-pointer ${
+                    isSelected
+                      ? 'text-[#E8820C] font-bold bg-orange-50 dark:bg-orange-950/30'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1a1d23] font-medium'
+                  }`}
+                >
+                  <span className="truncate">{cat.name}</span>
+                  {cat.item_count > 0 && (
+                    <span className={`text-xs font-mono shrink-0 ml-2 px-1.5 py-0.5 rounded ${
+                      isSelected
+                        ? 'bg-orange-100 dark:bg-orange-900/60 text-[#E8820C]'
+                        : 'bg-slate-100 dark:bg-[#1e2128] text-slate-500 dark:text-slate-400'
+                    }`}>
+                      {cat.item_count}
+                    </span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      {/* ── Markalar ── */}
+      <div className="border-b border-slate-100 dark:border-[#2a2d35]">
+        <div className="px-4 pt-4 pb-2">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            Araç Markası
+          </span>
+        </div>
+        <ul>
+          <li>
+            <button
+              type="button"
+              onClick={() => updateParam('brand', null)}
+              className={`w-full text-left px-4 py-2 flex items-center gap-3 transition-colors cursor-pointer ${
+                !currentBrand
+                  ? 'text-[#E8820C] font-bold bg-orange-50 dark:bg-orange-950/30'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1a1d23] font-medium'
+              }`}
+            >
+              <span className={`w-4 h-4 rounded border-2 shrink-0 flex items-center justify-center ${!currentBrand ? 'border-[#E8820C] bg-[#E8820C]' : 'border-slate-300 dark:border-slate-600'}`}>
+                {!currentBrand && <span className="text-white text-[9px] font-black">✓</span>}
+              </span>
+              <span>Tüm Markalar</span>
+            </button>
+          </li>
           {brands.map((b) => {
             const isSelected = currentBrand.toLowerCase() === b.name.toLowerCase();
             return (
-              <label key={b.name} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="brand"
-                  checked={isSelected}
-                  onChange={() => updateParam('brand', isSelected ? null : b.name)}
-                  className="w-3.5 h-3.5 accent-[#E8820C] cursor-pointer"
-                />
-                <span className={`text-sm ${isSelected ? 'text-[#E8820C] font-medium' : 'text-gray-700 dark:text-gray-300'}`}>
-                  {b.label}
-                </span>
-              </label>
+              <li key={b.name}>
+                <button
+                  type="button"
+                  onClick={() => updateParam('brand', isSelected ? null : b.name)}
+                  className={`w-full text-left px-4 py-2 flex items-center gap-3 transition-colors cursor-pointer ${
+                    isSelected
+                      ? 'text-[#E8820C] font-bold bg-orange-50 dark:bg-orange-950/30'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1a1d23] font-medium'
+                  }`}
+                >
+                  <span className={`w-4 h-4 rounded border-2 shrink-0 flex items-center justify-center ${isSelected ? 'border-[#E8820C] bg-[#E8820C]' : 'border-slate-300 dark:border-slate-600'}`}>
+                    {isSelected && <span className="text-white text-[9px] font-black">✓</span>}
+                  </span>
+                  <span>{b.label}</span>
+                </button>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
 
-      {/* 2. Parça Kalitesi */}
-      <div className="pt-3 border-t border-gray-100 dark:border-[#2a2d35] space-y-2">
-        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 block">Parça Tipi</span>
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={currentQuality === 'original'}
-              onChange={(e) => updateParam('quality', e.target.checked ? 'original' : null)}
-              className="w-3.5 h-3.5 rounded accent-[#E8820C] cursor-pointer"
-            />
-            <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
-              Orijinal OEM
-            </span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={currentQuality === 'aftermarket'}
-              onChange={(e) => updateParam('quality', e.target.checked ? 'aftermarket' : null)}
-              className="w-3.5 h-3.5 rounded accent-[#E8820C] cursor-pointer"
-            />
-            <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-              <Wrench className="w-3.5 h-3.5 text-gray-400" />
-              A Kalite Muadil
-            </span>
-          </label>
-        </div>
-      </div>
 
-      {/* 3. Kategoriler */}
-      <div className="pt-3 border-t border-gray-100 dark:border-[#2a2d35] space-y-2">
-        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 block">Kategori</span>
-        <div className="space-y-0.5">
-          <button
-            type="button"
-            onClick={() => updateParam('category', null)}
-            className={`w-full flex items-center justify-between py-1.5 px-2 rounded-lg text-sm text-left transition-colors cursor-pointer ${
-              !currentCategory
-                ? 'text-[#E8820C] font-medium bg-orange-50 dark:bg-[#1a1d23]'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a1d23]'
-            }`}
-          >
-            <span>Tüm Kategoriler</span>
-            <span className="text-[11px] text-gray-400">({totalProductsCount})</span>
-          </button>
-          {categories.map((cat) => {
-            const isActive = currentCategory === cat.slug;
+      {/* ── Parça Tipi ── */}
+      <div className="border-b border-slate-100 dark:border-[#2a2d35]">
+        <div className="px-4 pt-4 pb-2">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            Parça Tipi
+          </span>
+        </div>
+        <ul>
+          {[
+            { value: null, label: 'Tümü' },
+            { value: 'original', label: 'Orijinal OEM' },
+            { value: 'aftermarket', label: 'A Kalite Muadil' },
+          ].map((opt) => {
+            const isSelected = currentQuality === (opt.value ?? '');
             return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => updateParam('category', isActive ? null : cat.slug)}
-                className={`w-full flex items-center justify-between py-1.5 px-2 rounded-lg text-sm text-left transition-colors cursor-pointer ${
-                  isActive
-                    ? 'text-[#E8820C] font-medium bg-orange-50 dark:bg-[#1a1d23]'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a1d23]'
-                }`}
-              >
-                <span className="truncate">{cat.name}</span>
-                <span className="text-[11px] text-gray-400 shrink-0 ml-1">({cat.item_count})</span>
-              </button>
+              <li key={opt.label}>
+                <button
+                  type="button"
+                  onClick={() => updateParam('quality', opt.value)}
+                  className={`w-full text-left px-4 py-2 flex items-center gap-3 transition-colors cursor-pointer ${
+                    isSelected
+                      ? 'text-[#E8820C] font-bold bg-orange-50 dark:bg-orange-950/30'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1a1d23] font-medium'
+                  }`}
+                >
+                  <span className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${isSelected ? 'border-[#E8820C]' : 'border-slate-300 dark:border-slate-600'}`}>
+                    {isSelected && <span className="w-2 h-2 rounded-full bg-[#E8820C] block" />}
+                  </span>
+                  <span>{opt.label}</span>
+                </button>
+              </li>
             );
           })}
+        </ul>
+      </div>
+
+      {/* ── Stok ── */}
+      <div className="border-b border-slate-100 dark:border-[#2a2d35]">
+        <div className="px-4 pt-4 pb-2">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Stok Durumu</span>
+        </div>
+        <div className="px-4 pb-3">
+          <label className="flex items-center gap-3 cursor-pointer py-1">
+            <span className={`w-4 h-4 rounded border-2 shrink-0 flex items-center justify-center ${currentInStock ? 'border-[#E8820C] bg-[#E8820C]' : 'border-slate-300 dark:border-slate-600'}`}
+              onClick={() => updateParam('inStock', currentInStock ? null : 'true')}>
+              {currentInStock && <span className="text-white text-[9px] font-black">✓</span>}
+            </span>
+            <span
+              onClick={() => updateParam('inStock', currentInStock ? null : 'true')}
+              className="text-slate-700 dark:text-slate-300 font-medium cursor-pointer select-none"
+            >
+              Sadece Stokta Olanlar
+            </span>
+          </label>
         </div>
       </div>
 
-      {/* 4. Stok */}
-      <div className="pt-3 border-t border-gray-100 dark:border-[#2a2d35]">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={currentInStock}
-            onChange={(e) => updateParam('inStock', e.target.checked ? 'true' : null)}
-            className="w-3.5 h-3.5 rounded accent-[#E8820C] cursor-pointer"
-          />
-          <span className="text-sm text-gray-700 dark:text-gray-300">Sadece stokta olanlar</span>
-        </label>
-      </div>
-
-      {/* 5. Fiyat aralığı */}
-      <div className="pt-3 border-t border-gray-100 dark:border-[#2a2d35] space-y-2">
-        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 block">Fiyat Aralığı (₺)</span>
-        <form onSubmit={handlePriceApply} className="flex items-center gap-2">
-          <input
-            type="number"
-            placeholder="Min"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="w-full border border-gray-200 dark:border-[#2a2d35] bg-white dark:bg-[#0d0f12] text-sm text-gray-900 dark:text-white rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#E8820C] transition-colors"
-          />
-          <span className="text-gray-300 dark:text-gray-600">—</span>
-          <input
-            type="number"
-            placeholder="Max"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="w-full border border-gray-200 dark:border-[#2a2d35] bg-white dark:bg-[#0d0f12] text-sm text-gray-900 dark:text-white rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#E8820C] transition-colors"
-          />
+      {/* ── Fiyat Aralığı ── */}
+      <div>
+        <div className="px-4 pt-4 pb-2">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Fiyat Aralığı (TL)</span>
+        </div>
+        <form onSubmit={handlePriceApply} className="px-4 pb-4 space-y-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              placeholder="Min"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-[#0d0f12] border border-slate-200 dark:border-[#2a2d35] rounded-lg px-3 py-2 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:border-[#E8820C] placeholder-slate-400"
+            />
+            <span className="text-slate-300 dark:text-slate-600 font-bold">–</span>
+            <input
+              type="number"
+              placeholder="Max"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-[#0d0f12] border border-slate-200 dark:border-[#2a2d35] rounded-lg px-3 py-2 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:border-[#E8820C] placeholder-slate-400"
+            />
+          </div>
           <button
             type="submit"
-            className="bg-[#E8820C] hover:bg-[#d4740a] text-white text-xs font-medium px-3 py-2 rounded-lg shrink-0 cursor-pointer transition-colors"
+            className="w-full bg-[#E8820C] hover:bg-[#d4740a] text-white py-2.5 rounded-lg text-sm font-black transition-colors cursor-pointer"
           >
-            Ara
+            Uygula
           </button>
         </form>
       </div>
 
-      {/* Mobile apply */}
-      {mobileDrawerOpen && (
-        <div className="pt-3 border-t border-gray-100 dark:border-[#2a2d35]">
-          <button
-            type="button"
-            onClick={() => setMobileDrawerOpen(false)}
-            className="w-full bg-[#E8820C] hover:bg-[#d4740a] text-white font-medium py-2.5 rounded-lg text-sm cursor-pointer transition-colors"
-          >
-            Sonuçları göster
-          </button>
-        </div>
-      )}
     </div>
   );
 
@@ -266,16 +341,11 @@ export function ShopFilters({ categories, totalProductsCount }: ShopFiltersProps
         <button
           type="button"
           onClick={() => setMobileDrawerOpen(true)}
-          className="flex items-center gap-2 border border-gray-200 dark:border-[#2a2d35] text-gray-700 dark:text-gray-300 px-3.5 py-2 rounded-lg text-sm cursor-pointer hover:border-[#E8820C] hover:text-[#E8820C] transition-colors"
+          className="flex items-center gap-2 border-2 border-slate-200 dark:border-[#2a2d35] text-slate-700 dark:text-slate-300 px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer hover:border-[#E8820C] hover:text-[#E8820C] transition-colors"
         >
           <SlidersHorizontal className="w-4 h-4" />
           <span>Filtreler{hasActiveFilters ? ' (aktif)' : ''}</span>
         </button>
-        {hasActiveFilters && (
-          <button type="button" onClick={clearAllFilters} className="text-sm text-red-500 hover:underline cursor-pointer">
-            Temizle
-          </button>
-        )}
       </div>
 
       {/* Desktop sidebar */}
@@ -286,7 +356,7 @@ export function ShopFilters({ categories, totalProductsCount }: ShopFiltersProps
       {/* Mobile drawer overlay */}
       {mobileDrawerOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50 flex items-end">
-          <div className="w-full max-h-[85vh] overflow-y-auto rounded-t-2xl">
+          <div className="w-full max-h-[90vh] overflow-y-auto rounded-t-2xl">
             <FilterContent />
           </div>
         </div>

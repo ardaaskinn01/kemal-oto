@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
           Gizlilik ve Güvenlik Politikası
         </h1>
-        <p className="text-xs text-slate-500">Son Güncelleme: 2026</p>
+        <p className="text-xs text-slate-500">Son Güncelleme: 3 Eylül 2026</p>
       </div>
 
       {/* Content */}

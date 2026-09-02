@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -69,6 +71,19 @@ export function Footer() {
             <li><Link href="/policies/distance-sales" className="hover:text-[#E8820C] transition-colors">Mesafeli Satış</Link></li>
             <li><Link href="/policies/returns" className="hover:text-[#E8820C] transition-colors">Teslimat &amp; İade</Link></li>
             <li><Link href="/policies/warranty" className="hover:text-[#E8820C] transition-colors">Garanti &amp; Orijinallik</Link></li>
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('openCookieSettings'));
+                  }
+                }}
+                className="text-left text-slate-500 hover:text-[#E8820C] transition-colors text-xs inline-flex items-center gap-1"
+              >
+                <span>🍪 Çerez Tercihleri</span>
+              </button>
+            </li>
           </ul>
         </div>
 

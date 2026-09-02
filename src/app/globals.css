@@ -37,32 +37,32 @@ body {
   background-color: var(--background);
   /* Figtree as body font */
   font-family: var(--font-figtree), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
-  letter-spacing: -0.008em;
+  letter-spacing: -0.005em;
   transition: background-color 0.2s ease, color 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Outfit for all headings — geometric, editorial, clean Turkish support */
+/* Outfit for all headings — bold, industrial, clean Turkish support */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-outfit), system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
 }
 
 /* ─── Shared Card Utility ────────────────────────────────────────────────── */
 .card {
   background-color: var(--card);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--card-border);
   border-radius: var(--radius);
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .card:hover {
   border-color: #E8820C;
-  box-shadow: 0 2px 8px rgba(232, 130, 12, 0.10);
+  box-shadow: 0 4px 16px rgba(232, 130, 12, 0.12);
 }
 
 /* ─── Remove AI Template Tropes ─────────────────────────────────────────── */

@@ -21,7 +21,7 @@ export default function TermsOfServicePage() {
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
           Kullanım Koşulları ve Üyelik Sözleşmesi
         </h1>
-        <p className="text-xs text-slate-500">Son Güncelleme: 2026</p>
+        <p className="text-xs text-slate-500">Son Güncelleme: 3 Eylül 2026</p>
       </div>
 
       {/* Content */}
@@ -64,10 +64,18 @@ export default function TermsOfServicePage() {
 
         {/* 5. Yürürlük ve Yetkili Mahkeme */}
         <section className="space-y-3">
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">5. Yürürlük ve Uyuşmazlıklar</h2>
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">5. Yürürlük, Uyuşmazlık Çözümü ve Tüketici Hakem Heyetleri</h2>
           <p>
-            İşbu sözleşmenin uygulanmasından doğabilecek uyuşmazlıklarda; Bireysel tüketiciler için Tüketici Hakem Heyetleri ve Tüketici Mahkemeleri, Kurumsal ticari alıcılar için ise İzmir Mahkemeleri ve İcra Daireleri yetkilidir.
+            İşbu sözleşmenin uygulanmasından veya yorumlanmasından doğabilecek her türlü ihtilafta:
           </p>
+          <ul className="list-disc pl-5 space-y-1.5 text-xs">
+            <li>
+              <strong>Bireysel Tüketiciler İçin:</strong> Ticaret Bakanlığı&apos;nca her yıl ilan edilen parasal sınırlar dâhilinde Alıcı&apos;nın malı satın aldığı veya ikametgâhının bulunduğu yerdeki <strong>İlçe veya İl Tüketici Hakem Heyetleri</strong>; belirlenen parasal sınırın üzerindeki uyuşmazlıklarda ise <strong>Tüketici Mahkemeleri</strong> yetkilidir.
+            </li>
+            <li>
+              <strong>Kurumsal (Ticari) Müşteriler İçin:</strong> 6102 sayılı TTK hükümleri uyarınca ortaya çıkabilecek ticari ihtilaflarda <strong>İzmir Mahkemeleri ve İcra Daireleri</strong> yetkilidir.
+            </li>
+          </ul>
         </section>
       </div>
     </div>

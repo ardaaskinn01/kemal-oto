@@ -80,63 +80,64 @@ export default async function HomePage() {
       <HeroBanner />
 
       {/* 2. VALUE PROPOSITIONS BAND */}
-      <div className="bg-[#E8820C]">
+      <div className="bg-[#E8820C] shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-orange-400/40">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x-2 divide-orange-400/40">
             {badges.map((b, i) => (
-              <div key={i} className="py-4 px-4 sm:px-8 text-center">
-                <span className="text-sm sm:text-base font-bold text-white block leading-tight">{b.title}</span>
-                <span className="text-orange-100 text-xs mt-0.5 block font-medium">{b.subtitle}</span>
+              <div key={i} className="py-5 px-4 sm:px-8 text-center">
+                <span className="text-base sm:text-lg font-black text-white block leading-tight">{b.title}</span>
+                <span className="text-orange-100 text-xs sm:text-sm mt-1 block font-bold">{b.subtitle}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
 
         {/* 3. PSA GROUPE AUTHORITATIVE SHOWCASE (Peugeot, Citroen, Opel, DS, Vauxhall) */}
         <PsaGroupShowcase />
 
         {/* 4. KATEGORİ REHBERİ */}
-        <section className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
+        <section className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4 border-b-2 border-slate-200 dark:border-[#2a2d35]">
             <div>
-              <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Yedek Parça Kataloğu</span>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Popüler Ana Parça Grupları</h2>
+              <span className="text-xs sm:text-sm font-black text-[#E8820C] uppercase tracking-wider block mb-1">Yedek Parça Kataloğu</span>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Popüler Ana Parça Grupları</h2>
             </div>
-            <Link href="/shop/categories" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
-              Tüm Kategorileri Listele ({categories.length}) <ChevronRight className="w-3.5 h-3.5" />
+            <Link href="/shop/categories" className="text-sm font-black text-[#E8820C] hover:underline flex items-center gap-1.5">
+              <span>Tüm Kategorileri Listele ({categories.length})</span>
+              <ChevronRight className="w-4 h-4 stroke-[3]" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {mainCategories.map((cat, i) => {
               const count = getCategoryCount(cat.slug);
               return (
                 <div
                   key={i}
-                  className="border border-gray-200 dark:border-[#2a2d35] bg-white dark:bg-[#111318] rounded-2xl p-5 flex flex-col justify-between hover:border-[#E8820C] transition-all hover:shadow-md"
+                  className="border-2 border-slate-200 dark:border-[#2a2d35] bg-white dark:bg-[#111318] rounded-2xl p-6 flex flex-col justify-between hover:border-[#E8820C] transition-all hover:shadow-lg"
                 >
                   <div>
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="font-bold text-sm text-gray-900 dark:text-white leading-snug">
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <h3 className="font-black text-base sm:text-lg text-slate-900 dark:text-white leading-snug">
                         {cat.title}
                       </h3>
                       {count > 0 && (
-                        <span className="text-[10px] font-mono font-medium text-[#E8820C] bg-orange-50 dark:bg-orange-950/40 px-1.5 py-0.5 rounded shrink-0">
+                        <span className="text-xs font-mono font-bold text-[#E8820C] bg-orange-50 dark:bg-orange-950/40 px-2 py-0.5 rounded-md shrink-0 border border-orange-200 dark:border-orange-800/60">
                           {count} Parça
                         </span>
                       )}
                     </div>
 
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                       {cat.desc}
                     </p>
 
-                    <div className="space-y-1 mb-4 pt-2 border-t border-gray-100 dark:border-[#1e2128]">
-                      <span className="text-[10px] font-semibold text-gray-400 block uppercase">Örnek Parçalar:</span>
-                      <ul className="text-xs text-gray-600 dark:text-gray-300 space-y-0.5">
+                    <div className="space-y-1.5 mb-5 pt-3 border-t-2 border-slate-100 dark:border-[#1e2128]">
+                      <span className="text-xs font-black text-slate-400 block uppercase">Örnek Parçalar:</span>
+                      <ul className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-1 font-medium">
                         {cat.popular.map((item, idx) => (
                           <li key={idx} className="flex items-center gap-1.5 truncate">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#E8820C]" />
@@ -162,17 +163,18 @@ export default async function HomePage() {
 
         {/* 5. ÖNE ÇIKAN ÜRÜNLER VİTRİNİ */}
         {featuredProducts.length > 0 && (
-          <section className="space-y-4">
-            <div className="flex items-end justify-between pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
+          <section className="space-y-6">
+            <div className="flex items-end justify-between pb-4 border-b-2 border-slate-200 dark:border-[#2a2d35]">
               <div>
-                <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Hızlı Gönderim</span>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Çok Satan Parçalar</h2>
+                <span className="text-xs sm:text-sm font-black text-[#E8820C] uppercase tracking-wider block mb-1">Hızlı Gönderim</span>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Çok Satan Parçalar</h2>
               </div>
-              <Link href="/shop" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
-                Tüm Ürünleri Gör <ArrowRight className="w-3.5 h-3.5" />
+              <Link href="/shop" className="text-sm font-black text-[#E8820C] hover:underline flex items-center gap-1.5">
+                <span>Tüm Ürünleri Gör</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {featuredProducts.slice(0, 8).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -182,17 +184,18 @@ export default async function HomePage() {
 
         {/* 6. FREN & SÜSPANSİYON VİTRİNİ */}
         {brakeProducts.length > 0 && (
-          <section className="space-y-4">
-            <div className="flex items-end justify-between pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
+          <section className="space-y-6">
+            <div className="flex items-end justify-between pb-4 border-b-2 border-slate-200 dark:border-[#2a2d35]">
               <div>
-                <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Güvenlik & Sürüş</span>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Fren Disk, Balata & Süspansiyon</h2>
+                <span className="text-xs sm:text-sm font-black text-[#E8820C] uppercase tracking-wider block mb-1">Güvenlik & Sürüş</span>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Fren Disk, Balata & Süspansiyon</h2>
               </div>
-              <Link href="/shop?category=fren-sistemi" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
-                Tümünü Listele <ArrowRight className="w-3.5 h-3.5" />
+              <Link href="/shop?category=fren-sistemi" className="text-sm font-black text-[#E8820C] hover:underline flex items-center gap-1.5">
+                <span>Tümünü Listele</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {brakeProducts.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -202,17 +205,18 @@ export default async function HomePage() {
 
         {/* 7. PERİYODİK BAKIM VİTRİNİ */}
         {maintenanceProducts.length > 0 && (
-          <section className="space-y-4">
-            <div className="flex items-end justify-between pb-3 border-b border-gray-200 dark:border-[#2a2d35]">
+          <section className="space-y-6">
+            <div className="flex items-end justify-between pb-4 border-b-2 border-slate-200 dark:border-[#2a2d35]">
               <div>
-                <span className="text-xs font-bold text-[#E8820C] uppercase tracking-wider block">Düzenli Bakım</span>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Filtre & Bakım Setleri</h2>
+                <span className="text-xs sm:text-sm font-black text-[#E8820C] uppercase tracking-wider block mb-1">Düzenli Bakım</span>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Filtre & Bakım Setleri</h2>
               </div>
-              <Link href="/shop?category=filtre-bakim" className="text-xs font-semibold text-[#E8820C] hover:underline flex items-center gap-1">
-                Tümünü Listele <ArrowRight className="w-3.5 h-3.5" />
+              <Link href="/shop?category=filtre-bakim" className="text-sm font-black text-[#E8820C] hover:underline flex items-center gap-1.5">
+                <span>Tümünü Listele</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {maintenanceProducts.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

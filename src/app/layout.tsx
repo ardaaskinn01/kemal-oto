@@ -12,6 +12,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { CartProvider } from './contexts/CartContext';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { GarageModal } from './components/garage/GarageModal';
+import { CookieConsentBanner } from './components/ui/CookieConsentBanner';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -160,6 +161,7 @@ export default function RootLayout({
                   <MobileBottomBar />
                   <CartDrawer />
                   <GarageModal />
+                  <CookieConsentBanner />
                 </CartProvider>
               </GarageProvider>
             </ShippingSettingsProvider>

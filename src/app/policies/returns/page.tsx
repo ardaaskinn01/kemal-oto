@@ -53,9 +53,34 @@ export default function ReturnsPolicyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">4. İade Ücretinin Geri Ödenmesi</h2>
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">4. İade Kargo Ücreti ve Kargo Süreci</h2>
           <p>
-            İade ettiğiniz ürün Bornova/İzmir depomuza ulaştıktan ve teknik ekibimizce kontrol edildikten sonra <strong>2 ila 4 iş günü</strong> içerisinde ödemeniz kartınıza iade edilir.
+            E-ticaret mevzuatı ve standart müşteri memnuniyeti politikamız uyarınca:
+          </p>
+          <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm">
+            <li>
+              <strong>Ayıplı, Kusurlu veya Hatalı Gönderilen Ürünler:</strong> Parçanın hasarlı, arızalı ya da sipariş ettiğinizden/şasi numaranızdan farklı çıkması durumunda anlaşmalı kargo firmamız (<strong>DHL Express</strong>) ile gönderilen tüm iadelerin kargo ücreti <strong>tamamen Satıcı&apos;ya (Online Hızlı Parça) aittir</strong>.
+            </li>
+            <li>
+              <strong>Keyfi Cayma / Müşteri Tercihli İadeler:</strong> Tüketicinin herhangi bir kusur olmaksızın 14 günlük yasal cayma hakkını kullandığı durumlarda, iade anlaşmalı DHL Express kargo kodumuz ile depomuza yönlendirilir.
+            </li>
+          </ul>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">5. İade Depo Adresi</h2>
+          <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1 text-xs">
+            <p className="font-bold text-slate-900 dark:text-white">Kemal Oto / Online Hızlı Parça İade Merkezi</p>
+            <p><strong>Alıcı / İlgili:</strong> Ferhat Gazan</p>
+            <p><strong>Adres:</strong> MUTLUBAŞLAR PLAZA, KEMALPAŞA CADDESİ, 5.SANAYİ SİTESİ PINARBAŞI NO:344B, 35060 Bornova / İZMİR</p>
+            <p><strong>İletişim / Destek:</strong> 0542 292 44 92</p>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">6. İade Ücretinin Geri Ödenmesi</h2>
+          <p>
+            İade ettiğiniz ürün Bornova/İzmir depomuza ulaştıktan ve teknik ekibimizce kontrol edildikten sonra <strong>2 ila 4 iş günü</strong> içerisinde ödemeniz kartınıza iade edilir. İadenin banka hesabınıza yansıma süresi bankanızın prosedürlerine bağlı olarak değişebilir.
           </p>
         </section>
       </div>

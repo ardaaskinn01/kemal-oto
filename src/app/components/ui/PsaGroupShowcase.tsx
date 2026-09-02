@@ -80,11 +80,6 @@ export function PsaGroupShowcase() {
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-[#E8820C]/15 border border-[#E8820C]/30 text-[#E8820C] px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
-              <Award className="w-4 h-4" />
-              <span>Uzmanlık Alanımız: PSA Grubu (Stellantis) & GM</span>
-            </div>
-
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
               Sadece Uzman Olduğumuz Markaların <span className="text-[#E8820C]">Orijinal & Garantili</span> Parçaları
             </h2>
