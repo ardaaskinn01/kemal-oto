@@ -1,5 +1,6 @@
 import { Category, Product } from '../types/database.types';
 import { createClient } from '@supabase/supabase-js';
+import { INITIAL_PRODUCTS } from '../data/initialProducts';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -28,24 +29,35 @@ export async function getProducts(options?: {
 
   try {
     const supabase = getSupabaseClient();
-    if (!supabase) return [];
+    if (supabase) {
+      let query = supabase.from('products').select('*');
 
-    let query = supabase.from('products').select('*');
+      if (options?.featuredOnly) {
+        query = query.eq('is_featured', true);
+      }
+      if (options?.categorySlug) {
+        query = query.eq('category_slug', options.categorySlug);
+      }
 
-    if (options?.featuredOnly) {
-      query = query.eq('is_featured', true);
-    }
-    if (options?.categorySlug) {
-      query = query.eq('category_slug', options.categorySlug);
-    }
+      const { data, error } = await query;
 
-    const { data, error } = await query;
-
-    if (data && !error) {
-      products = data as Product[];
+      if (data && !error && data.length > 0) {
+        products = data as Product[];
+      }
     }
   } catch (e) {
     products = [];
+  }
+
+  // Fallback to INITIAL_PRODUCTS when database is empty or not seeded
+  if (products.length === 0) {
+    products = [...INITIAL_PRODUCTS];
+    if (options?.featuredOnly) {
+      products = products.filter((p) => p.is_featured);
+    }
+    if (options?.categorySlug) {
+      products = products.filter((p) => p.category_slug === options.categorySlug);
+    }
   }
 
   // Quality filter
@@ -78,6 +90,7 @@ export async function getProducts(options?: {
         p.title.toLowerCase().includes(q) ||
         p.brand.toLowerCase().includes(q) ||
         p.part_number.toLowerCase().includes(q) ||
+        (p.oem_reference_number && p.oem_reference_number.toLowerCase().includes(q)) ||
         p.description.toLowerCase().includes(q) ||
         (p.vehicle_compatibility && p.vehicle_compatibility.some(
           (vc) =>
@@ -87,15 +100,33 @@ export async function getProducts(options?: {
     );
   }
 
-  // Brand & Model filter (Matching for Opel, Peugeot, Citroën, Chevrolet, DS)
+  // Brand & Model filter (Supporting Opel, Peugeot, Citroën, Chevrolet, DS and Diğer Markalar)
   if (options?.brand) {
     const brandQ = options.brand.toLowerCase().trim();
     const modelQ = options?.model ? options.model.toLowerCase().trim() : '';
+    const isOtherBrands = brandQ.includes('diger') || brandQ.includes('diğer');
 
     products = products.filter((p) => {
+      if (isOtherBrands) {
+        const brandMatch = p.brand.toLowerCase().includes('diger') || p.brand.toLowerCase().includes('diğer');
+        const otherCarCheck = ['fiat', 'renault', 'volkswagen', 'audi', 'seat', 'skoda', 'ford'].some(
+          (b) => p.brand.toLowerCase().includes(b) || (p.vehicle_compatibility && p.vehicle_compatibility.some((vc) => vc.brand.toLowerCase().includes(b)))
+        );
+        if (!brandMatch && !otherCarCheck) return false;
+        if (modelQ) {
+          return p.vehicle_compatibility && p.vehicle_compatibility.some((vc) => vc.model.toLowerCase().includes(modelQ));
+        }
+        return true;
+      }
+
       // Direct match on product.brand
       const directBrandMatch = p.brand.toLowerCase().includes(brandQ);
-      if (directBrandMatch) return true;
+      if (directBrandMatch) {
+        if (modelQ) {
+          return p.vehicle_compatibility && p.vehicle_compatibility.some((vc) => vc.model.toLowerCase().includes(modelQ));
+        }
+        return true;
+      }
 
       // Match vehicle_compatibility array
       if (p.vehicle_compatibility && p.vehicle_compatibility.length > 0) {
@@ -143,7 +174,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     }
   } catch (e) {}
 
-  return null;
+  const local = INITIAL_PRODUCTS.find((p) => p.slug === slug);
+  return local || null;
 }
 
 export const DEFAULT_CATEGORIES: Category[] = [
@@ -205,13 +237,12 @@ export async function getCategories(): Promise<Category[]> {
     // 2. Fetch products to get accurate live item counts
     const { data: products } = await supabase.from('products').select('category_slug');
     const countMap: Record<string, number> = {};
-    if (products) {
-      products.forEach((p: { category_slug: string }) => {
-        if (p.category_slug) {
-          countMap[p.category_slug] = (countMap[p.category_slug] || 0) + 1;
-        }
-      });
-    }
+    const prodsForCount = (products && products.length > 0) ? products : INITIAL_PRODUCTS.map((p) => ({ category_slug: p.category_slug }));
+    prodsForCount.forEach((p: { category_slug: string }) => {
+      if (p.category_slug) {
+        countMap[p.category_slug] = (countMap[p.category_slug] || 0) + 1;
+      }
+    });
 
     if (dbCategories && dbCategories.length > 0 && !error) {
       return dbCategories.map((c: Category) => ({

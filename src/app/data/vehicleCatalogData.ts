@@ -153,5 +153,19 @@ export const VEHICLE_CATALOG: BrandCatalogItem[] = [
       { name: 'DS 7 Crossback', years: '2018+' },
       { name: 'DS 9', years: '2020+' }
     ]
+  },
+  {
+    brand: 'Diğer Markalar',
+    slug: 'Diger%20Markalar',
+    country: 'Global',
+    group: 'Diğer Araç Grupları & Ortak Platformlar',
+    models: [
+      { name: 'Fiat (Ducato / Doblo / Fiorino)', years: 'Tüm Yıllar' },
+      { name: 'Renault (Trafic / Master / Megane)', years: 'Tüm Yıllar' },
+      { name: 'Volkswagen (Golf / Polo / Passat / Caddy)', years: 'Tüm Yıllar' },
+      { name: 'Audi / Seat / Skoda (TSI & TDI)', years: 'Tüm Yıllar' },
+      { name: 'Ford (Transit / Focus / Courier)', years: 'Tüm Yıllar' },
+      { name: 'Diğer Araçlar & Evrensel Parçalar', years: 'Tüm Yıllar' }
+    ]
   }
 ];

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "import:excel": "python scripts/import_excel_products.py"
   },
   "dependencies": {
     "@cloudinary/react": "^1.14.4",

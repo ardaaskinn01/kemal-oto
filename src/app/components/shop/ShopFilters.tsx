@@ -34,6 +34,7 @@ export function ShopFilters({ categories, totalProductsCount }: ShopFiltersProps
     { name: 'Citroën', label: 'Citroën' },
     { name: 'Chevrolet', label: 'Chevrolet' },
     { name: 'DS Automobiles', label: 'DS Automobiles' },
+    { name: 'Diğer Markalar', label: 'Diğer Markalar' },
   ];
 
   // Get vehicle models for the currently selected brand
