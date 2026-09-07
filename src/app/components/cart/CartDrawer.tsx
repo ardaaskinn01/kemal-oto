@@ -290,6 +290,34 @@ export function CartDrawer() {
                 <span>Sepeti Onayla & Ödemeye Geç</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               </button>
+
+              {/* iyzico ile Öde & Kart Markaları Logoları */}
+              <div className="pt-2.5 border-t border-gray-200/60 dark:border-[#2a2d35]/60 flex flex-col items-center gap-1.5 text-center">
+                <div className="flex items-center gap-1 text-[11px] font-semibold text-gray-600 dark:text-gray-400">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span>256-Bit SSL &amp; 3D Secure ile Güvenli Ödeme</span>
+                </div>
+                <div className="block dark:hidden">
+                  <Image
+                    src="/images/iyzico/logo_band_colored.svg"
+                    alt="iyzico ile Öde, Visa, MasterCard, Troy, American Express"
+                    width={280}
+                    height={22}
+                    unoptimized
+                    className="h-4.5 w-auto object-contain"
+                  />
+                </div>
+                <div className="hidden dark:block">
+                  <Image
+                    src="/images/iyzico/logo_band_white.svg"
+                    alt="iyzico ile Öde, Visa, MasterCard, Troy, American Express"
+                    width={280}
+                    height={22}
+                    unoptimized
+                    className="h-4.5 w-auto object-contain"
+                  />
+                </div>
+              </div>
             </div>
           )}
 
@@ -302,15 +330,22 @@ export function CartDrawer() {
           <div className="bg-white dark:bg-[#111318] border border-gray-200 dark:border-[#2a2d35] rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
 
             <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-[#2a2d35] flex items-center justify-between bg-gray-900 text-white">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#E8820C] text-white flex items-center justify-center font-bold">
-                  <CreditCard className="w-4 h-4 stroke-[2.5]" />
+              <div className="flex items-center gap-3">
+                <div className="bg-white px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-transparent shrink-0">
+                  <Image
+                    src="/images/iyzico/iyzico_ile_ode_colored_horizontal.svg"
+                    alt="iyzico ile Öde"
+                    width={120}
+                    height={18}
+                    unoptimized
+                    className="h-5 w-auto object-contain"
+                  />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                    iyzico Güvenli Ödeme
+                  <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    Güvenli Ödeme Portalı
                   </h3>
-                  <p className="text-[11px] text-orange-400 font-medium">Toplam: {formatCurrency(grandTotal)} (KDV Dahil)</p>
+                  <p className="text-[11px] text-orange-400 font-semibold">Toplam: {formatCurrency(grandTotal)} (KDV Dahil)</p>
                 </div>
               </div>
 
@@ -520,6 +555,37 @@ export function CartDrawer() {
                       </>
                     )}
                   </button>
+
+                  {/* iyzico ile Öde, Visa, MasterCard, Troy, Amex Güvence Bandı */}
+                  <div className="p-3 bg-gray-50 dark:bg-[#16181f] rounded-xl border border-gray-200 dark:border-[#2a2d35] flex flex-col items-center gap-2 text-center">
+                    <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-gray-800 dark:text-gray-200">
+                      <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <span>iyzico ile 256-Bit SSL Korumalı Güvenli Ödeme</span>
+                    </div>
+                    <div className="block dark:hidden">
+                      <Image
+                        src="/images/iyzico/logo_band_colored.svg"
+                        alt="iyzico ile Öde - Visa, MasterCard, Troy, American Express"
+                        width={280}
+                        height={22}
+                        unoptimized
+                        className="h-5 w-auto object-contain"
+                      />
+                    </div>
+                    <div className="hidden dark:block">
+                      <Image
+                        src="/images/iyzico/logo_band_white.svg"
+                        alt="iyzico ile Öde - Visa, MasterCard, Troy, American Express"
+                        width={280}
+                        height={22}
+                        unoptimized
+                        className="h-5 w-auto object-contain"
+                      />
+                    </div>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">
+                      Ödemeniz tamamlandıktan sonra faturanız oluşturulur ve anında DHL Express kargo takip kodunuz üretilir.
+                    </p>
+                  </div>
                 </form>
               ) : (
                 <div id="iyzipay-checkout-form" className="responsive min-h-[320px]">

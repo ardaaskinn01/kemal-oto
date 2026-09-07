@@ -30,16 +30,27 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { orderId, trackingNumber, carrier = 'DHL Express' } = body;
+    const { orderId, trackingNumber, autoGenerate = false, carrier = 'DHL Express' } = body;
 
-    if (!orderId || !trackingNumber || !trackingNumber.trim()) {
+    if (!orderId) {
       return NextResponse.json(
-        { success: false, error: 'Kargo takip numarası zorunludur.' },
+        { success: false, error: 'Sipariş ID zorunludur.' },
         { status: 400 }
       );
     }
 
-    const cleanTracking = trackingNumber.trim().toUpperCase();
+    let cleanTracking = (trackingNumber || '').trim().toUpperCase();
+
+    // Otomatik DHL Kargo Oluşturma
+    if (autoGenerate || !cleanTracking) {
+      const { createDHLShipment } = await import('@/app/lib/shipping/dhlService');
+      const shipmentResult = await createDHLShipment({
+        orderId,
+        items: body.items || [],
+        orderTotal: body.totalAmount || 2500,
+      });
+      cleanTracking = shipmentResult.trackingNumber;
+    }
 
     // 3. Siparişi Veritabanında Güncelle
     const { data: order, error: fetchError } = await supabase
@@ -84,6 +95,7 @@ export async function POST(request: Request) {
       trackingNumber: cleanTracking,
       carrier,
       dhlUrl,
+      labelUrl: `/api/shipping/label/${encodeURIComponent(cleanTracking)}`,
     });
   } catch (err: any) {
     console.error('Ship order error:', err);

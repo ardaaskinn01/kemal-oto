@@ -355,6 +355,39 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               </div>
             </div>
 
+            {/* iyzico Güvenli Ödeme & Kart Logoları Bandı */}
+            <div className="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Güvenli Ödeme:</span>
+                </span>
+                <span className="text-[11px] text-slate-500">Peşin / Taksitli</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="block dark:hidden">
+                  <Image
+                    src="/images/iyzico/logo_band_colored.svg"
+                    alt="iyzico ile Öde, Visa, MasterCard, Troy, American Express"
+                    width={240}
+                    height={20}
+                    unoptimized
+                    className="h-4.5 w-auto object-contain"
+                  />
+                </div>
+                <div className="hidden dark:block">
+                  <Image
+                    src="/images/iyzico/logo_band_white.svg"
+                    alt="iyzico ile Öde, Visa, MasterCard, Troy, American Express"
+                    width={240}
+                    height={20}
+                    unoptimized
+                    className="h-4.5 w-auto object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>

@@ -13,7 +13,10 @@ import {
   FileText,
   AlertCircle,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  Printer,
+  Zap,
+  CheckCircle
 } from 'lucide-react';
 import { formatCurrency } from '../../lib/utils';
 
@@ -82,13 +85,13 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const handleShipOrder = async (order: Order) => {
+  const handleShipOrder = async (order: Order, autoGenerate = false) => {
     const trackingCode = (trackingInputs[order.id] || '').trim();
 
-    if (!trackingCode) {
+    if (!autoGenerate && !trackingCode) {
       setNotification({
         id: order.id,
-        message: 'Lütfen DHL Kargo Takip Numarasını giriniz. (Zorunludur)',
+        message: 'Lütfen DHL Kargo Takip Numarasını giriniz veya "Otomatik DHL Kargo Oluştur" butonunu kullanınız.',
         type: 'error',
       });
       return;
@@ -104,9 +107,11 @@ export default function AdminOrdersPage() {
         body: JSON.stringify({
           orderId: order.id,
           trackingNumber: trackingCode,
+          autoGenerate,
           customerEmail: order.contact_info?.email || 'musteri@onlinehizliparca.com',
           customerName: order.shipping_address?.full_name || 'Müşteri',
           items: order.items,
+          totalAmount: order.total_amount,
         }),
       });
 
@@ -115,7 +120,7 @@ export default function AdminOrdersPage() {
       if (data.success) {
         setNotification({
           id: order.id,
-          message: 'DHL Takip Kodu kaydedildi ve müşteriye bilgilendirme e-postası başarıyla gönderildi!',
+          message: `DHL Kargo başarıyla oluşturuldu! Takip No: ${data.trackingNumber}`,
           type: 'success',
         });
         fetchOrders();
@@ -148,12 +153,18 @@ export default function AdminOrdersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Truck className="w-7 h-7 text-amber-500" />
-            Sipariş & Manuel Kargo Yönetimi
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white flex items-center gap-2.5">
+              <Truck className="w-7 h-7 text-amber-500" />
+              Sipariş & DHL Kargo Yönetimi
+            </h1>
+            <div className="hidden sm:inline-flex items-center gap-1.5 bg-[#ffcc00]/20 border border-[#ffcc00]/60 text-slate-900 dark:text-amber-400 px-2.5 py-1 rounded-lg text-xs font-black">
+              <span className="bg-[#d40511] text-white px-1.5 py-0.5 rounded font-black tracking-wider text-[10px]">DHL</span>
+              <span>Otomatik Mod: Aktif (Sandbox)</span>
+            </div>
+          </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Gelen gerçek siparişlerin durumunu takip edin ve DHL Express kargo takip kodunu girerek müşterileri anında bilgilendirin.
+            Gelen siparişleri tek tıkla otomatik olarak DHL Express kargosuna dönüştürün, barkodlu konşimento etiketini yazdırın ve müşteriye takip linki gönderin.
           </p>
         </div>
 
@@ -291,52 +302,100 @@ export default function AdminOrdersPage() {
                   </div>
                 </div>
 
-                {/* DHL Tracking Input Form */}
+                {/* DHL Tracking & Shipping Actions */}
                 <div className="pt-2">
                   {!isShipped ? (
-                    <div className="flex flex-col sm:flex-row gap-2.5 items-center">
-                      <input
-                        type="text"
-                        placeholder="DHL Takip No Giriniz (Örn: DHL-TR-982410293)"
-                        value={trackingInputs[order.id] || ''}
-                        onChange={(e) =>
-                          setTrackingInputs({ ...trackingInputs, [order.id]: e.target.value })
-                        }
-                        className="w-full sm:flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-mono font-bold uppercase focus:outline-none focus:border-amber-400"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleShipOrder(order)}
-                        disabled={shippingLoading[order.id]}
-                        className="w-full sm:w-auto bg-amber-400 hover:bg-amber-500 text-slate-950 font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer disabled:opacity-50 shrink-0"
-                      >
-                        {shippingLoading[order.id] ? (
-                          <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                        ) : (
-                          <>
-                            <Send className="w-4 h-4" />
-                            <span>Kargoya Ver & Müşteriyi Bilgilendir</span>
-                          </>
-                        )}
-                      </button>
+                    <div className="space-y-3 bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4">
+                      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 text-xs font-black text-slate-900 dark:text-white">
+                            <span className="bg-[#d40511] text-white px-2 py-0.5 rounded text-[10px] font-black tracking-wider">DHL EXPRESS</span>
+                            <span>Otomatik Sevkiyat & Konşimento</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 mt-0.5">
+                            Tek tıkla koli desisini hesaplayıp DHL AWB takip kodu ve yazdırılabilir barkod etiketi oluşturur.
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleShipOrder(order, true)}
+                          disabled={shippingLoading[order.id]}
+                          className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black px-5 py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer disabled:opacity-50 shrink-0"
+                        >
+                          {shippingLoading[order.id] ? (
+                            <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                          ) : (
+                            <>
+                              <Zap className="w-4 h-4 fill-slate-950" />
+                              <span>Otomatik DHL Kargo Oluştur</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Optional manual code fallback */}
+                      <div className="pt-2 border-t border-amber-500/15 flex flex-col sm:flex-row gap-2 items-center">
+                        <input
+                          type="text"
+                          placeholder="veya Manuel DHL Kodu Girin (Örn: DHL-TR-98241029)"
+                          value={trackingInputs[order.id] || ''}
+                          onChange={(e) =>
+                            setTrackingInputs({ ...trackingInputs, [order.id]: e.target.value })
+                          }
+                          className="w-full sm:flex-1 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono font-bold uppercase focus:outline-none focus:border-amber-400"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleShipOrder(order, false)}
+                          disabled={shippingLoading[order.id] || !trackingInputs[order.id]?.trim()}
+                          className="w-full sm:w-auto bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer disabled:opacity-40 shrink-0"
+                        >
+                          Manuel Kaydet
+                        </button>
+                      </div>
                     </div>
                   ) : (
-                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-700 dark:text-slate-300">DHL Takip Kodu:</span>
-                        <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 bg-white dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                    <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 text-xs">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="bg-[#d40511] text-white px-2 py-0.5 rounded text-[10px] font-black tracking-wider">DHL EXPRESS</span>
+                        <span className="font-bold text-slate-700 dark:text-slate-300">AWB Takip No:</span>
+                        <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 bg-white dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-emerald-500/30 text-xs">
                           {order.tracking_number}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 font-bold text-amber-500">
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        {/* Print Label Button */}
+                        <button
+                          type="button"
+                          onClick={() => window.open(`/api/shipping/label/${order.tracking_number}`, '_blank')}
+                          className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer text-xs"
+                        >
+                          <Printer className="w-3.5 h-3.5 text-amber-400" />
+                          <span>DHL Konşimento Yazdır</span>
+                        </button>
+
+                        {/* Internal Tracking Portal Link */}
                         <a
-                          href={`https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${order.tracking_number}`}
+                          href={`/tracking?code=${order.tracking_number}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:underline flex items-center gap-1"
+                          className="bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer text-xs"
                         >
-                          <span>DHL Resmi Takip</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
+                          <Search className="w-3.5 h-3.5 text-[#E8820C]" />
+                          <span>Takip Portalı</span>
+                        </a>
+
+                        {/* Official DHL Tracking Link */}
+                        <a
+                          href={`https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${order.tracking_number}&submit=1`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-amber-400 hover:bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer text-xs"
+                        >
+                          <span>DHL Resmi Web</span>
+                          <ExternalLink className="w-3 h-3" />
                         </a>
                       </div>
                     </div>

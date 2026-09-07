@@ -153,15 +153,25 @@ export default function CustomerOrdersPage() {
                       </span>
                     </div>
 
-                    <a
-                      href={`https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${order.tracking_number}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-2 rounded-xl text-xs transition-colors shadow-sm cursor-pointer"
-                    >
-                      <span>1 Tıkla DHL Resmi Takip Yap</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/tracking?code=${order.tracking_number}`}
+                        className="inline-flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition-colors shadow-sm"
+                      >
+                        <Truck className="w-3.5 h-3.5" />
+                        <span>Kargo Durumunu Gör</span>
+                      </Link>
+
+                      <a
+                        href={`https://www.dhl.com/tr-tr/home/tracking.html?tracking-id=${order.tracking_number}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition-colors shadow-sm cursor-pointer"
+                      >
+                        <span>DHL Resmi</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
                   </div>
                 )}
               </div>

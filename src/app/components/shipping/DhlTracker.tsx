@@ -20,7 +20,7 @@ interface DhlTrackerProps {
 }
 
 export function DhlTracker({ initialTracking }: DhlTrackerProps) {
-  const [trackingCode, setTrackingCode] = useState('');
+  const [trackingCode, setTrackingCode] = useState(initialTracking?.trackingNumber || '');
   const [trackingData, setTrackingData] = useState<DHLTrackingInfo | null>(initialTracking || null);
   const [loading, setLoading] = useState(false);
 

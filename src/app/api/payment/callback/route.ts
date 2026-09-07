@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { iyzicoService } from '@/app/lib/services/iyzicoService';
 import { createClient } from '@/utils/supabase/server';
 import { emailService } from '@/app/lib/services/emailService';
+import { createDHLShipment } from '@/app/lib/shipping/dhlService';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,13 +20,23 @@ export async function POST(request: NextRequest) {
       try {
         const supabase = await createClient();
 
-        // 1. Sipariş Durumunu 'paid' Olarak Güncelle
+        // 1. Otomatik DHL Kargo Konşimentosu ve Takip Numarası Oluştur
+        const shipmentResult = await createDHLShipment({
+          orderId,
+          items: [],
+          orderTotal: 2500,
+        });
+
+        // 2. Sipariş Durumunu 'paid' ve 'shipped' (DHL ile Kargoya Verildi) Olarak Güncelle
         const { data: updatedOrder, error: updateError } = await supabase
           .from('orders')
           .update({
             payment_status: 'paid',
             payment_method: 'iyzico_credit_card',
             payment_id: result.paymentId || token,
+            shipping_status: 'shipped',
+            tracking_number: shipmentResult.trackingNumber,
+            carrier: 'DHL Express',
           })
           .eq('id', orderId)
           .select('*')
@@ -35,15 +46,17 @@ export async function POST(request: NextRequest) {
           console.error('Sipariş güncellenirken DB hatası:', updateError);
         }
 
-        // 2. Müşteri ve Yöneticiye E-posta Onaylarını Gönder
+        // 3. Müşteri ve Yöneticiye E-posta Onaylarını ve DHL Kargo Takip Bildirimini Gönder
+        const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://www.onlinehizliparca.com';
         if (updatedOrder) {
           await emailService.sendOrderConfirmation(updatedOrder);
           await emailService.sendAdminOrderNotification(updatedOrder);
+          await emailService.sendShippingNotification(updatedOrder, shipmentResult.trackingNumber, origin, 'DHL Express');
         } else {
           console.warn('Güncellenen sipariş bulunamadı, fallback bildirim atlanıyor:', orderId);
         }
       } catch (dbErr) {
-        console.error('Ödeme sonrası sipariş DB güncelleme / e-posta hatası:', dbErr);
+        console.error('Ödeme sonrası sipariş DB güncelleme / kargo / e-posta hatası:', dbErr);
       }
 
       return NextResponse.redirect(

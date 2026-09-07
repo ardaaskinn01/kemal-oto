@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ShoppingCart, CreditCard, Loader2, X, ShieldCheck } from 'lucide-react';
 import { Product } from '../../types/database.types';
 import { useCart } from '../../contexts/CartContext';
@@ -41,8 +42,9 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           order: {
-            id: `ORD-${Date.now()}`,
+            id: `ORD-QUICK-${Date.now()}`,
             total_amount: priceToPay,
+            vin: null,
           },
           customer,
           totalAmount: priceToPay,
@@ -97,7 +99,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
           className="flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm font-black px-6 py-3.5 rounded-xl shadow-md active:scale-95 transition-all cursor-pointer"
         >
           <CreditCard className="w-4 h-4" />
-          <span>Hemen Satın Al (iyzico Test)</span>
+          <span>Hemen Satın Al</span>
         </button>
 
         <button
@@ -117,16 +119,20 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
             
             {/* Header */}
             <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/60">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center font-bold">
-                  <CreditCard className="w-5 h-5" />
+              <div className="flex items-center gap-3">
+                <div className="bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-transparent shrink-0">
+                  <Image
+                    src="/images/iyzico/iyzico_ile_ode_colored_horizontal.svg"
+                    alt="iyzico ile Öde"
+                    width={110}
+                    height={16}
+                    unoptimized
+                    className="h-4.5 w-auto object-contain"
+                  />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    iyzico Güvenli Ödeme Testi
-                    <span className="bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold">
-                      SANDBOX
-                    </span>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                    Güvenli Ödeme Portalı
                   </h3>
                   <p className="text-[11px] text-slate-500">256-Bit SSL Korumalı 3D Secure Ödeme</p>
                 </div>
@@ -226,20 +232,51 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 disabled:opacity-50 cursor-pointer"
+                    className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 disabled:opacity-50 cursor-pointer uppercase tracking-wide"
                   >
                     {loading ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>iyzico Formu Hazırlanıyor...</span>
+                        <span>iyzico Ödeme Ekranı Hazırlanıyor...</span>
                       </>
                     ) : (
                       <>
                         <ShieldCheck className="w-4 h-4" />
-                        <span>iyzico Güvenli Ödeme Ekranını Aç ({priceToPay} TL)</span>
+                        <span>Ödemeye Geç ({priceToPay} TL)</span>
                       </>
                     )}
                   </button>
+
+                  {/* iyzico & Card Brands Banner */}
+                  <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col items-center gap-2 text-center">
+                    <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                      <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <span>iyzico ile 256-Bit SSL Korumalı Güvenli Ödeme</span>
+                    </div>
+                    <div className="block dark:hidden">
+                      <Image
+                        src="/images/iyzico/logo_band_colored.svg"
+                        alt="iyzico ile Öde - Visa, MasterCard, Troy, American Express"
+                        width={280}
+                        height={22}
+                        unoptimized
+                        className="h-5 w-auto object-contain"
+                      />
+                    </div>
+                    <div className="hidden dark:block">
+                      <Image
+                        src="/images/iyzico/logo_band_white.svg"
+                        alt="iyzico ile Öde - Visa, MasterCard, Troy, American Express"
+                        width={280}
+                        height={22}
+                        unoptimized
+                        className="h-5 w-auto object-contain"
+                      />
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                      Visa, MasterCard, Troy ve Amex ile Peşin / Taksitli Güvenli Ödeme
+                    </p>
+                  </div>
                 </form>
               ) : (
                 <div id="iyzipay-checkout-form" className="responsive min-h-[300px]">
