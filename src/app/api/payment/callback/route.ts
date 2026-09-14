@@ -32,8 +32,6 @@ export async function POST(request: NextRequest) {
           .from('orders')
           .update({
             payment_status: 'paid',
-            payment_method: 'iyzico_credit_card',
-            payment_id: result.paymentId || token,
             shipping_status: 'pending',
           })
           .eq('id', orderId)
@@ -55,8 +53,9 @@ export async function POST(request: NextRequest) {
         console.error('Ödeme sonrası sipariş DB güncelleme / kargo / e-posta hatası:', dbErr);
       }
 
+      // Sipariş Başarılı Sayfasına Yönlendir
       return NextResponse.redirect(
-        new URL(`/shop?payment_status=success&order_id=${encodeURIComponent(orderId)}`, request.url),
+        new URL(`/order-success?order_id=${encodeURIComponent(orderId)}`, request.url),
         303
       );
     } else {
