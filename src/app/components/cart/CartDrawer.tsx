@@ -433,7 +433,6 @@ export function CartDrawer() {
                           required
                           value={customer.companyName}
                           onChange={(e) => setCustomer({ ...customer, companyName: e.target.value })}
-                          placeholder="Örn: ABC Otomotiv Servis San. ve Tic. Ltd. Şti."
                           className="w-full bg-white dark:bg-[#0d0f12] border border-gray-300 dark:border-[#2a2d35] rounded-lg p-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#E8820C]"
                         />
                       </div>
@@ -448,7 +447,6 @@ export function CartDrawer() {
                             required
                             value={customer.taxOffice}
                             onChange={(e) => setCustomer({ ...customer, taxOffice: e.target.value })}
-                            placeholder="Örn: Bornova V.D."
                             className="w-full bg-white dark:bg-[#0d0f12] border border-gray-300 dark:border-[#2a2d35] rounded-lg p-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#E8820C]"
                           />
                         </div>
@@ -462,7 +460,6 @@ export function CartDrawer() {
                             required
                             value={customer.taxNumber}
                             onChange={(e) => setCustomer({ ...customer, taxNumber: e.target.value.replace(/\D/g, '') })}
-                            placeholder="Örn: 1234567890"
                             className="w-full bg-white dark:bg-[#0d0f12] border border-gray-300 dark:border-[#2a2d35] rounded-lg p-2.5 text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:border-[#E8820C]"
                           />
                         </div>
@@ -506,7 +503,6 @@ export function CartDrawer() {
                         required
                         value={customer.email}
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
-                        placeholder="fatura@ornek.com"
                         className="w-full bg-white dark:bg-[#0d0f12] border border-gray-300 dark:border-[#2a2d35] rounded-lg p-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#E8820C]"
                       />
                     </div>
@@ -517,7 +513,6 @@ export function CartDrawer() {
                         required
                         value={customer.phone}
                         onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-                        placeholder="0542 292 44 92"
                         className="w-full bg-white dark:bg-[#0d0f12] border border-gray-300 dark:border-[#2a2d35] rounded-lg p-2.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#E8820C]"
                       />
                     </div>
@@ -532,7 +527,6 @@ export function CartDrawer() {
                       required
                       value={customer.address}
                       onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
-                      placeholder="Mahalle, cadde, sokak, bina ve kapı no..."
                       className="w-full bg-white dark:bg-[#0d0f12] border border-gray-300 dark:border-[#2a2d35] rounded-lg p-2.5 text-xs text-gray-900 dark:text-white resize-none focus:outline-none focus:border-[#E8820C]"
                     />
                   </div>
@@ -548,12 +542,8 @@ export function CartDrawer() {
                       maxLength={17}
                       value={customer.vin}
                       onChange={(e) => setCustomer({ ...customer, vin: e.target.value.toUpperCase() })}
-                      placeholder="Örn: W0L0AHL359281XXXX"
                       className="w-full bg-white dark:bg-[#0d0f12] border border-gray-300 dark:border-[#2a2d35] rounded-lg p-2 font-mono text-xs font-bold uppercase focus:outline-none focus:border-[#E8820C]"
                     />
-                    <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">
-                      Ruhsatınızdaki 17 haneli şasi numarasını girerseniz, kargo çıkmadan %100 parça uyum teyidi yapılır.
-                    </p>
                   </div>
 
                   <button
