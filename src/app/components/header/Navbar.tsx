@@ -70,6 +70,7 @@ export function Navbar() {
         const { data } = await supabase
           .from('products')
           .select('*')
+          .eq('is_hidden', false)
           .or(`title.ilike.%${q}%,part_number.ilike.%${q}%,brand.ilike.%${q}%`)
           .limit(6);
         setSearchResults((data as Product[]) || []);

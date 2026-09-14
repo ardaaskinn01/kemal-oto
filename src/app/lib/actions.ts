@@ -26,6 +26,7 @@ export async function getProducts(options?: {
   maxPrice?: number;
   sort?: string;
   includeHidden?: boolean;
+  limit?: number;
 }): Promise<Product[]> {
   let products: Product[] = [];
 
@@ -35,13 +36,16 @@ export async function getProducts(options?: {
       let query = supabase.from('products').select('*');
 
       if (!options?.includeHidden) {
-        query = query.eq('is_hidden', false);
+        query = query.eq('is_hidden', false).gt('price', 0);
       }
       if (options?.featuredOnly) {
         query = query.eq('is_featured', true);
       }
       if (options?.categorySlug) {
         query = query.eq('category_slug', options.categorySlug);
+      }
+      if (options?.limit) {
+        query = query.limit(options.limit);
       }
 
       const { data, error } = await query;
@@ -65,9 +69,9 @@ export async function getProducts(options?: {
     }
   }
 
-  // Hidden products filter (vitrinde gizli ürünleri hariç tut)
+  // Hidden products filter (vitrinde gizli veya fiyatı 0 olan ürünleri kesinlikle hariç tut)
   if (!options?.includeHidden) {
-    products = products.filter((p) => !p.is_hidden);
+    products = products.filter((p) => !p.is_hidden && p.price > 0);
   }
 
   // Quality filter
@@ -266,8 +270,8 @@ export async function getCategories(): Promise<Category[]> {
     // 1. Try fetching from categories table
     const { data: dbCategories, error } = await supabase.from('categories').select('*');
     
-    // 2. Fetch products to get accurate live item counts
-    const { data: products } = await supabase.from('products').select('category_slug');
+    // 2. Fetch products to get accurate live item counts (only active visible products with price > 0)
+    const { data: products } = await supabase.from('products').select('category_slug').eq('is_hidden', false).gt('price', 0);
     const countMap: Record<string, number> = {};
     const prodsForCount = (products && products.length > 0) ? products : INITIAL_PRODUCTS.map((p) => ({ category_slug: p.category_slug }));
     prodsForCount.forEach((p: { category_slug: string }) => {
