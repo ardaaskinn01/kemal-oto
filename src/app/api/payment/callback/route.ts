@@ -20,23 +20,21 @@ export async function POST(request: NextRequest) {
       try {
         const supabase = await createClient();
 
-        // 1. Otomatik DHL Kargo Konşimentosu ve Takip Numarası Oluştur
-        const shipmentResult = await createDHLShipment({
-          orderId,
-          items: [],
-          orderTotal: 2500,
-        });
+        // 1. Kargo Entegrasyonu (Test aşamasında devre dışı bırakıldı)
+        // const shipmentResult = await createDHLShipment({
+        //   orderId,
+        //   items: [],
+        //   orderTotal: 2500,
+        // });
 
-        // 2. Sipariş Durumunu 'paid' ve 'shipped' (DHL ile Kargoya Verildi) Olarak Güncelle
+        // 2. Sipariş Durumunu 'paid' Olarak Güncelle (Kargo henüz çıkmadı, 'pending')
         const { data: updatedOrder, error: updateError } = await supabase
           .from('orders')
           .update({
             payment_status: 'paid',
             payment_method: 'iyzico_credit_card',
             payment_id: result.paymentId || token,
-            shipping_status: 'shipped',
-            tracking_number: shipmentResult.trackingNumber,
-            carrier: 'DHL Express',
+            shipping_status: 'pending',
           })
           .eq('id', orderId)
           .select('*')
@@ -46,12 +44,10 @@ export async function POST(request: NextRequest) {
           console.error('Sipariş güncellenirken DB hatası:', updateError);
         }
 
-        // 3. Müşteri ve Yöneticiye E-posta Onaylarını ve DHL Kargo Takip Bildirimini Gönder
-        const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://www.onlinehizliparca.com';
+        // 3. Müşteri ve Yöneticiye E-posta Onaylarını Gönder (Kargo bildirimi devre dışı)
         if (updatedOrder) {
           await emailService.sendOrderConfirmation(updatedOrder);
           await emailService.sendAdminOrderNotification(updatedOrder);
-          await emailService.sendShippingNotification(updatedOrder, shipmentResult.trackingNumber, origin, 'DHL Express');
         } else {
           console.warn('Güncellenen sipariş bulunamadı, fallback bildirim atlanıyor:', orderId);
         }
