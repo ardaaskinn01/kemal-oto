@@ -100,15 +100,18 @@ export function CartDrawer() {
       });
 
       let data: any = null;
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error(
-          res.status === 500
-            ? 'Sunucu ödeme servisine bağlanamadı. Lütfen Vercel Dashboard -> Settings -> Environment Variables alanında IYZICO_API_KEY ve IYZICO_SECRET_KEY tanımlı olduğundan emin olun.'
-            : `Ödeme servisi beklenmeyen bir yanıt verdi (HTTP ${res.status}).`
-        );
+      if (!res.ok) {
+        let serverMsg = '';
+        try {
+          const errJson = await res.json();
+          serverMsg = errJson.errorMessage || errJson.message;
+        } catch {
+          // not json
+        }
+        throw new Error(serverMsg || `Sunucu yanıt vermedi (HTTP ${res.status}).`);
       }
+
+      data = await res.json();
 
       if (data.success && data.checkoutFormContent) {
         setFormHtml(data.checkoutFormContent);
