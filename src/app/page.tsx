@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { getProducts, getCategories } from './lib/actions';
 import { ProductCard } from './components/ui/ProductCard';
 import { HeroBanner } from './components/ui/HeroBanner';
-import { ServicePackagesSection } from './components/ui/ServicePackagesSection';
 import { PsaGroupShowcase } from './components/ui/PsaGroupShowcase';
 import { 
   ShieldCheck, 
@@ -96,10 +95,7 @@ export default async function HomePage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
 
-        {/* 3. KOMPLE HIZLI SERVİS & BAKIM PAKETLERİ (Aşama 2) */}
-        <ServicePackagesSection />
-
-        {/* 4. PSA GROUPE AUTHORITATIVE SHOWCASE (Peugeot, Citroen, Opel, DS, Vauxhall) */}
+        {/* PSA GROUPE AUTHORITATIVE SHOWCASE (Peugeot, Citroen, Opel, DS, Vauxhall) */}
         <PsaGroupShowcase />
 
         {/* 4. KATEGORİ REHBERİ */}
