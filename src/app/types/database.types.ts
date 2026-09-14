@@ -27,7 +27,9 @@ export interface Product {
   rating: number;
   reviews_count: number;
   is_featured?: boolean;
+  is_hidden?: boolean; // true: Gizli urun (fiyat ve gorsel tanimlanana kadar vitrinde gizlenir)
   weight_kg?: number;
+  desi?: number; // Kargo koli volumetrik hacim ölçüsü (En x Boy x Yükseklik / 3000)
   created_at?: string;
 }
 

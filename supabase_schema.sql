@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS public.products (
   discount_price NUMERIC,
   stock INTEGER DEFAULT 10,
   weight_kg NUMERIC DEFAULT 1.0,
+  desi NUMERIC DEFAULT 2.0, -- Kargo desi katsayısı
   image_url TEXT NOT NULL,
   additional_images JSONB DEFAULT '[]'::jsonb,
   description TEXT,
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS public.products (
   rating NUMERIC DEFAULT 5.0,
   reviews_count INTEGER DEFAULT 0,
   is_featured BOOLEAN DEFAULT false,
+  is_hidden BOOLEAN DEFAULT false, -- true: Gizli ürün (fiyat ve görsel tanımlanana kadar vitrinde gizlenir)
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

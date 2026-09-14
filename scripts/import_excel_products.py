@@ -138,6 +138,47 @@ def detect_brand_and_models(title: str, code: str, mfg: str):
     return primary_brand, detected_models
 
 
+# Görseller dizini
+IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'public', 'images', 'products')
+
+
+def extract_clean_oem(raw_code: str, brand: str = "") -> str:
+    """
+    Excel'deki Stok Kodu formatindan temiz OEM kodunu cikarir.
+    Ornekler:
+      '="0024.84SARDES"'    -> '002484'
+      '="0111.ATKONEKS-SET"'-> '0111AT'
+      '="0113.92GLYCO"'     -> '011392'
+      '="1611803480"'       -> '1611803480'
+      '="0118.G4"'          -> '0118G4'
+    """
+    code = raw_code.replace('=', '').replace('"', '').replace("'", '').strip()
+    
+    # Bilinen marka soneklerini kaldir
+    brands_to_strip = [
+        'SARDES', 'GLYCO', 'KONEKS', 'KING', 'KOLBEN', 'KOLBENSCHMIDT',
+        'OTOCONTA', 'OTO CONTA', 'CORTECO', 'VICTOR REINZ', 'REINZ',
+        'DAYCO', 'GATES', 'BOSCH', 'VALEO', 'DELPHI', 'FEBI', 'SWAG',
+        'MAHLE', 'HENGST', 'MANN', 'LUK', 'SACHS', 'SNR', 'SKF',
+        'PEUGEOT', 'CITROEN', 'OPEL', 'CHEVROLET'
+    ]
+    if brand:
+        brands_to_strip.insert(0, brand.strip().upper())
+
+    for b in brands_to_strip:
+        b_clean = re.sub(r'[^A-Za-z0-9]', '', b).upper()
+        if b_clean and code.upper().endswith(b_clean):
+            code = code[:-len(b_clean)].rstrip('-._ ')
+            break
+
+    # Diger bilinen ekleri temizle
+    code = re.sub(r'(-SET|-TAKIM|-STD|-TK)$', '', code, flags=re.IGNORECASE)
+    
+    # Noktalari ve tireleri temizle
+    clean = re.sub(r'[^A-Za-z0-9]', '', code).upper()
+    return clean if clean else re.sub(r'[^A-Za-z0-9]', '', raw_code).upper()
+
+
 def detect_category(group: str, subgrp: str, title: str):
     combined = f"{group} {subgrp} {title}".upper()
     for kw, cat_info in CATEGORY_MAP.items():
@@ -157,6 +198,7 @@ def parse_excel(file_path: str):
     brand_stats = Counter()
     category_stats = Counter()
     stock_count = 0
+    images_found_count = 0
     
     slug_counts = Counter()
 
@@ -190,6 +232,18 @@ def parse_excel(file_path: str):
         is_original = any(k in mfg.upper() for k in ['OPEL GM', 'PEUGEOT', 'CITROEN', 'PSA', 'CHEVROLET', 'OEM', 'GENUINE'])
         part_quality = 'original' if is_original else ('oem' if any(k in mfg.upper() for k in ['BOSCH', 'DELPHI', 'VALEO', 'SNR', 'LUK', 'HENGST', 'SACHS']) else 'aftermarket')
         
+        # Temiz OEM kodu
+        clean_oem = extract_clean_oem(code, mfg)
+
+        # Görsel kontrolü (mevcut WebP var mı?)
+        img_filename = f"{clean_oem}.webp"
+        img_path = os.path.join(IMAGES_DIR, img_filename)
+        if os.path.exists(img_path):
+            image_url = f"/images/products/{img_filename}"
+            images_found_count += 1
+        else:
+            image_url = ""
+
         # Benzersiz slug
         base_slug = slugify(f"{brand}-{title}-{code}")[:80]
         slug_counts[base_slug] += 1
@@ -198,7 +252,10 @@ def parse_excel(file_path: str):
         else:
             slug = base_slug
 
-        # Ürün Nesnesi
+        from assign_desi_and_weight import calculate_weight_and_desi
+        weight_kg, desi = calculate_weight_and_desi(title, group, subgroup)
+
+        # Ürün Nesnesi (Fiyat 0, açıklamalar boş, is_hidden=True)
         prod = {
             'id': f"prod-{slugify(code)}-{r}",
             'title': title,
@@ -207,29 +264,36 @@ def parse_excel(file_path: str):
             'category_slug': category_slug,
             'brand': brand,
             'part_number': code,
-            'oem_reference_number': code.split('.')[0] if '.' in code else code,
+            'oem_reference_number': clean_oem,
             'is_original': is_original,
             'part_quality': part_quality,
             'vehicle_compatibility': models,
-            'price': 0, # Fiyatlar Excel'de 0, kullanıcı belirleyecek
+            'price': 0, # Fiyatlar sonra girilecek, şu an 0
             'discount_price': None,
             'stock': qty_num,
-            'image_url': '/images/products/on-fren-balatasi.jpg', # Varsayılan şablon görsel
-            'description': f"{brand} araçlar için {title}. Parça Kodu: {code}. Üretici: {mfg or 'Orijinal Standart'}.",
+            'weight_kg': round(weight_kg, 2),
+            'desi': round(desi, 1),
+            'image_url': image_url, # Varsa mevcut görsel, yoksa boş
+            'description': "", # Kullanıcı talebi doğrultusunda boş
+            'technical_description': "", # Boş
             'specs': {
                 'Üretici': mfg or 'Belirtilmemiş',
                 'Üretici Parça Kodu': mfg_code or code,
                 'Stok Grubu': group,
-                'Alt Grup': subgroup
+                'Alt Grup': subgroup,
+                'Desi': str(round(desi, 1)),
+                'Ağırlık (kg)': str(round(weight_kg, 2))
             },
-            'rating': 4.8,
+            'rating': 5.0,
             'reviews_count': 0,
-            'is_featured': False
+            'is_featured': False,
+            'is_hidden': True # Vitrinde gizli (fiyat ve açıklamalar tamamlanana kadar)
         }
         products.append(prod)
 
     print(f"\n[+] İşlem Tamamlandı: {len(products)} ürün başarıyla modellendi.")
     print(f"[+] Pozitif Stoklu Ürün Sayısı: {stock_count}")
+    print(f"[+] Mevcut Görsel Eşleşen Ürün Sayısı: {images_found_count}")
     print("\n--- Marka Dağılımı ---")
     for b, count in brand_stats.most_common():
         print(f"  {b}: {count} ürün (%{round(count/len(products)*100, 1)})")
@@ -243,6 +307,7 @@ def parse_excel(file_path: str):
 
 def export_to_json(products, output_path):
     print(f"\n[*] JSON formatinda '{output_path}' dosyasina aktariliyor...")
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(products, f, ensure_ascii=False, indent=2)
     print(f"[BASARILI] {len(products)} adet urun '{output_path}' dosyasina kaydedildi!")
@@ -250,6 +315,7 @@ def export_to_json(products, output_path):
 
 def export_to_sql(products, output_path):
     print(f"\n[*] Supabase SQL formatinda '{output_path}' dosyasina aktariliyor...")
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write("-- Online Hizli Parca - Supabase Products Seed\n")
         f.write("-- Toplam Urun: " + str(len(products)) + "\n\n")
@@ -257,22 +323,23 @@ def export_to_sql(products, output_path):
         batch_size = 100
         for i in range(0, len(products), batch_size):
             batch = products[i:i + batch_size]
-            f.write("INSERT INTO public.products (id, title, slug, category, category_slug, brand, part_number, oem_reference_number, is_original, part_quality, price, stock, image_url, description, specs, vehicle_compatibility, rating, reviews_count, is_featured) VALUES\n")
+            f.write("INSERT INTO public.products (id, title, slug, category, category_slug, brand, part_number, oem_reference_number, is_original, part_quality, price, stock, image_url, description, technical_description, specs, vehicle_compatibility, rating, reviews_count, is_featured, is_hidden) VALUES\n")
             
             val_lines = []
             for p in batch:
                 title_esc = p['title'].replace("'", "''")
                 slug_esc = p['slug'].replace("'", "''")
                 cat_esc = p['category'].replace("'", "''")
-                desc_esc = p['description'].replace("'", "''")
+                desc_esc = (p.get('description') or '').replace("'", "''")
+                tech_desc_esc = (p.get('technical_description') or '').replace("'", "''")
                 specs_json = json.dumps(p['specs'], ensure_ascii=False).replace("'", "''")
                 vc_json = json.dumps(p['vehicle_compatibility'], ensure_ascii=False).replace("'", "''")
                 
-                line = f"  ('{p['id']}', '{title_esc}', '{slug_esc}', '{cat_esc}', '{p['category_slug']}', '{p['brand']}', '{p['part_number']}', '{p['oem_reference_number']}', {str(p['is_original']).lower()}, '{p['part_quality']}', {p['price']}, {p['stock']}, '{p['image_url']}', '{desc_esc}', '{specs_json}'::jsonb, '{vc_json}'::jsonb, {p['rating']}, {p['reviews_count']}, {str(p['is_featured']).lower()})"
+                line = f"  ('{p['id']}', '{title_esc}', '{slug_esc}', '{cat_esc}', '{p['category_slug']}', '{p['brand']}', '{p['part_number']}', '{p['oem_reference_number']}', {str(p['is_original']).lower()}, '{p['part_quality']}', {p['price']}, {p['stock']}, '{p['image_url']}', '{desc_esc}', '{tech_desc_esc}', '{specs_json}'::jsonb, '{vc_json}'::jsonb, {p['rating']}, {p['reviews_count']}, {str(p['is_featured']).lower()}, {str(p['is_hidden']).lower()})"
                 val_lines.append(line)
                 
             f.write(",\n".join(val_lines))
-            f.write("\nON CONFLICT (id) DO UPDATE SET stock = EXCLUDED.stock, price = EXCLUDED.price;\n\n")
+            f.write("\nON CONFLICT (id) DO UPDATE SET stock = EXCLUDED.stock, price = EXCLUDED.price, is_hidden = EXCLUDED.is_hidden, image_url = EXCLUDED.image_url;\n\n")
             
     print(f"[BASARILI] SQL Seed dosyasi basariyla olusturuldu: {output_path}")
 
@@ -299,14 +366,104 @@ def main():
     if args.export_sql:
         export_to_sql(products, args.export_sql)
         
+def load_env():
+    """ .env.local veya .env dosyasındaki ortam değişkenlerini okur """
+    env_files = ['.env.local', '.env']
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for ef in env_files:
+        p = os.path.join(root, ef)
+        if os.path.exists(p):
+            with open(p, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#') and '=' in line:
+                        k, v = line.split('=', 1)
+                        k = k.strip()
+                        v = v.strip().strip('"').strip("'")
+                        if k not in os.environ:
+                            os.environ[k] = v
+
+
+def upload_to_supabase(products):
+    load_env()
+    supabase_url = os.environ.get('NEXT_PUBLIC_SUPABASE_URL', '').rstrip('/')
+    service_role_key = os.environ.get('SUPABASE_SERVICE_ROLE_KEY', '')
+
+    if not supabase_url or 'placeholder' in supabase_url:
+        print("HATA: 'NEXT_PUBLIC_SUPABASE_URL' geçerli değil. Lütfen .env.local dosyanızı kontrol edin.")
+        return
+
+    if not service_role_key:
+        print("\nHATA: 'SUPABASE_SERVICE_ROLE_KEY' bulunamadı.")
+        print("Lütfen .env.local dosyanıza 'SUPABASE_SERVICE_ROLE_KEY=...' satırını ekleyin.")
+        return
+
+    import urllib.request
+    import urllib.error
+
+    endpoint = f"{supabase_url}/rest/v1/products"
+    headers = {
+        "apikey": service_role_key,
+        "Authorization": f"Bearer {service_role_key}",
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates"
+    }
+
+    print(f"\n[*] Supabase veritabanına yükleme başlatılıyor ({endpoint})...")
+    print(f"[*] Toplam yüklenecek ürün: {len(products)}")
+
+    batch_size = 200
+    total = len(products)
+    success_count = 0
+
+    for i in range(0, total, batch_size):
+        batch = products[i:i + batch_size]
+        payload = json.dumps(batch).encode('utf-8')
+        
+        req = urllib.request.Request(endpoint, data=payload, headers=headers, method='POST')
+        try:
+            with urllib.request.urlopen(req) as resp:
+                if resp.status in [200, 201]:
+                    success_count += len(batch)
+                    sys.stdout.write(f"\r  Yüklendi: {success_count} / {total} (%{round(success_count/total*100, 1)})")
+                    sys.stdout.flush()
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode('utf-8')
+            print(f"\n[HATA] Supabase HTTP {e.code}: {err_body}")
+            print("İpucu: 'is_hidden' sütununun Supabase'de var olduğundan emin olun.")
+            return
+        except Exception as e:
+            print(f"\n[HATA] Beklenmeyen hata: {e}")
+            return
+
+    print(f"\n\n[TEBRİKLER] {success_count} adet ürün Supabase veritabanına başarıyla yüklendi!")
+
+
+def main():
+    load_env()
+    parser = argparse.ArgumentParser(description="STOK LİSTE.xlsx İçe Aktarma Aracı")
+    parser.add_argument('--file', default='STOK LİSTE.xlsx', help="Excel dosya yolu")
+    parser.add_argument('--dry-run', action='store_true', help="Sadece analiz et ve raporla")
+    parser.add_argument('--export-json', type=str, help="JSON çıktısı oluştur")
+    parser.add_argument('--export-sql', type=str, help="Supabase SQL seed dosyası oluştur")
+    parser.add_argument('--upload', action='store_true', help="Supabase veritabanına doğrudan yükle")
+    
+    args = parser.parse_args()
+    
+    if not os.path.exists(args.file):
+        print(f"HATA: '{args.file}' bulunamadı.")
+        sys.exit(1)
+        
+    products = parse_excel(args.file)
+    
+    if args.export_json:
+        export_to_json(products, args.export_json)
+        
+    if args.export_sql:
+        export_to_sql(products, args.export_sql)
+        
     if args.upload:
-        print("\n[*] Supabase doğrudan yükleme servisi çağrılıyor...")
-        supabase_url = os.environ.get('NEXT_PUBLIC_SUPABASE_URL')
-        service_role_key = os.environ.get('SUPABASE_SERVICE_ROLE_KEY')
-        if not service_role_key:
-            print("UYARI: 'SUPABASE_SERVICE_ROLE_KEY' ortam değişkeni tanımlı değil.")
-            print("Veritabanına güvenli toplu yükleme için service role key gereklidir.")
-            print("Bunun yerine '--export-sql' parametresi ile üretilen SQL dosyasını Supabase SQL Editor alanında tek seferde çalıştırabilirsiniz.")
+        upload_to_supabase(products)
             
     if not (args.export_json or args.export_sql or args.upload) and not args.dry_run:
         print("\nİpucu: Komutu '--dry-run', '--export-sql dosya.sql' veya '--export-json dosya.json' ile çalıştırabilirsiniz.")

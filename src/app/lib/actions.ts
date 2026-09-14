@@ -25,6 +25,7 @@ export async function getProducts(options?: {
   minPrice?: number;
   maxPrice?: number;
   sort?: string;
+  includeHidden?: boolean;
 }): Promise<Product[]> {
   let products: Product[] = [];
 
@@ -33,6 +34,9 @@ export async function getProducts(options?: {
     if (supabase) {
       let query = supabase.from('products').select('*');
 
+      if (!options?.includeHidden) {
+        query = query.eq('is_hidden', false);
+      }
       if (options?.featuredOnly) {
         query = query.eq('is_featured', true);
       }
@@ -59,6 +63,11 @@ export async function getProducts(options?: {
     if (options?.categorySlug) {
       products = products.filter((p) => p.category_slug === options.categorySlug);
     }
+  }
+
+  // Hidden products filter (vitrinde gizli ürünleri hariç tut)
+  if (!options?.includeHidden) {
+    products = products.filter((p) => !p.is_hidden);
   }
 
   // Quality filter
@@ -180,17 +189,25 @@ export async function getProducts(options?: {
   return products;
 }
 
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export async function getProductBySlug(slug: string, options?: { allowHidden?: boolean }): Promise<Product | null> {
   try {
     const supabase = getSupabaseClient();
     if (supabase) {
-      const { data } = await supabase.from('products').select('*').eq('slug', slug).single();
+      let query = supabase.from('products').select('*').eq('slug', slug);
+      if (!options?.allowHidden) {
+        query = query.eq('is_hidden', false);
+      }
+      const { data } = await query.maybeSingle();
       if (data) return data as Product;
     }
   } catch (e) {}
 
   const local = INITIAL_PRODUCTS.find((p) => p.slug === slug);
-  return local || null;
+  if (local) {
+    if (local.is_hidden && !options?.allowHidden) return null;
+    return local;
+  }
+  return null;
 }
 
 export const DEFAULT_CATEGORIES: Category[] = [

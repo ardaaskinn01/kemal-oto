@@ -17,8 +17,8 @@ interface ShippingSettingsContextType {
 }
 
 const DEFAULT_SETTINGS: ShippingSettings = {
-  cost: 150,
-  freeThreshold: 2500,
+  cost: 0,
+  freeThreshold: 0,
   carrier: 'DHL Express',
 };
 
