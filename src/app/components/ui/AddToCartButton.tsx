@@ -172,54 +172,55 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
               {!formHtml ? (
                 <form onSubmit={handleStartPayment} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Ad</label>
+                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Ad *</label>
                       <input
                         type="text"
                         required
                         value={customer.firstName}
                         onChange={(e) => setCustomer({ ...customer, firstName: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Soyad</label>
+                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Soyad *</label>
                       <input
                         type="text"
                         required
                         value={customer.lastName}
                         onChange={(e) => setCustomer({ ...customer, lastName: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">E-Posta</label>
+                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">E-Posta *</label>
                       <input
                         type="email"
                         required
                         value={customer.email}
                         onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Telefon</label>
+                      <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Telefon *</label>
                       <input
-                        type="text"
+                        type="tel"
                         required
                         value={customer.phone}
                         onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs"
+                        placeholder="0542 292 44 92"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs"
                       />
                     </div>
                   </div>
 
                   <div className="text-xs">
-                    <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Teslimat Adresi</label>
+                    <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Teslimat Adresi *</label>
                     <textarea
                       rows={2}
                       required

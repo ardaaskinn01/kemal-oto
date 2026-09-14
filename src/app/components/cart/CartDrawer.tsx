@@ -131,8 +131,14 @@ export function CartDrawer() {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm animate-in fade-in">
-        <div className="w-full max-w-md bg-white dark:bg-[#111318] border-l border-gray-200 dark:border-[#2a2d35] h-full flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300">
+      <div 
+        className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm animate-in fade-in cursor-pointer"
+        onClick={() => setIsCartOpen(false)}
+      >
+        <div 
+          className="w-full max-w-md bg-white dark:bg-[#111318] border-l border-gray-200 dark:border-[#2a2d35] h-full flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300 cursor-default"
+          onClick={(e) => e.stopPropagation()}
+        >
 
           {/* Drawer Header */}
           <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-[#2a2d35] flex items-center justify-between bg-gray-50 dark:bg-[#0d0f12]">

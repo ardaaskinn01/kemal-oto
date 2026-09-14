@@ -26,6 +26,7 @@ interface ShopPageProps {
     category?: string;
     brand?: string;
     model?: string;
+    engine?: string;
     year?: string;
     vin?: string;
     quality?: string;
@@ -77,6 +78,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const categorySlug = params.category || '';
   const brandFilter = params.brand || '';
   const modelFilter = params.model || '';
+  const engineFilter = params.engine || '';
   const vinFilter = params.vin || '';
   const qualityFilter = params.quality || '';
   const inStockFilter = params.inStock === 'true';
@@ -89,6 +91,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     categorySlug,
     brand: brandFilter,
     model: modelFilter,
+    engineCode: engineFilter,
     vin: vinFilter,
     quality: qualityFilter,
     inStock: inStockFilter,
@@ -189,6 +192,15 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                     <X className="w-3.5 h-3.5" />
                   </Link>
                 )}
+                {engineFilter && (
+                  <Link
+                    href={`/shop?brand=${encodeURIComponent(brandFilter)}${modelFilter ? '&model=' + encodeURIComponent(modelFilter) : ''}${categorySlug ? '&category=' + encodeURIComponent(categorySlug) : ''}`}
+                    className="flex items-center gap-1.5 bg-amber-100 dark:bg-amber-950/50 text-[#E8820C] text-xs font-bold px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800 hover:bg-amber-200 transition-colors"
+                  >
+                    <span>Motor: {engineFilter}</span>
+                    <X className="w-3.5 h-3.5" />
+                  </Link>
+                )}
                 <Link
                   href="/shop"
                   className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors ml-1"
@@ -203,6 +215,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               <input type="hidden" name="brand" value={brandFilter} />
               {modelFilter && <input type="hidden" name="model" value={modelFilter} />}
               {categorySlug && <input type="hidden" name="category" value={categorySlug} />}
+              {engineFilter && <input type="hidden" name="engine" value={engineFilter} />}
               <div className="relative flex-1">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -229,11 +242,18 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                 {currentCatObj ? currentCatObj.name : 'Tüm Yedek Parçalar'}
               </h1>
             </div>
-            {categorySlug && (
-              <Link href="/shop" className="flex items-center gap-1 bg-slate-100 dark:bg-[#1a1d23] text-slate-700 dark:text-slate-300 text-xs font-bold px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 hover:border-[#E8820C] hover:text-[#E8820C] transition-colors self-start sm:self-auto">
-                {currentCatObj?.name || categorySlug} <X className="w-3 h-3" />
-              </Link>
-            )}
+            <div className="flex items-center gap-2">
+              {categorySlug && (
+                <Link href="/shop" className="flex items-center gap-1 bg-slate-100 dark:bg-[#1a1d23] text-slate-700 dark:text-slate-300 text-xs font-bold px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 hover:border-[#E8820C] hover:text-[#E8820C] transition-colors">
+                  {currentCatObj?.name || categorySlug} <X className="w-3 h-3" />
+                </Link>
+              )}
+              {engineFilter && (
+                <Link href={`/shop${categorySlug ? '?category=' + encodeURIComponent(categorySlug) : ''}`} className="flex items-center gap-1 bg-amber-100 dark:bg-amber-950/50 text-[#E8820C] text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200 dark:border-amber-800 hover:bg-amber-200 transition-colors">
+                  Motor: {engineFilter} <X className="w-3 h-3" />
+                </Link>
+              )}
+            </div>
           </div>
         )}
 
@@ -249,6 +269,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               {categorySlug && <input type="hidden" name="category" value={categorySlug} />}
               {brandFilter && <input type="hidden" name="brand" value={brandFilter} />}
               {modelFilter && <input type="hidden" name="model" value={modelFilter} />}
+              {engineFilter && <input type="hidden" name="engine" value={engineFilter} />}
               {qualityFilter && <input type="hidden" name="quality" value={qualityFilter} />}
               {inStockFilter && <input type="hidden" name="inStock" value="true" />}
               {params.minPrice && <input type="hidden" name="minPrice" value={params.minPrice} />}

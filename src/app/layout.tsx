@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Figtree, Outfit } from 'next/font/google';
 import './globals.css';
 import { Navbar } from './components/header/Navbar';
 import { Footer } from './components/footer/Footer';
@@ -14,18 +13,20 @@ import { CartDrawer } from './components/cart/CartDrawer';
 import { GarageModal } from './components/garage/GarageModal';
 import { CookieConsentBanner } from './components/ui/CookieConsentBanner';
 
-const figtree = Figtree({
-  subsets: ['latin'],
+import { Montserrat, Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin', 'latin-ext'],
   display: 'swap',
-  variable: '--font-figtree',
-  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
 });
 
-const outfit = Outfit({
-  subsets: ['latin'],
+const montserrat = Montserrat({
+  subsets: ['latin', 'latin-ext'],
   display: 'swap',
-  variable: '--font-outfit',
-  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-montserrat',
+  weight: ['500', '600', '700', '800', '900'],
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.onlinehizliparca.com';
@@ -121,7 +122,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="tr" suppressHydrationWarning className={`dark ${figtree.variable} ${outfit.variable}`}>
+    <html lang="tr" suppressHydrationWarning className={`dark ${inter.variable} ${montserrat.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{

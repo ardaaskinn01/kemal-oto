@@ -15,6 +15,8 @@ import {
   LogOut,
   Package,
   ChevronDown,
+  ShieldCheck,
+  CheckCircle2,
 } from 'lucide-react';
 import { useGarage } from '../../contexts/GarageContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -25,11 +27,14 @@ import { formatCurrency } from '../../lib/utils';
 import { Product } from '../../types/database.types';
 import { BrandMegaMenu } from './BrandMegaMenu';
 import { VEHICLE_CATALOG } from '../../data/vehicleCatalogData';
+import { getBrandLogo } from '../../data/brandLogos';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [expandedMobileBrand, setExpandedMobileBrand] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   const { activeVehicle, setIsGarageModalOpen } = useGarage();
@@ -49,26 +54,33 @@ export function Navbar() {
 
   const [searchResults, setSearchResults] = useState<Product[]>([]);
 
+  // Debounced search with 280ms delay to prevent lagging on mobile keyboards
   useEffect(() => {
     const q = searchQuery.trim();
-    if (q.length >= 2) {
-      const fetchLiveSearch = async () => {
-        try {
-          const { supabase } = await import('../../lib/supabaseClient');
-          const { data } = await supabase
-            .from('products')
-            .select('*')
-            .or(`title.ilike.%${q}%,part_number.ilike.%${q}%,brand.ilike.%${q}%`)
-            .limit(5);
-          setSearchResults((data as Product[]) || []);
-        } catch (e) {
-          setSearchResults([]);
-        }
-      };
-      fetchLiveSearch();
-    } else {
+    if (q.length < 2) {
       setSearchResults([]);
+      setIsSearching(false);
+      return;
     }
+
+    setIsSearching(true);
+    const timer = setTimeout(async () => {
+      try {
+        const { supabase } = await import('../../lib/supabaseClient');
+        const { data } = await supabase
+          .from('products')
+          .select('*')
+          .or(`title.ilike.%${q}%,part_number.ilike.%${q}%,brand.ilike.%${q}%`)
+          .limit(6);
+        setSearchResults((data as Product[]) || []);
+      } catch (e) {
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 280);
+
+    return () => clearTimeout(timer);
   }, [searchQuery]);
 
   const categories = [
@@ -81,17 +93,46 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white dark:bg-[#0d0f12] border-b border-gray-200 dark:border-[#2a2d35] transition-colors">
+      <header className="sticky top-0 z-40 bg-white dark:bg-[#0d1015] border-b border-slate-200 dark:border-[#1e2533] transition-colors">
 
-        {/* 1. Top strip — PSA Authority */}
-        <div className="bg-gray-50 dark:bg-[#111318] border-b border-gray-200 dark:border-[#2a2d35] text-xs text-gray-500 dark:text-gray-400 py-1.5 px-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <span className="font-medium text-gray-700 dark:text-gray-300">
-              <strong className="text-[#E8820C]">PSA Grubu & GM</strong> (Peugeot • Citroën • Opel • Chevrolet • DS) Yedek Parça Merkezi
-            </span>
-            <div className="flex items-center gap-4">
-              <a href="tel:05422924492" className="hover:text-[#E8820C] transition-colors font-semibold">
-                Destek: 0542 292 44 92
+        {/* 1. Top strip — Kemal Oto EPC Servis Masası */}
+        <div className="bg-[#0b0e13] text-slate-300 border-b border-[#1c222e] text-xs py-1.5 px-4 shadow-inner">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-1.5">
+            <div className="flex items-center gap-2 flex-wrap justify-center md:justify-start">
+              <span className="inline-flex items-center gap-1.5 font-bold text-white bg-slate-800/90 border border-slate-700/80 px-2 py-0.5 rounded text-[10px] sm:text-[11px] tracking-wider uppercase">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Kemal Oto Orijinal & Muadil Parça
+              </span>
+              <span className="text-slate-500 hidden sm:inline">•</span>
+              <span className="font-semibold text-slate-300 text-[11px] sm:text-xs">
+                Bugün <strong className="text-amber-400">16:00'ya Kadar</strong> Aynı Gün Sevk
+              </span>
+              <span className="text-slate-500 hidden lg:inline">•</span>
+              <span className="text-slate-400 hidden lg:inline text-[11px]">
+                Stellantis & GM Orijinal OEM / E-Mark Onaylı Parça
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2.5 sm:gap-3 text-xs flex-wrap justify-center">
+              {/* 17 Haneli Şasi Doğrulama Butonu */}
+              <button
+                type="button"
+                onClick={() => setIsGarageModalOpen(true)}
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-400 hover:text-amber-300 bg-[#161c27] hover:bg-[#1f2736] border border-amber-500/30 px-2.5 py-0.5 rounded transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>17 Haneli Şasi ile Doğrula</span>
+              </button>
+
+              {/* Danışma & WhatsApp Teyit */}
+              <a
+                href="https://wa.me/905422924492?text=Merhaba%2C%20arac%C4%B1m%C4%B1n%20%C5%9Fasi%20numaras%C4%B1%20ile%20uyumlu%20par%C3%A7a%20dan%C4%B1%C5%9Fmak%20istiyorum."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-bold text-emerald-400 hover:text-emerald-300 transition-colors text-[11px] sm:text-xs"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Şasi Teyit: 0542 292 44 92</span>
               </a>
             </div>
           </div>
@@ -101,9 +142,9 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-4">
 
-            {/* Logo */}
+            {/* Logo & Sub-descriptor */}
             <Link href="/" className="shrink-0 flex items-center gap-3">
-              <div className="relative w-11 h-11 rounded-xl overflow-hidden border-2 border-slate-200 dark:border-[#2a2d35] bg-white shadow-sm">
+              <div className="relative w-11 h-11 rounded-lg overflow-hidden border border-slate-300 dark:border-[#222938] bg-white shadow-sm shrink-0">
                 <Image
                   src="/logo.png"
                   alt="Kemal Oto Logo"
@@ -112,12 +153,17 @@ export function Navbar() {
                   priority
                 />
               </div>
-              <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
-                Online Hızlı<span className="text-[#E8820C]">Parça</span>
-              </span>
+              <div className="flex flex-col">
+                <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+                  Online Hızlı<span className="text-[#E8820C]">Parça</span>
+                </span>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase mt-1 font-mono">
+                  Kemal Oto • PSA & GM Dağıtım
+                </span>
+              </div>
             </Link>
 
-            {/* Search — centered, flex-1 */}
+            {/* Search — EPC Technical Console style */}
             <div ref={searchRef} className="hidden md:block flex-1 max-w-xl relative mx-auto">
               <form
                 onSubmit={(e) => {
@@ -127,49 +173,56 @@ export function Navbar() {
                     window.location.href = `/shop?q=${encodeURIComponent(searchQuery.trim())}`;
                   }
                 }}
-                className="flex items-center border-2 border-slate-300 dark:border-[#2a2d35] rounded-xl overflow-hidden bg-slate-50 dark:bg-[#111318] focus-within:border-[#E8820C] focus-within:bg-white dark:focus-within:bg-[#1a1d23] transition-all shadow-sm"
+                className="flex items-center border border-slate-300 dark:border-[#222938] rounded-lg overflow-hidden bg-slate-50 dark:bg-[#131720] focus-within:border-[#E8820C] focus-within:ring-1 focus-within:ring-[#E8820C] transition-all shadow-xs"
               >
-                <Search className="w-5 h-5 text-slate-400 ml-3.5 shrink-0 stroke-[2.5]" />
+                <Search className="w-4 h-4 text-slate-400 ml-3 shrink-0 stroke-[2.5]" />
                 <input
                   type="text"
                   value={searchQuery}
                   onFocus={() => setIsSearchOpen(true)}
                   onChange={(e) => { setSearchQuery(e.target.value); setIsSearchOpen(true); }}
-                  placeholder="Parça adı veya OEM parça numarası ara..."
-                  className="flex-1 bg-transparent text-sm sm:text-base font-medium text-slate-900 dark:text-white placeholder-slate-400 py-3 px-3 focus:outline-none"
+                  placeholder="Parça Adı, OEM Kodu (örn: 1611803480) veya Motor Kodu..."
+                  className="flex-1 bg-transparent text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 py-2.5 px-3 focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="bg-[#E8820C] hover:bg-[#d4740a] text-white px-6 py-3 text-sm sm:text-base font-extrabold transition-colors shrink-0 cursor-pointer uppercase tracking-wider"
+                  className="bg-[#E8820C] hover:bg-[#cf7005] text-white px-5 py-2.5 text-xs sm:text-sm font-black transition-colors shrink-0 cursor-pointer uppercase tracking-wider font-mono"
                 >
-                  Ara
+                  Sorgula
                 </button>
               </form>
 
               {/* Autocomplete dropdown */}
               {isSearchOpen && searchQuery.trim().length >= 2 && (
-                <div className="absolute left-0 right-0 top-full mt-1.5 bg-white dark:bg-[#111318] border-2 border-slate-200 dark:border-[#2a2d35] rounded-xl shadow-xl z-50 overflow-hidden text-xs">
+                <div className="absolute left-0 right-0 top-full mt-1.5 bg-white dark:bg-[#131720] border border-slate-200 dark:border-[#222938] rounded-lg shadow-xl z-50 overflow-hidden text-xs">
                   {searchResults.length > 0 ? (
-                    <div className="divide-y divide-gray-100 dark:divide-[#2a2d35]">
+                    <div className="divide-y divide-gray-100 dark:divide-[#1e2533]">
                       {searchResults.map((product) => (
                         <Link
                           key={product.id}
                           href={`/shop/products/${product.slug}`}
                           onClick={() => setIsSearchOpen(false)}
-                          className="flex items-center gap-3 p-3.5 hover:bg-gray-50 dark:hover:bg-[#1a1d23] transition-colors"
+                          className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-[#1a202c] transition-colors"
                         >
-                          <div className="w-11 h-11 rounded-lg bg-gray-100 dark:bg-[#2a2d35] overflow-hidden relative shrink-0">
+                          <div className="w-10 h-10 rounded bg-gray-100 dark:bg-[#1c222e] overflow-hidden relative shrink-0 border border-slate-200 dark:border-slate-800">
                             {product.image_url ? (
                               <Image src={product.image_url} alt={product.title} fill className="object-cover" />
                             ) : (
-                              <Wrench className="w-5 h-5 text-gray-400 m-auto mt-3" />
+                              <Wrench className="w-4 h-4 text-gray-400 m-auto mt-3" />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-bold text-sm text-gray-900 dark:text-white truncate">{product.title}</p>
-                            <p className="text-gray-400 font-mono mt-0.5 font-semibold">OEM: {product.part_number}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="font-mono text-[11px] font-bold text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.2 rounded border border-amber-200 dark:border-amber-800">
+                                OEM: {product.part_number}
+                              </span>
+                              <span className="text-[10px] text-slate-400 uppercase font-semibold">
+                                {product.brand}
+                              </span>
+                            </div>
                           </div>
-                          <span className="text-base font-black text-gray-900 dark:text-white shrink-0">
+                          <span className="text-sm font-black text-gray-900 dark:text-white shrink-0 font-mono">
                             {formatCurrency(product.price)}
                           </span>
                         </Link>
@@ -177,8 +230,8 @@ export function Navbar() {
                     </div>
                   ) : (
                     <div className="p-4 text-center text-gray-500">
-                      <p className="font-bold text-gray-700 dark:text-gray-300">Ürün bulunamadı.</p>
-                      <p className="text-xs mt-1">OEM numarasını veya araç modelini deneyin.</p>
+                      <p className="font-bold text-gray-700 dark:text-gray-300">Uygun parça bulunamadı.</p>
+                      <p className="text-xs mt-1">OEM referans numarasını veya araç modelini kontrol edin.</p>
                     </div>
                   )}
                 </div>
@@ -186,23 +239,34 @@ export function Navbar() {
             </div>
 
             {/* Right actions */}
-            <div className="flex items-center gap-2.5 ml-auto">
+            <div className="flex items-center gap-2 sm:gap-2.5 ml-auto">
 
-              {/* Garaj butonu */}
+              {/* Garaj butonu - Teknik Servis Şasi Rozeti */}
               <button
                 type="button"
                 onClick={() => setIsGarageModalOpen(true)}
                 title={activeVehicle ? `${activeVehicle.make} ${activeVehicle.model}` : 'Aracınızı seçin'}
-                className={`hidden sm:flex items-center gap-2 text-xs sm:text-sm px-4 py-2.5 rounded-xl border-2 transition-colors cursor-pointer font-bold ${
+                className={`hidden sm:flex items-center gap-2 text-xs px-3.5 py-2.5 rounded-lg border transition-colors cursor-pointer font-bold ${
                   activeVehicle
-                    ? 'border-emerald-500 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30'
-                    : 'border-slate-200 dark:border-[#2a2d35] text-slate-700 dark:text-slate-300 hover:border-[#E8820C] hover:text-[#E8820C]'
+                    ? 'border-emerald-500/80 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30'
+                    : 'border-slate-300 dark:border-[#222938] text-slate-700 dark:text-slate-300 hover:border-[#E8820C] hover:text-[#E8820C]'
                 }`}
               >
-                <Car className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 stroke-[2.5]" />
-                <span className="max-w-[120px] truncate">
-                  {activeVehicle ? `${activeVehicle.make} ${activeVehicle.model}` : 'Araç Seç'}
-                </span>
+                {activeVehicle ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span className="max-w-[120px] truncate font-mono">
+                      {activeVehicle.make} {activeVehicle.model}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Car className="w-4 h-4 shrink-0 stroke-[2.5]" />
+                    <span className="max-w-[120px] truncate">
+                      Şasi / Araç Seç
+                    </span>
+                  </>
+                )}
               </button>
 
               <ThemeToggle />
@@ -302,36 +366,87 @@ export function Navbar() {
         {mobileMenuOpen && (
           <div className="md:hidden bg-white dark:bg-[#0d0f12] border-t-2 border-slate-200 dark:border-[#2a2d35] p-5 space-y-5 max-h-[80vh] overflow-y-auto">
             <div>
-              <p className="text-xs font-black uppercase text-slate-500 tracking-wider mb-2.5">
-                Markalar & Modeller
-              </p>
-              <div className="space-y-3">
-                {VEHICLE_CATALOG.map((b) => (
-                  <div key={b.slug} className="border-2 border-slate-200 dark:border-[#2a2d35] rounded-xl p-3 bg-slate-50 dark:bg-[#141822]">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-black text-sm text-slate-900 dark:text-white uppercase">{b.brand}</span>
-                      <Link
-                        href={`/shop?brand=${encodeURIComponent(b.brand)}`}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-xs font-bold text-[#E8820C] hover:underline"
+              <div className="flex items-center justify-between mb-2.5">
+                <p className="text-xs font-black uppercase text-slate-500 tracking-wider">
+                  Markalar &amp; Modeller
+                </p>
+                <span className="text-[11px] font-bold text-[#E8820C]">
+                  Markaya basıp alt modelleri açın ↓
+                </span>
+              </div>
+              <div className="space-y-2">
+                {VEHICLE_CATALOG.map((b) => {
+                  const isExpanded = expandedMobileBrand === b.slug;
+                  return (
+                    <div
+                      key={b.slug}
+                      className={`border-2 rounded-xl transition-all overflow-hidden ${
+                        isExpanded
+                          ? 'border-[#E8820C] bg-orange-50/40 dark:bg-[#141822] shadow-sm'
+                          : 'border-slate-200 dark:border-[#2a2d35] bg-slate-50 dark:bg-[#11141c]'
+                      }`}
+                    >
+                      {/* Brand Header — clickable button to toggle accordion */}
+                      <button
+                        type="button"
+                        onClick={() => setExpandedMobileBrand(isExpanded ? null : b.slug)}
+                        className="w-full flex items-center justify-between p-3 cursor-pointer text-left"
                       >
-                        Tümü →
-                      </Link>
+                        <div className="flex items-center gap-2.5">
+                          <span className={isExpanded ? 'text-[#E8820C]' : 'text-slate-600 dark:text-slate-400'}>
+                            {getBrandLogo(b.brand, 'w-5 h-5')}
+                          </span>
+                          <span className="font-black text-sm text-slate-900 dark:text-white uppercase">
+                            {b.brand}
+                          </span>
+                          <span className="text-[11px] font-bold text-slate-400 font-mono">
+                            ({b.models.length} model)
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <ChevronDown
+                            className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                              isExpanded ? 'rotate-180 text-[#E8820C]' : ''
+                            }`}
+                          />
+                        </div>
+                      </button>
+
+                      {/* Sub-models list when tapped */}
+                      {isExpanded && (
+                        <div className="p-3 pt-0 border-t border-slate-200/80 dark:border-slate-800 space-y-2">
+                          <div className="flex items-center justify-between pt-2">
+                            <span className="text-[11px] font-black uppercase text-slate-500">
+                              Tüm {b.brand} Modelleri:
+                            </span>
+                            <Link
+                              href={`/shop?brand=${encodeURIComponent(b.brand)}`}
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="text-xs font-black text-[#E8820C] hover:underline"
+                            >
+                              Tüm Parçaları Gör →
+                            </Link>
+                          </div>
+                          <div className="grid grid-cols-2 gap-1.5 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
+                            {b.models.map((m) => (
+                              <Link
+                                key={m.name}
+                                href={`/shop?brand=${encodeURIComponent(b.brand)}&model=${encodeURIComponent(m.name)}`}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-white hover:bg-[#E8820C] bg-white dark:bg-[#1a1e28] border border-slate-200 dark:border-slate-800 p-2 rounded-lg truncate transition-colors flex flex-col"
+                              >
+                                <span className="truncate">{m.name}</span>
+                                <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 font-normal mt-0.5">
+                                  {m.years}
+                                </span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-slate-200 dark:border-slate-800">
-                      {b.models.slice(0, 8).map((m) => (
-                        <Link
-                          key={m.name}
-                          href={`/shop?brand=${encodeURIComponent(b.brand)}&model=${encodeURIComponent(m.name)}`}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="text-xs text-slate-700 dark:text-slate-300 hover:text-[#E8820C] p-1 truncate"
-                        >
-                          {m.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

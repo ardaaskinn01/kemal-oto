@@ -18,6 +18,7 @@ export async function getProducts(options?: {
   featuredOnly?: boolean;
   brand?: string;
   model?: string;
+  engineCode?: string;
   vin?: string;
   quality?: string;
   inStock?: boolean;
@@ -146,6 +147,20 @@ export async function getProducts(options?: {
       }
 
       return false;
+    });
+  }
+
+  // Engine Code filter (e.g. DV6, EP6, EB2, B16DTH, A14NET)
+  if (options?.engineCode) {
+    const ec = options.engineCode.toLowerCase().trim();
+    products = products.filter((p) => {
+      const motorSpec = (p.specs && (p.specs['Motor Uyumluluğu'] || p.specs['Motor'] || p.specs['Motor Kodu'])) || '';
+      return (
+        motorSpec.toLowerCase().includes(ec) ||
+        p.title.toLowerCase().includes(ec) ||
+        (p.technical_description && p.technical_description.toLowerCase().includes(ec)) ||
+        (p.description && p.description.toLowerCase().includes(ec))
+      );
     });
   }
 
