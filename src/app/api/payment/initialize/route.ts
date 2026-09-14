@@ -7,6 +7,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { order, customer, items, totalAmount } = body;
 
+    // İyzico API anahtarları kontrolü
+    const iyzicoKey = process.env.IYZICO_API_KEY;
+    const iyzicoSecret = process.env.IYZICO_SECRET_KEY;
+    if (!iyzicoKey || !iyzicoSecret || iyzicoKey === 'your-iyzico-api-key' || iyzicoKey.includes('placeholder')) {
+      return NextResponse.json(
+        {
+          success: false,
+          errorMessage: 'İyzico API anahtarları tanımlı değil. Lütfen Vercel Dashboard -> Settings -> Environment Variables alanına IYZICO_API_KEY, IYZICO_SECRET_KEY ve IYZICO_BASE_URL ekleyin.',
+        },
+        { status: 500 }
+      );
+    }
+
     const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://www.onlinehizliparca.com';
     const callbackUrl = `${origin}/api/payment/callback`;
 
